@@ -1,0 +1,6 @@
+{
+  "appTitle": "LN Studio",
+  "wardrobeEmpty": "No records",
+  "unknownError": "Unknown error: {value}",
+  "exceptionOccurred": "Exception occurred: {value}"
+}
