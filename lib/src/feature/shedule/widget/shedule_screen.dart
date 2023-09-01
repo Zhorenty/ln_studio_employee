@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
-/// {@template wardrobe_screen}
-/// Wardrobe screen.
+/// {@template shedule_screen}
+/// Shedule screen.
 /// {@endtemplate}
-class WardrobeScreen extends StatelessWidget {
-  /// {@macro wardrobe_screen}
-  const WardrobeScreen({super.key});
+class SheduleScreen extends StatelessWidget {
+  /// {@macro shedule_screen}
+  const SheduleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,17 +57,6 @@ class WardrobeScreen extends StatelessWidget {
             color: context.colors.primary,
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text(
-          'Записаться',
-          style: context.fonts.bodyMedium?.copyWith(
-            color: context.colors.onBackground,
-            fontFamily: FontFamily.playfair,
-          ),
-        ),
-        backgroundColor: context.colors.primary,
-        onPressed: () {},
       ),
     );
   }

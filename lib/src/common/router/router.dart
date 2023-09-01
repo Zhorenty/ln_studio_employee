@@ -1,13 +1,12 @@
 import 'package:go_router/go_router.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
-import '/src/feature/booking/widget/booking_screen.dart';
 import '/src/feature/settings/widget/settings_screen.dart';
-import '/src/feature/home/widget/home_screen.dart';
+import '../../feature/shedule/widget/shedule_screen.dart';
 
 /// Router of this application.
 final router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/shedule',
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) => CustomBottomNavigationBar(
@@ -17,16 +16,8 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/home',
-              builder: (context, state) => const WardrobeScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/booking',
-              builder: (context, state) => const BookingScreen(),
+              path: '/shedule',
+              builder: (context, state) => const SheduleScreen(),
             ),
           ],
         ),
