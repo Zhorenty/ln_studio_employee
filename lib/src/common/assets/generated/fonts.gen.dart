@@ -10,6 +10,9 @@
 class FontFamily {
   FontFamily._();
 
+  /// Font family: Outfit
+  static const String outfit = 'Outfit';
+
   /// Font family: Playfair
   static const String playfair = 'Playfair';
 }

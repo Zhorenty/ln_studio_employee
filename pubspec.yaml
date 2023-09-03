@@ -43,6 +43,8 @@ dependencies:
   # Local packages
   rest_client:
     path: packages/rest_client
+  dio: ^5.3.2
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   # Testing
@@ -79,6 +81,14 @@ flutter:
         - asset: assets/fonts/PlayfairDisplay-Regular.ttf
           weight: 400
         - asset: assets/fonts/PlayfairDisplay-Bold.ttf
+          weight: 700
+    - family: Outfit
+      fonts:
+        - asset: assets/fonts/Outfit-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Outfit-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Outfit-Bold.ttf
           weight: 700
 
   # Enable generation of localized Strings from arb files.

@@ -1,9 +1,13 @@
+import 'package:ln_employee/src/feature/shedule/data/timetable_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Dependencies container.
 abstract interface class Dependencies {
   /// Shared preferences
   abstract final SharedPreferences sharedPreferences;
+
+  /// Wardrobe repository.
+  abstract final TimetableRepository timetableRepository;
 
   /// Freeze dependencies, so they cannot be modified.
   Dependencies freeze();
@@ -16,11 +20,15 @@ final class Dependencies$Mutable implements Dependencies {
   Dependencies$Mutable();
 
   @override
+  late TimetableRepository timetableRepository;
+
+  @override
   late SharedPreferences sharedPreferences;
 
   @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
+        timetableRepository: timetableRepository,
       );
 }
 
@@ -30,10 +38,14 @@ final class Dependencies$Mutable implements Dependencies {
 final class _Dependencies$Immutable implements Dependencies {
   const _Dependencies$Immutable({
     required this.sharedPreferences,
+    required this.timetableRepository,
   });
 
   @override
   final SharedPreferences sharedPreferences;
+
+  @override
+  final TimetableRepository timetableRepository;
 
   @override
   Dependencies freeze() => this;
