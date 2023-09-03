@@ -19,6 +19,10 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   Future<List<Timetable>> loadTimetables() async {
     final response = await restClient.get('/api/timetable/all');
 
-    return Timetable.fromJson(response);
+    final tables = List.from((response['response'] as Map)['data'] as List)
+        .map((e) => Timetable.fromJson(e))
+        .toList();
+
+    return tables;
   }
 }
