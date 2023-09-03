@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:rest_client/rest_client.dart';
 
 ///
 @immutable
@@ -19,13 +18,19 @@ final class Timetable {
   ///
   final int employeeId;
 
-  factory Timetable.fromDTO(TimetableDTO dto) => Timetable(
-        dateAt: dto.dateAt,
-        salonId: dto.salonId,
-        employeeId: dto.employeeId,
+  factory Timetable.fromJson(Map<String, Object?> json) => Timetable(
+        dateAt: json['date_at']! as List<DateTime>,
+        salonId: json['salon_id']! as int,
+        employeeId: json['employee_id']! as int,
       );
+
+  Map<String, Object?> toJson() => {
+        'dateAt': dateAt,
+        'salonId': salonId,
+        'employee_id': employeeId,
+      };
 
   @override
   String toString() =>
-      'Employee(birthDate: $dateAt, salonId: $salonId, employeeId: $employeeId)';
+      'Employee(dateAt: $dateAt, salonId: $salonId, employeeId: $employeeId)';
 }

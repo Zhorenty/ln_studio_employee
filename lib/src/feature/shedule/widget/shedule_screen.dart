@@ -53,7 +53,9 @@ class SheduleScreen extends StatelessWidget {
           ],
         ),
         // body: const ScheduleScreenTest(),
-        body: const Center(),
+        body: Center(
+          child: Text(state.hasTimetables ? 'Hello' : 'Goodbye'),
+        ),
       ),
     );
   }

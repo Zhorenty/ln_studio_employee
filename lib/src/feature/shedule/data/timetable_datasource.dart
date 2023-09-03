@@ -10,13 +10,15 @@ abstract interface class TimetableDatasource {
 
 ///
 class TimetableDatasourceImpl implements TimetableDatasource {
-  TimetableDatasourceImpl(RestClient client) : _client = client;
+  TimetableDatasourceImpl({required this.restClient});
 
   ///
-  final RestClient _client;
+  final RestClient restClient;
 
   @override
-  Future<List<Timetable>> loadTimetables() => _client.getCategories().then(
-        (list) => list.map(Timetable.fromDTO).toList(),
-      );
+  Future<List<Timetable>> loadTimetables() async {
+    final response = await restClient.get('/api/timetable/all');
+
+    return Timetable.fromJson(response);
+  }
 }

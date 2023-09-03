@@ -24,3 +24,6 @@ clean:
 	flutter clean
 
 	cd packages/rest_client && flutter clean
+
+watch:
+	dart run build_runner watch

@@ -18,8 +18,16 @@ mixin InitializationSteps {
       progress.dependencies.sharedPreferences = sharedPreferences;
     },
     'Profile repository': (progress) async {
+      final restClient = RestClient(
+        Dio(
+          BaseOptions(
+            baseUrl: 'http://31.129.104.75',
+          ),
+        ),
+      );
+
       final TimetableDatasource timetableDatasource = TimetableDatasourceImpl(
-        RestClient(Dio(BaseOptions(baseUrl: $baseUrl))),
+        restClient: restClient,
       );
 
       final profileARepository = TimetableRepositoryImpl(
