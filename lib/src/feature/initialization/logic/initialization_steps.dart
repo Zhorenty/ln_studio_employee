@@ -17,12 +17,10 @@ mixin InitializationSteps {
       final sharedPreferences = await SharedPreferences.getInstance();
       progress.dependencies.sharedPreferences = sharedPreferences;
     },
-    'Profile repository': (progress) async {
+    'Timetable repository & Rest client': (progress) async {
       final restClient = RestClient(
         Dio(
-          BaseOptions(
-            baseUrl: 'http://31.129.104.75',
-          ),
+          BaseOptions(baseUrl: 'http://31.129.104.75'),
         ),
       );
 
