@@ -7,14 +7,14 @@ import '/src/common/utils/extensions/context_extension.dart';
 import '../bloc/timetable_bloc.dart';
 import '../bloc/timetable_state.dart';
 
-class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key});
+class EmployeeTimetables extends StatefulWidget {
+  const EmployeeTimetables({super.key});
 
   @override
-  CalendarScreenState createState() => CalendarScreenState();
+  EmployeeTimetablesState createState() => EmployeeTimetablesState();
 }
 
-class CalendarScreenState extends State<CalendarScreen> {
+class EmployeeTimetablesState extends State<EmployeeTimetables> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimetableBloc, TimetableState>(
