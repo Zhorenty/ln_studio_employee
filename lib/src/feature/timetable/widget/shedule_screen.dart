@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/shedule/bloc/shedule_bloc.dart';
+import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_employee/src/feature/timetable/bloc/timetable_bloc.dart';
+import 'package:ln_employee/src/feature/timetable/widget/worker_widget.dart';
 
-import '../bloc/shedule_state.dart';
+import '../bloc/timetable_state.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 /// {@template shedule_screen}
@@ -14,29 +16,22 @@ class SheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SheduleBloc, SheduleState>(
+    return BlocBuilder<TimetableBloc, TimetableState>(
       builder: (context, state) => Scaffold(
         backgroundColor: context.colors.background,
         appBar: AppBar(
           backgroundColor: context.colors.onBackground,
           title: Align(
             alignment: Alignment.bottomLeft,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 2, top: 8),
-                  child: Text(
-                    'ул. Степана Разина, д. 72',
-                    style: context.fonts.bodyMedium?.copyWith(
-                      color: context.colors.primary,
-                    ),
-                  ),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 2, top: 8),
+              child: Text(
+                'График работы',
+                style: context.fonts.titleLarge?.copyWith(
+                  color: context.colors.primary,
+                  fontFamily: FontFamily.playfair,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 4, top: 8),
-                  child: Icon(Icons.arrow_forward_ios, size: 12),
-                )
-              ],
+              ),
             ),
           ),
           actions: [
@@ -52,10 +47,7 @@ class SheduleScreen extends StatelessWidget {
             ),
           ],
         ),
-        // body: const ScheduleScreenTest(),
-        body: Center(
-          child: Text(state.hasTimetables ? 'Hello' : 'Goodbye'),
-        ),
+        body: const CalendarScreen(),
       ),
     );
   }

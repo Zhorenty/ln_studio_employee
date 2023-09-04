@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '/src/feature/settings/widget/settings_screen.dart';
-import '../../feature/shedule/widget/shedule_screen.dart';
+import '../../feature/timetable/widget/shedule_screen.dart';
 
 /// Router of this application.
 final router = GoRouter(
