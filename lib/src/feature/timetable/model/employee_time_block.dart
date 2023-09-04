@@ -1,25 +1,17 @@
+import 'employee.dart';
 import 'timeblock.dart';
 
 class EmployeeTimeBlock {
-  const EmployeeTimeBlock({
-    required this.employeeId,
-    required this.firstName,
-    required this.lastName,
-    required this.timeTables,
-  });
+  Employee employee;
+  List<Timetable> timetables;
 
-  final int employeeId;
-  final String firstName;
-  final String lastName;
-  final List<Timetable> timeTables;
+  EmployeeTimeBlock({required this.employee, required this.timetables});
 
-  factory EmployeeTimeBlock.fromJson(Map<String, Object?> json) =>
-      EmployeeTimeBlock(
-        employeeId: json['employee_id'] as int,
-        firstName: json['first_name'] as String,
-        lastName: json['second_name'] as String,
-        timeTables: List.from(json['time_tables'] as List)
-            .map((e) => Timetable.fromJson(e))
-            .toList(),
-      );
+  factory EmployeeTimeBlock.fromJson(Map<String, dynamic> json) {
+    return EmployeeTimeBlock(
+      employee: Employee.fromJson(json['employee']),
+      timetables: List<Timetable>.from(
+          json['timetables'].map((x) => Timetable.fromJson(x))),
+    );
+  }
 }
