@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../model/employee_time_block.dart';
 import '/src/common/utils/pattern_match.dart';
-import '/src/feature/timetable/model/timetable.dart';
 
 /// Wardrobe event.
 sealed class TimetableState extends _$TimetableStateBase {
@@ -9,13 +9,13 @@ sealed class TimetableState extends _$TimetableStateBase {
 
   /// Wardrobe is idle.
   const factory TimetableState.idle({
-    List<Timetable> timetables,
+    List<EmployeeTimeBlock> timetables,
     String? error,
   }) = _TimetableState$Idle;
 
   /// Wardrobe is loaded.
   const factory TimetableState.loaded({
-    required List<Timetable> timetables,
+    required List<EmployeeTimeBlock> timetables,
     String? error,
   }) = _TimetableState$Loaded;
 }
@@ -42,7 +42,7 @@ abstract base class _$TimetableStateBase {
   const _$TimetableStateBase({required this.timetables, this.error});
 
   @nonVirtual
-  final List<Timetable> timetables;
+  final List<EmployeeTimeBlock> timetables;
 
   @nonVirtual
   final String? error;

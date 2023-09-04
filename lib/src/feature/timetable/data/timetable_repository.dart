@@ -1,11 +1,10 @@
-import 'package:ln_employee/src/feature/timetable/model/timetable.dart';
-
+import '../model/employee_time_block.dart';
 import 'timetable_datasource.dart';
 
 ///
 abstract interface class TimetableRepository {
   ///
-  Future<List<Timetable>> getTimetables();
+  Future<List<EmployeeTimeBlock>> getTimetables();
 }
 
 ///
@@ -16,5 +15,6 @@ final class TimetableRepositoryImpl implements TimetableRepository {
   final TimetableDatasource dataSource;
 
   @override
-  Future<List<Timetable>> getTimetables() async => dataSource.loadTimetables();
+  Future<List<EmployeeTimeBlock>> getTimetables() async =>
+      dataSource.loadTimetables();
 }

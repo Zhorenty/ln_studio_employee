@@ -1,25 +1,18 @@
-import 'package:ln_employee/src/feature/timetable/model/timetable.dart';
+import 'employee.dart';
+import 'timeblock.dart';
 
 class EmployeeTimeBlock {
-  const EmployeeTimeBlock({
-    required this.employeeId,
-    required this.firstName,
-    required this.lastName,
-    required this.timeTables,
-  });
+  final Employee employee;
+  final List<TimeBlock> timetables;
 
-  final int employeeId;
-  final String firstName;
-  final String lastName;
-  final List<Timetable> timeTables;
+  EmployeeTimeBlock({required this.employee, required this.timetables});
 
-  factory EmployeeTimeBlock.fromJson(Map<String, Object?> json) =>
-      EmployeeTimeBlock(
-        employeeId: json['employee_id'] as int,
-        firstName: json['first_name'] as String,
-        lastName: json['second_name'] as String,
-        timeTables: List.from(json['time_tables'] as List)
-            .map((e) => Timetable.fromJson(e))
-            .toList(),
-      );
+  factory EmployeeTimeBlock.fromJson(Map<String, dynamic> json) {
+    return EmployeeTimeBlock(
+      employee: Employee.fromJson(json['employee']),
+      timetables: (json['timetables'] as List<dynamic>)
+          .map((e) => TimeBlock.fromJson(e))
+          .toList(),
+    );
+  }
 }

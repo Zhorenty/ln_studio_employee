@@ -52,13 +52,7 @@ class SheduleScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(state.hasTimetables ? 'Hello' : 'Goodbye'),
-            Text(state.timetables[1].employeeId.toString())
-          ],
-        ),
+        body: Center(child: Text(state.hasTimetables ? 'Hello' : 'Goodbye')),
       ),
     );
   }

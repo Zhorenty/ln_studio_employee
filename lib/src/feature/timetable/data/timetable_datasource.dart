@@ -1,11 +1,11 @@
 import 'package:rest_client/rest_client.dart';
 
-import '../model/timetable.dart';
+import '../model/employee_time_block.dart';
 
 ///
 abstract interface class TimetableDatasource {
   ///
-  Future<List<Timetable>> loadTimetables();
+  Future<List<EmployeeTimeBlock>> loadTimetables();
 }
 
 ///
@@ -16,13 +16,13 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   final RestClient restClient;
 
   @override
-  Future<List<Timetable>> loadTimetables() async {
-    final response = await restClient.get('/api/timetable/all');
+  Future<List<EmployeeTimeBlock>> loadTimetables() async {
+    final response = await restClient.get('/api/timetable/timeblocks');
 
-    final tables = List.from((response['response'] as Map)['data'] as List)
-        .map((e) => Timetable.fromJson(e))
+    final timeBlocks = (response as List<dynamic>)
+        .map((e) => EmployeeTimeBlock.fromJson(e))
         .toList();
 
-    return tables;
+    return timeBlocks;
   }
 }
