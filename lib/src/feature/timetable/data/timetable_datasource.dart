@@ -8,9 +8,9 @@ abstract interface class TimetableDatasource {
   ///
   Future<List<EmployeeTimetable>> fetchEmployeesTimetables();
 
-  Future<void> fillTimeBlocks(List<FillTimeBlocks> fillTimeBlocks);
+  Future<void> fillTimetables(List<FillTimetable> fillTimetables);
 
-  Future<void> deleteTimeBlocks(List<TimetableItem> timetableItems);
+  Future<void> deleteTimetableItems(List<TimetableItem> timetableItems);
 }
 
 ///
@@ -33,11 +33,11 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   }
 
   @override
-  Future<void> fillTimeBlocks(List<FillTimeBlocks> fillTimeBlocks) async {
+  Future<void> fillTimetables(List<FillTimetable> fillTimetables) async {
     await restClient.post(
-      '/api/employee/create',
+      '/api/timetable/fill_timeblocks',
       body: {
-        'data': fillTimeBlocks
+        'data': fillTimetables
             .map(
               (e) => e.toJson(),
             )
@@ -47,7 +47,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   }
 
   @override
-  Future<void> deleteTimeBlocks(List<TimetableItem> timetableItems) async {
+  Future<void> deleteTimetableItems(List<TimetableItem> timetableItems) async {
     await restClient.post(
       '/api/timetable/delete_timeblocks',
       body: {

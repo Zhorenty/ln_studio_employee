@@ -1,22 +1,22 @@
-import 'timetable_item.dart';
+import 'package:intl/intl.dart';
 
-class FillTimeBlocks {
-  const FillTimeBlocks({
+class FillTimetable {
+  const FillTimetable({
     required this.employeeId,
     required this.salonId,
-    required this.timetableItems,
+    required this.dates,
   });
 
   final int employeeId;
   final int salonId;
-  final List<TimetableItem> timetableItems;
+  final List<DateTime> dates;
 
   Map<String, Object?> toJson() => {
         'employee_id': employeeId,
         'salon_id': salonId,
-        'time_tables': timetableItems
+        'dates': dates
             .map(
-              (e) => e.dateAt.toIso8601String(),
+              (date) => DateFormat('yyyy-MM-dd').format(date),
             )
             .toList(),
       };

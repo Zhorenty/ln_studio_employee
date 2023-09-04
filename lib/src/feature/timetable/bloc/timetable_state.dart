@@ -6,19 +6,19 @@ import '/src/common/utils/pattern_match.dart';
 /// Wardrobe event.
 sealed class TimetableState extends _$TimetableStateBase {
   const TimetableState._({
-    required super.timetables,
+    required super.employeeTimetable,
     super.error,
   });
 
   /// Wardrobe is idle.
   const factory TimetableState.idle({
-    List<EmployeeTimetable> timetables,
+    List<EmployeeTimetable> employeeTimetable,
     String? error,
   }) = _TimetableState$Idle;
 
   /// Wardrobe is loaded.
   const factory TimetableState.loaded({
-    required List<EmployeeTimetable> timetables,
+    required List<EmployeeTimetable> employeeTimetable,
     String? error,
   }) = _TimetableState$Loaded;
 }
@@ -26,7 +26,7 @@ sealed class TimetableState extends _$TimetableStateBase {
 /// [TimetableState.idle] state matcher.
 final class _TimetableState$Idle extends TimetableState {
   const _TimetableState$Idle({
-    super.timetables = const [],
+    super.employeeTimetable = const [],
     super.error,
   }) : super._();
 }
@@ -34,7 +34,7 @@ final class _TimetableState$Idle extends TimetableState {
 /// [TimetableState.loaded] state matcher.
 final class _TimetableState$Loaded extends TimetableState {
   const _TimetableState$Loaded({
-    required super.timetables,
+    required super.employeeTimetable,
     super.error,
   }) : super._();
 }
@@ -42,10 +42,10 @@ final class _TimetableState$Loaded extends TimetableState {
 /// Wardrobe state base class.
 @immutable
 abstract base class _$TimetableStateBase {
-  const _$TimetableStateBase({required this.timetables, this.error});
+  const _$TimetableStateBase({required this.employeeTimetable, this.error});
 
   @nonVirtual
-  final List<EmployeeTimetable> timetables;
+  final List<EmployeeTimetable> employeeTimetable;
 
   @nonVirtual
   final String? error;
@@ -54,7 +54,7 @@ abstract base class _$TimetableStateBase {
   bool get hasError => error != null;
 
   /// Indicator whether timetables is not empty.
-  bool get hasTimetables => timetables.isNotEmpty;
+  bool get hasTimetables => employeeTimetable.isNotEmpty;
 
   /// Indicator whether state is already loaded.
   bool get isLoaded => maybeMap(
@@ -91,11 +91,12 @@ abstract base class _$TimetableStateBase {
       );
 
   @override
-  String toString() => 'TimetableState(Wardrobe: $timetables, error: $error)';
+  String toString() =>
+      'TimetableState(Wardrobe: $employeeTimetable, error: $error)';
 
   @override
   bool operator ==(Object other) => identical(this, other);
 
   @override
-  int get hashCode => Object.hash(timetables, error);
+  int get hashCode => Object.hash(employeeTimetable, error);
 }
