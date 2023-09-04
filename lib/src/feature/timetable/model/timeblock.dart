@@ -1,15 +1,15 @@
 class Timetable {
-  final int id;
-  final DateTime dateAt;
-  final dynamic salary;
-  final bool onWork;
-
   Timetable({
     required this.id,
     required this.dateAt,
     required this.salary,
     required this.onWork,
   });
+
+  final int id;
+  final DateTime dateAt;
+  final dynamic salary;
+  final bool onWork;
 
   factory Timetable.fromJson(Map<String, dynamic> json) {
     return Timetable(

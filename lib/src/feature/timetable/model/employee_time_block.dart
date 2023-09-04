@@ -11,7 +11,8 @@ class EmployeeTimeBlock {
     return EmployeeTimeBlock(
       employee: Employee.fromJson(json['employee']),
       timetables: List<Timetable>.from(
-          json['timetables'].map((x) => Timetable.fromJson(x))),
+        json['timetables'].map((e) => Timetable.fromJson(e)),
+      ),
     );
   }
 }
