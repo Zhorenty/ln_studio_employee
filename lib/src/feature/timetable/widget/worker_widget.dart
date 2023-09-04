@@ -29,14 +29,11 @@ class CalendarScreenState extends State<CalendarScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
+                  padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
                   child: Text(
                     '${employee.firstName} ${employee.lastName}',
                     style: context.fonts.headlineSmall!.copyWith(
-                      fontFamily: FontFamily.outfit,
+                      fontFamily: FontFamily.geologica,
                     ),
                   ),
                 ),
@@ -45,7 +42,7 @@ class CalendarScreenState extends State<CalendarScreen> {
                     left: 8,
                     right: 8,
                     bottom: 8,
-                    top: 2,
+                    top: 0,
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
@@ -65,29 +62,54 @@ class CalendarScreenState extends State<CalendarScreen> {
                             timetable.dateAt.day == day.day,
                       );
                     },
-                    onDaySelected: (selectedDay, focusedDay) {},
-                    onFormatChanged: (format) {},
+                    onDaySelected: (selectedDay, focusedDay) {
+                      print('ЭРИК КОЛЛБЭК ТУТ');
+                    },
+                    headerStyle: HeaderStyle(
+                      titleCentered: true,
+                      titleTextStyle: context.fonts.bodyLarge!.copyWith(
+                        fontFamily: FontFamily.geologica,
+                      ),
+                      formatButtonVisible: false,
+                    ),
                     calendarStyle: CalendarStyle(
                       cellMargin: const EdgeInsets.symmetric(
                         horizontal: 8,
                         vertical: 5,
                       ),
                       todayTextStyle: context.fonts.titleSmall!.copyWith(
-                        fontFamily: FontFamily.outfit,
+                        fontFamily: FontFamily.geologica,
                         fontWeight: FontWeight.bold,
                       ),
                       selectedTextStyle: context.fonts.titleSmall!.copyWith(
-                        fontFamily: FontFamily.outfit,
+                        fontFamily: FontFamily.geologica,
                         fontWeight: FontWeight.bold,
                       ),
                       defaultTextStyle: context.fonts.titleSmall!.copyWith(
-                        fontFamily: FontFamily.outfit,
+                        fontFamily: FontFamily.geologica,
                         fontWeight: FontWeight.bold,
                       ),
+                      holidayTextStyle: context.fonts.titleSmall!.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      weekendTextStyle: context.fonts.titleSmall!.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: Colors.grey,
+                      ),
+                      outsideTextStyle: context.fonts.titleSmall!.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: Colors.grey,
+                      ),
+
                       selectedDecoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: const Color(0xFFEEAAFF).withOpacity(.5),
                       ),
+                      // todayDecoration: BoxDecoration(
+                      //   borderRadius: BorderRadius.circular(10),
+                      //   color: const Color(0xFFEEAAFF).withOpacity(.5),
+                      // ),
                     ),
                   ),
                 ),
