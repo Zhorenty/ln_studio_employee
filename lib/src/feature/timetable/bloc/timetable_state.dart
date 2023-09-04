@@ -1,39 +1,36 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/pattern_match.dart';
-import '/src/feature/shedule/model/timetable.dart';
+import '/src/feature/timetable/model/timetable.dart';
 
 /// Wardrobe event.
-sealed class SheduleState extends _$SheduleStateBase {
-  const SheduleState._({
-    required super.timetables,
-    super.error,
-  });
+sealed class TimetableState extends _$TimetableStateBase {
+  const TimetableState._({required super.timetables, super.error});
 
   /// Wardrobe is idle.
-  const factory SheduleState.idle({
+  const factory TimetableState.idle({
     List<Timetable> timetables,
     String? error,
-  }) = _SheduleState$Idle;
+  }) = _TimetableState$Idle;
 
   /// Wardrobe is loaded.
-  const factory SheduleState.loaded({
+  const factory TimetableState.loaded({
     required List<Timetable> timetables,
     String? error,
-  }) = _SheduleState$Loaded;
+  }) = _TimetableState$Loaded;
 }
 
-/// [SheduleState.idle] state matcher.
-final class _SheduleState$Idle extends SheduleState {
-  const _SheduleState$Idle({
+/// [TimetableState.idle] state matcher.
+final class _TimetableState$Idle extends TimetableState {
+  const _TimetableState$Idle({
     super.timetables = const [],
     super.error,
   }) : super._();
 }
 
-/// [SheduleState.loaded] state matcher.
-final class _SheduleState$Loaded extends SheduleState {
-  const _SheduleState$Loaded({
+/// [TimetableState.loaded] state matcher.
+final class _TimetableState$Loaded extends TimetableState {
+  const _TimetableState$Loaded({
     required super.timetables,
     super.error,
   }) : super._();
@@ -41,8 +38,8 @@ final class _SheduleState$Loaded extends SheduleState {
 
 /// Wardrobe state base class.
 @immutable
-abstract base class _$SheduleStateBase {
-  const _$SheduleStateBase({required this.timetables, this.error});
+abstract base class _$TimetableStateBase {
+  const _$TimetableStateBase({required this.timetables, this.error});
 
   @nonVirtual
   final List<Timetable> timetables;
@@ -70,20 +67,20 @@ abstract base class _$SheduleStateBase {
 
   /// Map over state union.
   R map<R>({
-    required PatternMatch<R, _SheduleState$Idle> idle,
-    required PatternMatch<R, _SheduleState$Loaded> loaded,
+    required PatternMatch<R, _TimetableState$Idle> idle,
+    required PatternMatch<R, _TimetableState$Loaded> loaded,
   }) =>
       switch (this) {
-        final _SheduleState$Idle idleState => idle(idleState),
-        final _SheduleState$Loaded loadedState => loaded(loadedState),
+        final _TimetableState$Idle idleState => idle(idleState),
+        final _TimetableState$Loaded loadedState => loaded(loadedState),
         _ => throw UnsupportedError('Unsupported state: $this'),
       };
 
   /// Map over state union or return default if no match.
   R maybeMap<R>({
     required R Function() orElse,
-    PatternMatch<R, _SheduleState$Idle>? idle,
-    PatternMatch<R, _SheduleState$Loaded>? loaded,
+    PatternMatch<R, _TimetableState$Idle>? idle,
+    PatternMatch<R, _TimetableState$Loaded>? loaded,
   }) =>
       map(
         idle: idle ?? (_) => orElse(),
@@ -91,7 +88,7 @@ abstract base class _$SheduleStateBase {
       );
 
   @override
-  String toString() => 'SheduleState(Wardrobe: $timetables, error: $error)';
+  String toString() => 'TimetableState(Wardrobe: $timetables, error: $error)';
 
   @override
   bool operator ==(Object other) => identical(this, other);

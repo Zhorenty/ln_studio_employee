@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/shedule/bloc/shedule_bloc.dart';
+import 'package:ln_employee/src/feature/timetable/bloc/timetable_bloc.dart';
 
-import '../bloc/shedule_state.dart';
+import '../bloc/timetable_state.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 /// {@template shedule_screen}
@@ -14,7 +14,7 @@ class SheduleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SheduleBloc, SheduleState>(
+    return BlocBuilder<TimetableBloc, TimetableState>(
       builder: (context, state) => Scaffold(
         backgroundColor: context.colors.background,
         appBar: AppBar(
@@ -52,9 +52,12 @@ class SheduleScreen extends StatelessWidget {
             ),
           ],
         ),
-        // body: const ScheduleScreenTest(),
-        body: Center(
-          child: Text(state.hasTimetables ? 'Hello' : 'Goodbye'),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(state.hasTimetables ? 'Hello' : 'Goodbye'),
+            Text(state.timetables[1].employeeId.toString())
+          ],
         ),
       ),
     );

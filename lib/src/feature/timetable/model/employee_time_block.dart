@@ -1,4 +1,4 @@
-import 'package:ln_employee/src/feature/shedule/model/timetable.dart';
+import 'package:ln_employee/src/feature/timetable/model/timetable.dart';
 
 class EmployeeTimeBlock {
   const EmployeeTimeBlock({
