@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetable_bloc.dart';
+import 'package:ln_employee/src/feature/timetable/widget/worker_widget.dart';
 
 import '../bloc/timetable_state.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -52,7 +53,7 @@ class SheduleScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: Center(child: Text(state.hasTimetables ? 'Hello' : 'Goodbye')),
+        body: const CalendarScreen(),
       ),
     );
   }

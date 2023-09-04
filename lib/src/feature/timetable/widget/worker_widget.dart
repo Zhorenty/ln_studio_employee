@@ -1,124 +1,101 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '../bloc/timetable_bloc.dart';
+import '../bloc/timetable_state.dart';
 
-final List<Worker> workers = [
-  Worker(
-    employeeId: 1,
-    salonId: 2,
-    workingDates: [
-      DateTime.now(),
-      DateTime.now().add(const Duration(days: 2)),
-      DateTime.now().add(const Duration(days: 4)),
-    ],
-  ),
-  Worker(
-    employeeId: 2,
-    salonId: 2,
-    workingDates: [
-      DateTime.now(),
-      DateTime.now().add(const Duration(days: 26)),
-      DateTime.now().add(const Duration(days: 28)),
-    ],
-  ),
-  Worker(
-    employeeId: 3,
-    salonId: 2,
-    workingDates: [
-      DateTime.now(),
-      DateTime.now().add(const Duration(days: 18)),
-      DateTime.now().add(const Duration(days: 20)),
-    ],
-  ),
-];
-
-class Worker {
-  final int employeeId;
-  final int salonId;
-  final List<DateTime> workingDates;
-
-  Worker({
-    required this.employeeId,
-    required this.salonId,
-    required this.workingDates,
-  });
-}
-
-class ScheduleScreen extends StatelessWidget {
-  const ScheduleScreen({super.key});
+class CalendarScreen extends StatefulWidget {
+  const CalendarScreen({super.key});
 
   @override
+  CalendarScreenState createState() => CalendarScreenState();
+}
+
+class CalendarScreenState extends State<CalendarScreen> {
+  @override
   Widget build(BuildContext context) {
-    List<DateTime> selectedDates = [];
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.onBackground,
-        title: const Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'График работы',
-            style: TextStyle(
-              fontFamily: 'Playfair',
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        actions: [
-          Text(
-            'Выбранные даты: ${selectedDates.join(', ')}',
-          )
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: workers.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
+    return BlocBuilder<TimetableBloc, TimetableState>(
+      builder: (context, state) => Scaffold(
+        backgroundColor: context.colors.background,
+        body: ListView.builder(
+          itemCount: state.timetables.length,
+          itemBuilder: (context, index) {
+            final employee = state.timetables[index].employee;
+
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Employee ${workers[index].employeeId}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Outfit',
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    '${employee.firstName} ${employee.lastName}',
+                    style: context.fonts.headlineSmall!.copyWith(
+                      fontFamily: FontFamily.outfit,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  margin: const EdgeInsets.only(
+                    left: 8,
+                    right: 8,
+                    bottom: 8,
+                    top: 2,
+                  ),
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),
                     color: context.colors.onBackground,
                   ),
                   child: TableCalendar(
+                    locale: 'ru_RU',
                     firstDay: DateTime.now().subtract(const Duration(days: 30)),
                     lastDay: DateTime.now().add(const Duration(days: 30)),
+                    focusedDay: DateTime.now(),
                     calendarFormat: CalendarFormat.month,
-                    focusedDay: DateTime.now().add(const Duration(days: 1)),
                     selectedDayPredicate: (day) {
-                      final workerDates = workers[index].workingDates;
-                      return workerDates.any(
-                        (date) =>
-                            date.year == day.year &&
-                            date.month == day.month &&
-                            date.day == day.day,
+                      return state.timetables[index].timetables.any(
+                        (timetable) =>
+                            timetable.dateAt.year == day.year &&
+                            timetable.dateAt.month == day.month &&
+                            timetable.dateAt.day == day.day,
                       );
                     },
                     onDaySelected: (selectedDay, focusedDay) {},
+                    onFormatChanged: (format) {},
                     calendarStyle: CalendarStyle(
+                      cellMargin: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 5,
+                      ),
+                      todayTextStyle: context.fonts.titleSmall!.copyWith(
+                        fontFamily: FontFamily.outfit,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      selectedTextStyle: context.fonts.titleSmall!.copyWith(
+                        fontFamily: FontFamily.outfit,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      defaultTextStyle: context.fonts.titleSmall!.copyWith(
+                        fontFamily: FontFamily.outfit,
+                        fontWeight: FontWeight.bold,
+                      ),
                       selectedDecoration: BoxDecoration(
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(10),
                         color: const Color(0xFFEEAAFF).withOpacity(.5),
                       ),
                     ),
                   ),
                 ),
+                Divider(color: context.colors.onBackground)
               ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
