@@ -1,25 +1,20 @@
-import 'package:ln_employee/src/feature/shedule/model/timetable.dart';
+import 'package:ln_employee/src/feature/shedule/model/employee.dart';
+import 'package:ln_employee/src/feature/shedule/model/timetable_item.dart';
 
-class EmployeeTimeBlock {
-  const EmployeeTimeBlock({
-    required this.employeeId,
-    required this.firstName,
-    required this.lastName,
-    required this.timeTables,
+class EmployeeTimetable {
+  const EmployeeTimetable({
+    required this.employee,
+    required this.timetableItems,
   });
 
-  final int employeeId;
-  final String firstName;
-  final String lastName;
-  final List<Timetable> timeTables;
+  final Employee employee;
+  final List<TimetableItem> timetableItems;
 
-  factory EmployeeTimeBlock.fromJson(Map<String, Object?> json) =>
-      EmployeeTimeBlock(
-        employeeId: json['employee_id'] as int,
-        firstName: json['first_name'] as String,
-        lastName: json['second_name'] as String,
-        timeTables: List.from(json['time_tables'] as List)
-            .map((e) => Timetable.fromJson(e))
+  factory EmployeeTimetable.fromJson(Map<String, Object?> json) =>
+      EmployeeTimetable(
+        employee: Employee.fromJson(json['employee'] as Map<String, dynamic>),
+        timetableItems: List.from(json['timetables'] as List)
+            .map((e) => TimetableItem.fromJson(e))
             .toList(),
       );
 }

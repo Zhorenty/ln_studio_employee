@@ -1,11 +1,11 @@
-import 'package:ln_employee/src/feature/shedule/model/timetable.dart';
+import 'package:ln_employee/src/feature/shedule/model/employee_time_block.dart';
 
 import 'timetable_datasource.dart';
 
 ///
 abstract interface class TimetableRepository {
   ///
-  Future<List<Timetable>> getTimetables();
+  Future<List<EmployeeTimetable>> fetchEmployeesTimetables();
 }
 
 ///
@@ -16,5 +16,6 @@ final class TimetableRepositoryImpl implements TimetableRepository {
   final TimetableDatasource dataSource;
 
   @override
-  Future<List<Timetable>> getTimetables() async => dataSource.loadTimetables();
+  Future<List<EmployeeTimetable>> fetchEmployeesTimetables() =>
+      dataSource.fetchEmployeesTimetables();
 }

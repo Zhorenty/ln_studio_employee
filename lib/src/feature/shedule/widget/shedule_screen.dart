@@ -4,6 +4,7 @@ import 'package:ln_employee/src/feature/shedule/bloc/shedule_bloc.dart';
 
 import '../bloc/shedule_state.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import 'woker_test.dart';
 
 /// {@template shedule_screen}
 /// Shedule screen.
@@ -52,10 +53,10 @@ class SheduleScreen extends StatelessWidget {
             ),
           ],
         ),
-        // body: const ScheduleScreenTest(),
-        body: Center(
-          child: Text(state.hasTimetables ? 'Hello' : 'Goodbye'),
-        ),
+        body: const ScheduleScreenTest(),
+        // body: Center(
+        //   child: Text(state.hasTimetables ? 'Hello' : 'Goodbye'),
+        // ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:ln_employee/src/feature/shedule/model/employee_time_block.dart';
 
 import '/src/common/utils/pattern_match.dart';
-import '/src/feature/shedule/model/timetable.dart';
 
 /// Wardrobe event.
 sealed class SheduleState extends _$SheduleStateBase {
@@ -12,13 +12,13 @@ sealed class SheduleState extends _$SheduleStateBase {
 
   /// Wardrobe is idle.
   const factory SheduleState.idle({
-    List<Timetable> timetables,
+    List<EmployeeTimetable> timetables,
     String? error,
   }) = _SheduleState$Idle;
 
   /// Wardrobe is loaded.
   const factory SheduleState.loaded({
-    required List<Timetable> timetables,
+    required List<EmployeeTimetable> timetables,
     String? error,
   }) = _SheduleState$Loaded;
 }
@@ -45,7 +45,7 @@ abstract base class _$SheduleStateBase {
   const _$SheduleStateBase({required this.timetables, this.error});
 
   @nonVirtual
-  final List<Timetable> timetables;
+  final List<EmployeeTimetable> timetables;
 
   @nonVirtual
   final String? error;

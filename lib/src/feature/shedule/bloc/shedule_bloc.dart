@@ -19,7 +19,7 @@ class SheduleBloc extends Bloc<SheduleEvent, SheduleState> {
   Future<void> _load(
       SheduleEvent$Fetch event, Emitter<SheduleState> emit) async {
     try {
-      final timetables = await timetableRepository.getTimetables();
+      final timetables = await timetableRepository.fetchEmployeesTimetables();
       return emit(
         SheduleState.loaded(timetables: timetables),
       );
