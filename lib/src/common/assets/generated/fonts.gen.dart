@@ -15,4 +15,7 @@ class FontFamily {
 
   /// Font family: Playfair
   static const String playfair = 'Playfair';
+
+  /// Font family: Geologica
+  static const String geologica = 'Geologica';
 }

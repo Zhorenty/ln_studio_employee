@@ -1,5 +1,5 @@
-import 'package:ln_employee/src/feature/shedule/model/employee.dart';
-import 'package:ln_employee/src/feature/shedule/model/timetable_item.dart';
+import 'employee.dart';
+import 'timetable_item.dart';
 
 class EmployeeTimetable {
   const EmployeeTimetable({

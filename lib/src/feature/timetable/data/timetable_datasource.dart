@@ -1,8 +1,7 @@
-import 'package:ln_employee/src/feature/shedule/model/employee_time_block.dart';
+import 'package:ln_employee/src/feature/timetable/model/employee_timetable.dart';
+import 'package:ln_employee/src/feature/timetable/model/fill_time_blocks.dart';
+import 'package:ln_employee/src/feature/timetable/model/timetable_item.dart';
 import 'package:rest_client/rest_client.dart';
-
-import '../model/fill_time_blocks.dart';
-import '../model/timetable_item.dart';
 
 ///
 abstract interface class TimetableDatasource {

@@ -1,4 +1,4 @@
-import 'package:ln_employee/src/feature/shedule/model/employee_time_block.dart';
+import 'package:ln_employee/src/feature/timetable/model/employee_timetable.dart';
 
 import 'timetable_datasource.dart';
 

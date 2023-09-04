@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:ln_employee/src/feature/shedule/data/timetable_datasource.dart';
-import 'package:ln_employee/src/feature/shedule/data/timetable_repository.dart';
+import 'package:ln_employee/src/feature/timetable/data/timetable_datasource.dart';
+import 'package:ln_employee/src/feature/timetable/data/timetable_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

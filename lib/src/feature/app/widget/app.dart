@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/router/app_router_scope.dart';
-import '../../shedule/bloc/shedule_bloc.dart';
-import '../../shedule/bloc/shedule_event.dart';
+import '../../timetable/bloc/timetable_bloc.dart';
+import '../../timetable/bloc/timetable_event.dart';
 import '/src/common/widget/scope_widgets.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/initialization/model/dependencies.dart';
@@ -25,9 +25,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => SheduleBloc(
+            create: (context) => TimetableBloc(
               timetableRepository: result.dependencies.timetableRepository,
-            )..add(const SheduleEvent.fetch()),
+            )..add(const TimetableEvent.fetch()),
           )
         ],
         child: ScopesProvider(
