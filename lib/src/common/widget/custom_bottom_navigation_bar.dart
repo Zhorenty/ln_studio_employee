@@ -19,22 +19,24 @@ class CustomBottomNavigationBar extends StatelessWidget {
         onTap: navigationShell.goBranch,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        backgroundColor: context.colors.onBackground,
+        backgroundColor: context.colorScheme.onBackground,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_rounded, color: context.colors.primary),
+            icon:
+                Icon(Icons.receipt_rounded, color: context.colorScheme.primary),
             activeIcon: CircleAvatar(
               radius: 20,
-              backgroundColor: context.colors.primary,
+              backgroundColor: context.colorScheme.primary,
               child: const Icon(Icons.receipt_rounded, color: Colors.black87),
             ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings_rounded, color: context.colors.primary),
+            icon: Icon(Icons.settings_rounded,
+                color: context.colorScheme.primary),
             activeIcon: CircleAvatar(
               radius: 20,
-              backgroundColor: context.colors.primary,
+              backgroundColor: context.colorScheme.primary,
               child: const Icon(Icons.settings, color: Colors.black87),
             ),
             label: '',

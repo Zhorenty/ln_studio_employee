@@ -30,13 +30,11 @@ class _TimetableScreenState extends State<TimetableScreen> {
       builder: (context, state) => CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: context.colors.onBackground,
-            surfaceTintColor: Colors.white,
             centerTitle: false,
             title: Text(
               'График работы',
-              style: context.fonts.titleLarge!.copyWith(
-                color: context.colors.primary,
+              style: context.textTheme.titleLarge!.copyWith(
+                color: context.colorScheme.primary,
                 fontFamily: FontFamily.geologica,
               ),
             ),
@@ -71,7 +69,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                     ),
                     child: Text(
                       '${employee.firstName} ${employee.lastName}',
-                      style: context.fonts.headlineSmall!.copyWith(
+                      style: context.textTheme.headlineSmall!.copyWith(
                         fontFamily: FontFamily.geologica,
                       ),
                     ),
@@ -80,7 +78,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                     margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: context.colors.onBackground,
+                      color: context.colorScheme.onBackground,
                     ),
                     child: _CustomTableCalendar(
                       focusedDay: _focusedDays[index],
@@ -108,7 +106,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                       },
                     ),
                   ),
-                  Divider(color: context.colors.onBackground)
+                  const Divider()
                 ],
               );
             },
@@ -162,35 +160,35 @@ class _CustomTableCalendar extends StatelessWidget {
       headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,
-        titleTextStyle: context.fonts.bodyLarge!.copyWith(
+        titleTextStyle: context.textTheme.bodyLarge!.copyWith(
           fontFamily: FontFamily.geologica,
         ),
       ),
       calendarStyle: CalendarStyle(
         cellMargin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        todayTextStyle: context.fonts.titleSmall!.copyWith(
+        todayTextStyle: context.textTheme.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
-          color: context.colors.onBackground,
+          color: context.colorScheme.onBackground,
         ),
-        selectedTextStyle: context.fonts.titleSmall!.copyWith(
+        selectedTextStyle: context.textTheme.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
-          color: context.colors.background,
+          color: context.colorScheme.background,
         ),
-        defaultTextStyle: context.fonts.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
-          fontWeight: FontWeight.bold,
-        ),
-        holidayTextStyle: context.fonts.titleSmall!.copyWith(
+        defaultTextStyle: context.textTheme.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
         ),
-        weekendTextStyle: context.fonts.titleSmall!.copyWith(
+        holidayTextStyle: context.textTheme.titleSmall!.copyWith(
+          fontFamily: FontFamily.geologica,
+          fontWeight: FontWeight.bold,
+        ),
+        weekendTextStyle: context.textTheme.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
           color: Colors.grey,
         ),
-        outsideTextStyle: context.fonts.titleSmall!.copyWith(
+        outsideTextStyle: context.textTheme.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
           color: Colors.grey,
         ),
@@ -217,11 +215,11 @@ class _CustomTableCalendar extends StatelessWidget {
         selectedDecoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: context.colors.primary,
+          color: context.colorScheme.primary,
         ),
         todayDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: context.colors.secondary,
+          color: context.colorScheme.secondary,
         ),
       ),
     );

@@ -9,15 +9,14 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: context.colors.onBackground,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: CircleAvatar(
-              backgroundColor: context.colors.primary,
+              backgroundColor: context.colorScheme.primary,
               child: Icon(
                 Icons.person,
-                color: context.colors.onBackground,
+                color: context.colorScheme.onBackground,
               ),
             ),
           ),

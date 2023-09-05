@@ -16,7 +16,7 @@ class SalonChoiceWidget extends StatelessWidget {
           builder: (BuildContext context) {
             return Container(
               decoration: BoxDecoration(
-                color: context.colors.onBackground,
+                color: context.colorScheme.onBackground,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0),
@@ -50,7 +50,7 @@ class SalonChoiceWidget extends StatelessWidget {
         height: 50,
         width: 300,
         decoration: BoxDecoration(
-          color: context.colors.primary,
+          color: context.colorScheme.primary,
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
@@ -58,15 +58,15 @@ class SalonChoiceWidget extends StatelessWidget {
           children: [
             Text(
               'ул. Степана Разина, д. 72',
-              style: context.fonts.titleMedium!.copyWith(
+              style: context.textTheme.titleMedium!.copyWith(
                 fontSize: 17,
-                color: context.colors.onBackground,
+                color: context.colorScheme.onBackground,
                 fontFamily: FontFamily.geologica,
               ),
             ),
             Icon(
               Icons.arrow_forward_ios,
-              color: context.colors.onBackground,
+              color: context.colorScheme.onBackground,
               size: 18,
             ),
           ],

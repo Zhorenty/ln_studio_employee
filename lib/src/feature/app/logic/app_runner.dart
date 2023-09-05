@@ -24,7 +24,7 @@ class AppRunner with InitializationSteps, InitializationProcessor {
     Bloc.observer = AppBlocObserver();
     Bloc.transformer = sequential();
 
-    /// TODO(zhorenty): Remove after splash is approved
+    /// Uncomment if you need to check splash screen.
     /// Splash screen test
     // Future initialization(BuildContext ctx) async =>
     //     await Future.delayed(const Duration(seconds: 5));

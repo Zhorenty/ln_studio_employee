@@ -13,16 +13,16 @@ abstract interface class TimetableRepository {
 
 /// Implementation of the timetable repository.
 final class TimetableRepositoryImpl implements TimetableRepository {
-  TimetableRepositoryImpl({required this.dataSource});
+  TimetableRepositoryImpl(this._dataSource);
 
   /// Timetable data source.
-  final TimetableDatasource dataSource;
+  final TimetableDatasource _dataSource;
 
   @override
   Future<List<EmployeeTimetable>> getEmployeesTimetables() =>
-      dataSource.fetchEmployeesTimetables();
+      _dataSource.fetchEmployeesTimetables();
 
   @override
   Future<void> fillTimetable(FillTimetable fillTimetables) =>
-      dataSource.fillTimetable(fillTimetables);
+      _dataSource.fillTimetable(fillTimetables);
 }

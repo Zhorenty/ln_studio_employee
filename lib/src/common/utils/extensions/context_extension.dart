@@ -8,8 +8,8 @@ extension BuildContextX on BuildContext {
       AppLocalization.stringOf<GeneratedLocalization>(this);
 
   /// Returns [ColorScheme] from [BuildContext]
-  ColorScheme get colors => Theme.of(this).colorScheme;
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
 
   /// Returns [TextTheme] from [BuildContext].
-  TextTheme get fonts => Theme.of(this).textTheme;
+  TextTheme get textTheme => Theme.of(this).textTheme;
 }
