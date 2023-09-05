@@ -35,12 +35,12 @@ abstract base class _$TimetableEventBase {
   /// Map over state union.
   R map<R>({
     required PatternMatch<R, TimetableEvent$Fetch> fetch,
-    required PatternMatch<R, TimetableEvent$FillTimetables> fillTimetables,
+    required PatternMatch<R, TimetableEvent$FillTimetables> fillTimetable,
     deleteTimetableItems,
   }) =>
       switch (this) {
         final TimetableEvent$Fetch s => fetch(s),
-        final TimetableEvent$FillTimetables s => fillTimetables(s),
+        final TimetableEvent$FillTimetables s => fillTimetable(s),
         _ => throw AssertionError(),
       };
 
@@ -48,20 +48,20 @@ abstract base class _$TimetableEventBase {
   R maybeMap<R>({
     required R Function() orElse,
     PatternMatch<R, TimetableEvent$Fetch>? fetch,
-    PatternMatch<R, TimetableEvent$FillTimetables>? fillTimetables,
+    PatternMatch<R, TimetableEvent$FillTimetables>? fillTimetable,
   }) =>
       map<R>(
         fetch: fetch ?? (_) => orElse(),
-        fillTimetables: fillTimetables ?? (_) => orElse(),
+        fillTimetable: fillTimetable ?? (_) => orElse(),
       );
 
   /// Map over state union or return null if no match.
   R? mapOrNull<R>({
     PatternMatch<R, TimetableEvent$Fetch>? fetch,
-    PatternMatch<R, TimetableEvent$FillTimetables>? fillTimetables,
+    PatternMatch<R, TimetableEvent$FillTimetables>? fillTimetable,
   }) =>
       map<R?>(
         fetch: fetch ?? (_) => null,
-        fillTimetables: fillTimetables ?? (_) => null,
+        fillTimetable: fillTimetable ?? (_) => null,
       );
 }

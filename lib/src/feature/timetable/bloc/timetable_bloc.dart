@@ -11,7 +11,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     on<TimetableEvent>(
       (event, emit) => event.map(
         fetch: (event) => _fetch(event, emit),
-        fillTimetables: (event) => _fillTimetable(event, emit),
+        fillTimetable: (event) => _fillTimetable(event, emit),
       ),
     );
   }

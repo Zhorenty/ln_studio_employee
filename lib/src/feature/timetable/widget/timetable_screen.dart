@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_employee/src/feature/timetable/widget/employee_timetables.dart';
 
+import '/src/feature/timetable/widget/employee_timetables.dart';
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 /// {@template timetable_screen}
