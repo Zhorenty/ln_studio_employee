@@ -118,14 +118,24 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       color: Colors.transparent,
                     ),
+                    weekendDecoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.transparent,
+                    ),
+                    holidayDecoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.transparent,
+                    ),
                     selectedDecoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: const Color(0xFFEEAAFF).withOpacity(.5),
+                      color: const Color(0xFFEEAAFF).withOpacity(.4),
                     ),
                     todayDecoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xFFEEAAFF).withOpacity(.5),
+                      color: context.colors.onError,
                     ),
                   ),
                 ),
