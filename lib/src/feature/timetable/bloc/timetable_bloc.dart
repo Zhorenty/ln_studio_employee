@@ -11,8 +11,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     on<TimetableEvent>(
       (event, emit) => event.map(
         fetch: (event) => _fetch(event, emit),
-        fillTimetables: (event) => _fillTimetables(event, emit),
-        deleteTimetableItems: (event) => _deleteTimetableItems(event, emit),
+        fillTimetables: (event) => _fillTimetable(event, emit),
       ),
     );
   }
@@ -36,27 +35,13 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
   }
 
   /// Fill timetable items from repository.
-  Future<void> _fillTimetables(
+  Future<void> _fillTimetable(
     TimetableEvent$FillTimetables event,
     Emitter<TimetableState> emit,
   ) async {
     try {
-      await timetableRepository.fillTimetables(event.fillTimetables);
+      await timetableRepository.fillTimetable(event.fillTimetables);
       add(const TimetableEvent.fetch());
-    } on Object catch (e) {
-      emit(TimetableState.idle(error: e.toString()));
-      rethrow;
-    }
-  }
-
-  /// Delete timetable items from repository.
-  Future<void> _deleteTimetableItems(
-    TimetableEvent$DeleteTimetableItems event,
-    Emitter<TimetableState> emit,
-  ) async {
-    try {
-      await timetableRepository.deleteTimetableItems(event.timetableItems);
-      emit(TimetableState.loaded(employeeTimetable: state.employeeTimetable));
     } on Object catch (e) {
       emit(TimetableState.idle(error: e.toString()));
       rethrow;

@@ -1,6 +1,5 @@
 import '/src/feature/timetable/model/employee_timetable.dart';
 import '/src/feature/timetable/model/fill_time_blocks.dart';
-import '/src/feature/timetable/model/timetable_item.dart';
 import 'timetable_datasource.dart';
 
 /// Repository for timetables data.
@@ -9,10 +8,7 @@ abstract interface class TimetableRepository {
   Future<List<EmployeeTimetable>> getEmployeesTimetables();
 
   /// Fill time block items.
-  Future<void> fillTimetables(List<FillTimetable> fillTimetables);
-
-  /// Delete time block items.
-  Future<void> deleteTimetableItems(List<TimetableItem> timetableItems);
+  Future<void> fillTimetable(FillTimetable fillTimetable);
 }
 
 /// Implementation of the timetable repository.
@@ -27,10 +23,6 @@ final class TimetableRepositoryImpl implements TimetableRepository {
       dataSource.fetchEmployeesTimetables();
 
   @override
-  Future<void> fillTimetables(List<FillTimetable> fillTimetables) =>
-      dataSource.fillTimetables(fillTimetables);
-
-  @override
-  Future<void> deleteTimetableItems(List<TimetableItem> timetableItems) =>
-      dataSource.deleteTimetableItems(timetableItems);
+  Future<void> fillTimetable(FillTimetable fillTimetables) =>
+      dataSource.fillTimetable(fillTimetables);
 }

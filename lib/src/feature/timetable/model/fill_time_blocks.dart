@@ -7,7 +7,7 @@ final class FillTimetable {
   const FillTimetable({
     required this.employeeId,
     required this.salonId,
-    required this.dates,
+    required this.dateAt,
   });
 
   /// Employee's id.
@@ -17,12 +17,12 @@ final class FillTimetable {
   final int salonId;
 
   /// Dates to fill.
-  final List<DateTime> dates;
+  final DateTime dateAt;
 
   /// Convert [FillTimetable] to json.
   Map<String, Object?> toJson() => {
         'employee_id': employeeId,
         'salon_id': salonId,
-        'dates': dates.map((e) => DateFormat('yyyy-MM-dd').format(e)).toList(),
+        'date_at': DateFormat('yyyy-MM-dd').format(dateAt),
       };
 }

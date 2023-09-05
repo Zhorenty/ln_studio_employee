@@ -33,7 +33,7 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
+                padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
                 child: Text(
                   '${employee.firstName} ${employee.lastName}',
                   style: context.fonts.headlineSmall!.copyWith(
@@ -48,9 +48,11 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                   color: context.colors.onBackground,
                 ),
                 child: TableCalendar(
+                  /// TODO: скролл
+                  // availableGestures: AvailableGestures.horizontalSwipe,
                   locale: 'ru_RU',
-                  firstDay: DateTime.now().subtract(const Duration(days: 30)),
-                  lastDay: DateTime.now().add(const Duration(days: 30)),
+                  firstDay: DateTime.now().subtract(const Duration(days: 45)),
+                  lastDay: DateTime.now().add(const Duration(days: 45)),
                   focusedDay: DateTime.now(),
                   calendarFormat: CalendarFormat.month,
                   selectedDayPredicate: (day) {
@@ -62,19 +64,15 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                     );
                   },
                   onDaySelected: (selectedDay, focusedDay) {
-                    // TODO(evklidus): Проверять не нажата ли уже дата
                     final fillTimetable = FillTimetable(
                       employeeId: employee.id,
-                      // TODO(evklidus): Подставлять реальный salonId
                       salonId: 1,
-                      dates: [selectedDay],
+                      dateAt: selectedDay,
                     );
                     final timetableBloc =
                         BlocProvider.of<TimetableBloc>(context);
                     timetableBloc.add(
-                      TimetableEvent.fillTimetables(
-                        [fillTimetable],
-                      ),
+                      TimetableEvent.fillTimetable(fillTimetable),
                     );
                   },
                   headerStyle: HeaderStyle(
@@ -92,6 +90,7 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                     todayTextStyle: context.fonts.titleSmall!.copyWith(
                       fontFamily: FontFamily.geologica,
                       fontWeight: FontWeight.bold,
+                      color: context.colors.background,
                     ),
                     selectedTextStyle: context.fonts.titleSmall!.copyWith(
                       fontFamily: FontFamily.geologica,
@@ -128,6 +127,11 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       color: Colors.transparent,
                     ),
+                    outsideDecoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.transparent,
+                    ),
                     selectedDecoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -135,7 +139,7 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                     ),
                     todayDecoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: context.colors.onError,
+                      color: context.colors.primary,
                     ),
                   ),
                 ),
