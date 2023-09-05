@@ -43,10 +43,10 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                         left: 12,
                         right: 12,
-                        top: 26,
+                        top: index == 0 ? 26 : 0,
                       ),
                       child: Text(
                         '${employee.firstName} ${employee.lastName}',
@@ -152,6 +152,7 @@ class _CustomTableCalendar extends StatelessWidget {
         todayTextStyle: context.fonts.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
+          color: context.colors.onBackground,
         ),
         selectedTextStyle: context.fonts.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
@@ -201,7 +202,7 @@ class _CustomTableCalendar extends StatelessWidget {
         ),
         todayDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: const Color(0xFFEEAAFF).withOpacity(.5),
+          color: context.colors.secondary,
         ),
       ),
     );

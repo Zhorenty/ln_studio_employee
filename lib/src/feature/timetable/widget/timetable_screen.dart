@@ -86,7 +86,7 @@ class TimetableScreen extends StatelessWidget {
                 width: 300,
                 decoration: BoxDecoration(
                   color: context.colors.primary,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
