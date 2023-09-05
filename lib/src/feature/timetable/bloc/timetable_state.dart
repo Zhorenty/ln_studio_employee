@@ -3,20 +3,17 @@ import 'package:ln_employee/src/feature/timetable/model/employee_timetable.dart'
 
 import '/src/common/utils/pattern_match.dart';
 
-/// Wardrobe event.
+/// Timetable states.
 sealed class TimetableState extends _$TimetableStateBase {
-  const TimetableState._({
-    required super.employeeTimetable,
-    super.error,
-  });
+  const TimetableState._({required super.employeeTimetable, super.error});
 
-  /// Wardrobe is idle.
+  /// Timetable is idle.
   const factory TimetableState.idle({
     List<EmployeeTimetable> employeeTimetable,
     String? error,
   }) = _TimetableState$Idle;
 
-  /// Wardrobe is loaded.
+  /// Timetable is loaded.
   const factory TimetableState.loaded({
     required List<EmployeeTimetable> employeeTimetable,
     String? error,
@@ -39,7 +36,7 @@ final class _TimetableState$Loaded extends TimetableState {
   }) : super._();
 }
 
-/// Wardrobe state base class.
+/// Timetable state base class.
 @immutable
 abstract base class _$TimetableStateBase {
   const _$TimetableStateBase({required this.employeeTimetable, this.error});
@@ -92,7 +89,7 @@ abstract base class _$TimetableStateBase {
 
   @override
   String toString() =>
-      'TimetableState(Wardrobe: $employeeTimetable, error: $error)';
+      'TimetableState(Timetable: $employeeTimetable, error: $error)';
 
   @override
   bool operator ==(Object other) => identical(this, other);

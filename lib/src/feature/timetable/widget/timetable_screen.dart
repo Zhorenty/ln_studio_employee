@@ -4,11 +4,11 @@ import 'package:ln_employee/src/feature/timetable/widget/employee_timetables.dar
 
 import '/src/common/utils/extensions/context_extension.dart';
 
-/// {@template shedule_screen}
-/// Shedule screen.
+/// {@template timetable_screen}
+/// Timetable screen.
 /// {@endtemplate}
 class TimetableScreen extends StatelessWidget {
-  /// {@macro shedule_screen}
+  /// {@macro timetable_screen}
   const TimetableScreen({super.key});
 
   @override

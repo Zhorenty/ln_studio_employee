@@ -4,25 +4,27 @@ import 'package:ln_employee/src/feature/timetable/model/timetable_item.dart';
 
 import 'timetable_datasource.dart';
 
-///
+/// Repository for timetables data.
 abstract interface class TimetableRepository {
-  ///
-  Future<List<EmployeeTimetable>> fetchEmployeesTimetables();
+  /// Get timetables.
+  Future<List<EmployeeTimetable>> getEmployeesTimetables();
 
+  /// Fill time block items.
   Future<void> fillTimetables(List<FillTimetable> fillTimetables);
 
+  /// Delete time block items.
   Future<void> deleteTimetableItems(List<TimetableItem> timetableItems);
 }
 
-///
+/// Implementation of the timetable repository.
 final class TimetableRepositoryImpl implements TimetableRepository {
   TimetableRepositoryImpl({required this.dataSource});
 
-  ///
+  /// Timetable data source.
   final TimetableDatasource dataSource;
 
   @override
-  Future<List<EmployeeTimetable>> fetchEmployeesTimetables() =>
+  Future<List<EmployeeTimetable>> getEmployeesTimetables() =>
       dataSource.fetchEmployeesTimetables();
 
   @override

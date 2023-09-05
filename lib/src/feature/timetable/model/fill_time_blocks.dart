@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+///
 class FillTimetable {
   const FillTimetable({
     required this.employeeId,
@@ -7,17 +8,19 @@ class FillTimetable {
     required this.dates,
   });
 
+  /// Employee's id.
   final int employeeId;
+
+  /// Current salon id.
   final int salonId;
+
+  /// Dates to fill.
   final List<DateTime> dates;
 
+  /// Convert [FillTimetable] to json.
   Map<String, Object?> toJson() => {
         'employee_id': employeeId,
         'salon_id': salonId,
-        'dates': dates
-            .map(
-              (date) => DateFormat('yyyy-MM-dd').format(date),
-            )
-            .toList(),
+        'dates': dates.map((e) => DateFormat('yyyy-MM-dd').format(e)).toList(),
       };
 }

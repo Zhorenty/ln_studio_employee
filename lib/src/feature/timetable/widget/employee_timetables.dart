@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/timetable/bloc/timetable_event.dart';
-import 'package:ln_employee/src/feature/timetable/model/fill_time_blocks.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '../bloc/timetable_bloc.dart';
-import '../bloc/timetable_state.dart';
+import '/src/feature/timetable/bloc/timetable_bloc.dart';
+import '/src/feature/timetable/bloc/timetable_event.dart';
+import '/src/feature/timetable/bloc/timetable_state.dart';
+import '/src/feature/timetable/model/fill_time_blocks.dart';
 
+/// {@template employee_timetables_widget}
+/// Employee timetables widget.
+/// {@endtemplate}
 class EmployeeTimetables extends StatefulWidget {
+  /// {@macro employee_timetables_widget}
   const EmployeeTimetables({super.key});
 
   @override
@@ -38,12 +42,7 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(
-                  left: 8,
-                  right: 8,
-                  bottom: 8,
-                  top: 0,
-                ),
+                margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: context.colors.onBackground,
@@ -63,10 +62,10 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                     );
                   },
                   onDaySelected: (selectedDay, focusedDay) {
-                    // TODO: Проверять не нажата ли уже дата
+                    // TODO(evklidus): Проверять не нажата ли уже дата
                     final fillTimetable = FillTimetable(
                       employeeId: employee.id,
-                      // TODO: Подставлять реальный salonId
+                      // TODO(evklidus): Подставлять реальный salonId
                       salonId: 1,
                       dates: [selectedDay],
                     );
@@ -114,15 +113,20 @@ class EmployeeTimetablesState extends State<EmployeeTimetables> {
                       fontFamily: FontFamily.geologica,
                       color: Colors.grey,
                     ),
-
+                    defaultDecoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.transparent,
+                    ),
                     selectedDecoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: const Color(0xFFEEAAFF).withOpacity(.5),
+                    ),
+                    todayDecoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: const Color(0xFFEEAAFF).withOpacity(.5),
                     ),
-                    // todayDecoration: BoxDecoration(
-                    //   borderRadius: BorderRadius.circular(10),
-                    //   color: const Color(0xFFEEAAFF).withOpacity(.5),
-                    // ),
                   ),
                 ),
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-/// Элемент расписания
+/// Timetable element.
 @immutable
 final class TimetableItem {
   const TimetableItem({
@@ -10,15 +10,19 @@ final class TimetableItem {
     this.onWork = false,
   });
 
+  /// Employee's ID.
   final int id;
 
-  /// Дата когда сотрудник должен выйти
+  /// Date when the employee should go to work.
   final DateTime dateAt;
 
+  /// Employee's salary.
   final int? salary;
 
+  /// Indicator whether employee is at work or not.
   final bool onWork;
 
+  /// Return [TimetableItem] from [json].
   factory TimetableItem.fromJson(Map<String, Object?> json) => TimetableItem(
         id: json['id'] as int,
         dateAt: DateTime.parse(json['date_at'] as String),
@@ -26,6 +30,7 @@ final class TimetableItem {
         onWork: json['on_work'] as bool,
       );
 
+  /// Convert [TimetableItem] to json.
   Map<String, Object?> toJson() => {};
 
   @override

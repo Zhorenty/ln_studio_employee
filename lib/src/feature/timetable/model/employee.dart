@@ -1,3 +1,4 @@
+/// Employee's timetable
 class Employee {
   Employee({
     required this.id,
@@ -5,10 +6,16 @@ class Employee {
     required this.lastName,
   });
 
+  /// Employee's ID
   int id;
+
+  /// Employee's first name
   String firstName;
+
+  /// Employee's last name
   String lastName;
 
+  /// Returns employee from [json].
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
       id: json['id'] as int,
