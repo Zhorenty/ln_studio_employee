@@ -1,115 +1,228 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/feature/timetable/widget/salon_choice_widget.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-import '/src/feature/timetable/widget/employee_timetables.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/feature/timetable/bloc/timetable_bloc.dart';
+import '/src/feature/timetable/bloc/timetable_event.dart';
+import '/src/feature/timetable/bloc/timetable_state.dart';
+import '/src/feature/timetable/model/fill_time_blocks.dart';
 
 /// {@template timetable_screen}
 /// Timetable screen.
 /// {@endtemplate}
-class TimetableScreen extends StatelessWidget {
+class TimetableScreen extends StatefulWidget {
   /// {@macro timetable_screen}
   const TimetableScreen({super.key});
 
   @override
+  State<TimetableScreen> createState() => _TimetableScreenState();
+}
+
+class _TimetableScreenState extends State<TimetableScreen> {
+  final List<DateTime> _focusedDays = [];
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.background,
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              AppBar(
-                backgroundColor: context.colors.onBackground,
-                surfaceTintColor: context.colors.onBackground,
-                toolbarHeight: 90,
-                title: Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 24),
+    return BlocBuilder<TimetableBloc, TimetableState>(
+      builder: (context, state) => CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: context.colors.onBackground,
+            surfaceTintColor: Colors.white,
+            centerTitle: false,
+            title: Text(
+              'График работы',
+              style: context.fonts.titleLarge!.copyWith(
+                color: context.colors.primary,
+                fontFamily: FontFamily.geologica,
+              ),
+            ),
+            floating: true,
+            pinned: true,
+            stretch: true,
+            bottom: const PreferredSize(
+              preferredSize: Size(300, 70),
+              child: Padding(
+                padding: EdgeInsets.only(top: 5, bottom: 15),
+                child: SalonChoiceWidget(),
+              ),
+            ),
+          ),
+          SliverList.builder(
+            itemCount: state.employeeTimetable.length,
+            itemBuilder: (context, index) {
+              if (index >= _focusedDays.length) {
+                _focusedDays.add(DateTime.now());
+              }
+              final employeeTimetable = state.employeeTimetable[index];
+              final employee = employeeTimetable.employee;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 12,
+                      right: 12,
+                      top: index == 0 ? 26 : 0,
+                    ),
                     child: Text(
-                      'Здравствуйте, Евгений',
-                      style: context.fonts.titleLarge!.copyWith(
-                        color: context.colors.primary,
+                      '${employee.firstName} ${employee.lastName}',
+                      style: context.fonts.headlineSmall!.copyWith(
                         fontFamily: FontFamily.geologica,
                       ),
                     ),
                   ),
-                ),
-              ),
-              const EmployeeTimetables(),
-            ],
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: context.colors.onBackground,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          topRight: Radius.circular(20.0),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            leading: const Icon(Icons.camera),
-                            title: const Text('Camera'),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          ListTile(
-                            leading: const Icon(Icons.photo_library),
-                            title: const Text('Photo Library'),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-              child: Container(
-                margin: const EdgeInsets.only(top: kIsWeb ? 65 : 120),
-                height: 50,
-                width: 300,
-                decoration: BoxDecoration(
-                  color: context.colors.primary,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'ул. Степана Разина, д. 72',
-                      style: context.fonts.titleMedium!.copyWith(
-                        fontSize: 17,
-                        color: context.colors.onBackground,
-                        fontFamily: FontFamily.geologica,
-                      ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
+                  Container(
+                    margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
                       color: context.colors.onBackground,
-                      size: 18,
                     ),
-                  ],
-                ),
-              ),
-            ),
-          )
+                    child: _CustomTableCalendar(
+                      focusedDay: _focusedDays[index],
+                      selectedDayPredicate: (day) {
+                        return employeeTimetable.timetableItems.any(
+                          (timetable) =>
+                              timetable.dateAt.year == day.year &&
+                              timetable.dateAt.month == day.month &&
+                              timetable.dateAt.day == day.day,
+                        );
+                      },
+                      onDaySelected: (selectedDay, focusedDay) {
+                        final fillTimetable = FillTimetable(
+                          employeeId: employee.id,
+                          salonId: 1,
+                          dateAt: selectedDay,
+                        );
+                        _focusedDays[index] = selectedDay;
+
+                        final timetableBloc =
+                            BlocProvider.of<TimetableBloc>(context);
+                        timetableBloc.add(
+                          TimetableEvent.fillTimetable(fillTimetable),
+                        );
+                      },
+                    ),
+                  ),
+                  Divider(color: context.colors.onBackground)
+                ],
+              );
+            },
+          ),
         ],
+      ),
+    );
+  }
+}
+
+/// Custom [TableCalendar] widget.
+class _CustomTableCalendar extends StatelessWidget {
+  const _CustomTableCalendar({
+    required this.focusedDay,
+    this.selectedDayPredicate,
+    this.onDaySelected,
+  });
+
+  /// Focused day.
+  final DateTime focusedDay;
+
+  /// Deciding whether given day should be marked as selected.
+  final bool Function(DateTime)? selectedDayPredicate;
+
+  /// Called whenever any day gets tapped.
+  final void Function(DateTime, DateTime)? onDaySelected;
+
+  @override
+  Widget build(BuildContext context) {
+    DateTime firstDayOfPreviousMonth = DateTime(
+      DateTime.now().year,
+      DateTime.now().month - 1,
+      0,
+    );
+    DateTime lastDayOfNextMonth = DateTime(
+      DateTime.now().year,
+      DateTime.now().month + 2,
+      0,
+    );
+
+    return TableCalendar(
+      locale: 'ru_RU',
+      availableGestures: AvailableGestures.none,
+      startingDayOfWeek: StartingDayOfWeek.monday,
+      firstDay: firstDayOfPreviousMonth,
+      lastDay: lastDayOfNextMonth,
+      focusedDay: focusedDay,
+      calendarFormat: CalendarFormat.month,
+      selectedDayPredicate: selectedDayPredicate,
+      onDaySelected: onDaySelected,
+      headerStyle: HeaderStyle(
+        formatButtonVisible: false,
+        titleCentered: true,
+        titleTextStyle: context.fonts.bodyLarge!.copyWith(
+          fontFamily: FontFamily.geologica,
+        ),
+      ),
+      calendarStyle: CalendarStyle(
+        cellMargin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        todayTextStyle: context.fonts.titleSmall!.copyWith(
+          fontFamily: FontFamily.geologica,
+          fontWeight: FontWeight.bold,
+          color: context.colors.onBackground,
+        ),
+        selectedTextStyle: context.fonts.titleSmall!.copyWith(
+          fontFamily: FontFamily.geologica,
+          fontWeight: FontWeight.bold,
+          color: context.colors.background,
+        ),
+        defaultTextStyle: context.fonts.titleSmall!.copyWith(
+          fontFamily: FontFamily.geologica,
+          fontWeight: FontWeight.bold,
+        ),
+        holidayTextStyle: context.fonts.titleSmall!.copyWith(
+          fontFamily: FontFamily.geologica,
+          fontWeight: FontWeight.bold,
+        ),
+        weekendTextStyle: context.fonts.titleSmall!.copyWith(
+          fontFamily: FontFamily.geologica,
+          color: Colors.grey,
+        ),
+        outsideTextStyle: context.fonts.titleSmall!.copyWith(
+          fontFamily: FontFamily.geologica,
+          color: Colors.grey,
+        ),
+        defaultDecoration: const BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.transparent,
+        ),
+        weekendDecoration: const BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.transparent,
+        ),
+        holidayDecoration: const BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.transparent,
+        ),
+        outsideDecoration: const BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.transparent,
+        ),
+        selectedDecoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          color: context.colors.primary,
+        ),
+        todayDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: context.colors.secondary,
+        ),
       ),
     );
   }
