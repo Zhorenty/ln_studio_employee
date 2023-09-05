@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import '/src/common/bloc/observer.dart';
 import '/src/common/utils/logger.dart';
@@ -25,13 +24,13 @@ class AppRunner with InitializationSteps, InitializationProcessor {
     Bloc.observer = AppBlocObserver();
     Bloc.transformer = sequential();
 
-    /// TODO(zhorenty): Remove after splash is approved
+    /// Uncomment if you need to check splash screen.
     /// Splash screen test
-    Future initialization(BuildContext ctx) async =>
-        await Future.delayed(const Duration(seconds: 5));
+    // Future initialization(BuildContext ctx) async =>
+    //     await Future.delayed(const Duration(seconds: 5));
 
-    // ignore: deprecated_member_use
-    FlutterNativeSplash.removeAfter(initialization);
+    // // ignore: deprecated_member_use
+    // FlutterNativeSplash.removeAfter(initialization);
 
     final result = await processInitialization(
       steps: initializationSteps,

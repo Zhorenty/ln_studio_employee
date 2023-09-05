@@ -2,11 +2,11 @@ import 'package:go_router/go_router.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '/src/feature/settings/widget/settings_screen.dart';
-import '../../feature/timetable/widget/shedule_screen.dart';
+import '../../feature/timetable/widget/timetable_screen.dart';
 
 /// Router of this application.
 final router = GoRouter(
-  initialLocation: '/shedule',
+  initialLocation: '/timetable',
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) => CustomBottomNavigationBar(
@@ -16,8 +16,8 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/shedule',
-              builder: (context, state) => const SheduleScreen(),
+              path: '/timetable',
+              builder: (context, state) => const TimetableScreen(),
             ),
           ],
         ),

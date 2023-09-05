@@ -1,28 +1,47 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../data/timetable_repository.dart';
+import '/src/feature/timetable/data/timetable_repository.dart';
 import 'timetable_event.dart';
 import 'timetable_state.dart';
 
-/// Wardrobe bloc.
+/// Timetable bloc.
 class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
   TimetableBloc({required this.timetableRepository})
       : super(const TimetableState.idle()) {
     on<TimetableEvent>(
-      (event, emit) => event.map(fetch: (e) => _load(e, emit)),
+      (event, emit) => event.map(
+        fetch: (event) => _fetch(event, emit),
+        fillTimetable: (event) => _fillTimetable(event, emit),
+      ),
     );
   }
 
-  ///
+  /// Repository for timetables data
   final TimetableRepository timetableRepository;
 
-  Future<void> _load(
-      TimetableEvent$Fetch event, Emitter<TimetableState> emit) async {
+  /// Fetch timetables from repository.
+  Future<void> _fetch(
+    TimetableEvent$Fetch event,
+    Emitter<TimetableState> emit,
+  ) async {
     try {
-      final timetables = await timetableRepository.getTimetables();
-      return emit(
-        TimetableState.loaded(timetables: timetables),
-      );
+      final employeeTimetable =
+          await timetableRepository.getEmployeesTimetables();
+      emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
+    } on Object catch (e) {
+      emit(TimetableState.idle(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  /// Fill timetable items from repository.
+  Future<void> _fillTimetable(
+    TimetableEvent$FillTimetables event,
+    Emitter<TimetableState> emit,
+  ) async {
+    try {
+      await timetableRepository.fillTimetable(event.fillTimetables);
+      add(const TimetableEvent.fetch());
     } on Object catch (e) {
       emit(TimetableState.idle(error: e.toString()));
       rethrow;

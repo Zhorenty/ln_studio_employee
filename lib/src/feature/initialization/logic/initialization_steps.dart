@@ -28,9 +28,7 @@ mixin InitializationSteps {
         restClient: restClient,
       );
 
-      final profileARepository = TimetableRepositoryImpl(
-        dataSource: timetableDatasource,
-      );
+      final profileARepository = TimetableRepositoryImpl(timetableDatasource);
       progress.dependencies.timetableRepository = profileARepository;
     },
   };

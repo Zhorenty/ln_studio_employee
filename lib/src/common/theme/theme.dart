@@ -14,6 +14,12 @@ final $darkThemeData = ThemeData(
   textTheme: Typography.whiteHelsinki,
   brightness: Brightness.dark,
   useMaterial3: true,
+  dividerTheme: const DividerThemeData(color: Color(0xFF191919)),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Color(0xFF191919),
+    surfaceTintColor: Color(0xFF191919),
+  ),
+  scaffoldBackgroundColor: const Color(0xFF101010),
 );
 
 final lightColorScheme = ColorScheme.fromSeed(
