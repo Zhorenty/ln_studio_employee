@@ -1,19 +1,22 @@
+import 'package:flutter/foundation.dart';
+
 /// Employee's timetable
-class Employee {
-  Employee({
+@immutable
+final class Employee {
+  const Employee({
     required this.id,
     required this.firstName,
     required this.lastName,
   });
 
   /// Employee's ID
-  int id;
+  final int id;
 
   /// Employee's first name
-  String firstName;
+  final String firstName;
 
   /// Employee's last name
-  String lastName;
+  final String lastName;
 
   /// Returns employee from [json].
   factory Employee.fromJson(Map<String, dynamic> json) {

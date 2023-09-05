@@ -1,7 +1,6 @@
-import 'package:ln_employee/src/feature/timetable/model/employee_timetable.dart';
-import 'package:ln_employee/src/feature/timetable/model/fill_time_blocks.dart';
-import 'package:ln_employee/src/feature/timetable/model/timetable_item.dart';
-
+import '/src/feature/timetable/model/employee_timetable.dart';
+import '/src/feature/timetable/model/fill_time_blocks.dart';
+import '/src/feature/timetable/model/timetable_item.dart';
 import 'timetable_datasource.dart';
 
 /// Repository for timetables data.

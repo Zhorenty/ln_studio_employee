@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 ///
-class FillTimetable {
+@immutable
+final class FillTimetable {
   const FillTimetable({
     required this.employeeId,
     required this.salonId,

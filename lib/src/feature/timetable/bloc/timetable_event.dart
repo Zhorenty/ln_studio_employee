@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:ln_employee/src/feature/timetable/model/fill_time_blocks.dart';
-import 'package:ln_employee/src/feature/timetable/model/timetable_item.dart';
 
 import '/src/common/utils/pattern_match.dart';
+import '/src/feature/timetable/model/fill_time_blocks.dart';
+import '/src/feature/timetable/model/timetable_item.dart';
 
 /// Timetable events.
 @immutable
