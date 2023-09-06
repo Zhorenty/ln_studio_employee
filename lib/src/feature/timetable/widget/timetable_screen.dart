@@ -9,7 +9,6 @@ import '/src/common/utils/extensions/context_extension.dart';
 import '/src/feature/timetable/bloc/timetable_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_event.dart';
 import '/src/feature/timetable/bloc/timetable_state.dart';
-import '/src/feature/timetable/model/fill_time_blocks.dart';
 import '/src/feature/timetable/widget/salon_choice_widget.dart';
 
 /// {@template timetable_screen}
@@ -25,6 +24,14 @@ class TimetableScreen extends StatefulWidget {
 
 class _TimetableScreenState extends State<TimetableScreen> {
   final List<DateTime> _focusedDays = [];
+
+  late final TimetableBloc _timetableBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _timetableBloc = BlocProvider.of<TimetableBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,17 +112,14 @@ class _TimetableScreenState extends State<TimetableScreen> {
                         );
                       },
                       onDaySelected: (selectedDay, focusedDay) {
-                        final fillTimetable = FillTimetable(
-                          employeeId: employee.id,
-                          salonId: 1,
-                          dateAt: selectedDay,
-                        );
                         _focusedDays[index] = selectedDay;
 
-                        final timetableBloc =
-                            BlocProvider.of<TimetableBloc>(context);
-                        timetableBloc.add(
-                          TimetableEvent.fillTimetable(fillTimetable),
+                        _timetableBloc.add(
+                          TimetableEvent.fillTimetable(
+                            employeeId: employee.id,
+                            salonId: 1,
+                            dateAt: selectedDay,
+                          ),
                         );
                       },
                     ),

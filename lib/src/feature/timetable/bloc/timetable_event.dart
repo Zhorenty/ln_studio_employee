@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/pattern_match.dart';
-import '/src/feature/timetable/model/fill_time_blocks.dart';
 
 /// Timetable events.
 @immutable
@@ -10,9 +9,11 @@ sealed class TimetableEvent extends _$TimetableEventBase {
 
   const factory TimetableEvent.fetch() = TimetableEvent$Fetch;
 
-  const factory TimetableEvent.fillTimetable(
-    FillTimetable fillTimetables,
-  ) = TimetableEvent$FillTimetables;
+  const factory TimetableEvent.fillTimetable({
+    required int employeeId,
+    required int salonId,
+    required DateTime dateAt,
+  }) = TimetableEvent$FillTimetables;
 }
 
 /// [TimetableEvent.fetch] event.
@@ -22,10 +23,20 @@ final class TimetableEvent$Fetch extends TimetableEvent {
 
 /// [TimetableEvent.fillTimetable] event.
 final class TimetableEvent$FillTimetables extends TimetableEvent {
-  const TimetableEvent$FillTimetables(this.fillTimetables) : super();
+  const TimetableEvent$FillTimetables({
+    required this.employeeId,
+    required this.salonId,
+    required this.dateAt,
+  }) : super();
 
-  /// Timetable items to fill.
-  final FillTimetable fillTimetables;
+  /// Employee's id.
+  final int employeeId;
+
+  /// Current salon id.
+  final int salonId;
+
+  /// Dates to fill.
+  final DateTime dateAt;
 }
 
 /// Timetable events base class.

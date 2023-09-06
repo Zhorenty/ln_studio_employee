@@ -1,7 +1,7 @@
+import 'package:intl/intl.dart';
 import 'package:rest_client/rest_client.dart';
 
 import '/src/feature/timetable/model/employee_timetable.dart';
-import '/src/feature/timetable/model/fill_time_blocks.dart';
 
 /// Datasource for timetables data.
 abstract interface class TimetableDatasource {
@@ -9,7 +9,11 @@ abstract interface class TimetableDatasource {
   Future<List<EmployeeTimetable>> fetchEmployeesTimetables();
 
   /// Fill timetable items.
-  Future<void> fillTimetable(FillTimetable fillTimetable);
+  Future<void> fillTimetable({
+    required int employeeId,
+    required int salonId,
+    required DateTime dateAt,
+  });
 }
 
 /// Implementation of timetable datasource.
@@ -31,10 +35,18 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   }
 
   @override
-  Future<void> fillTimetable(FillTimetable fillTimetable) async {
+  Future<void> fillTimetable({
+    required int employeeId,
+    required int salonId,
+    required DateTime dateAt,
+  }) async {
     await restClient.post(
       '/api/timetable/fill_timeblock',
-      body: fillTimetable.toJson(),
+      body: {
+        'employee_id': employeeId,
+        'salon_id': salonId,
+        'date_at': DateFormat('yyyy-MM-dd').format(dateAt),
+      },
     );
   }
 }
