@@ -153,7 +153,7 @@ class _CustomTableCalendar extends StatelessWidget {
     DateTime firstDayOfPreviousMonth = DateTime(
       DateTime.now().year,
       DateTime.now().month - 1,
-      0,
+      1,
     );
     DateTime lastDayOfNextMonth = DateTime(
       DateTime.now().year,
