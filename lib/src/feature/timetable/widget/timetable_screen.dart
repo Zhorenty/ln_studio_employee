@@ -1,6 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/timetable/widget/salon_choice_widget.dart';
+
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -9,6 +10,7 @@ import '/src/feature/timetable/bloc/timetable_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_event.dart';
 import '/src/feature/timetable/bloc/timetable_state.dart';
 import '/src/feature/timetable/model/fill_time_blocks.dart';
+import '/src/feature/timetable/widget/salon_choice_widget.dart';
 
 /// {@template timetable_screen}
 /// Timetable screen.
@@ -38,6 +40,18 @@ class _TimetableScreenState extends State<TimetableScreen> {
                 fontFamily: FontFamily.geologica,
               ),
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    color: context.colorScheme.primary,
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+            ],
             floating: true,
             pinned: true,
             stretch: true,
@@ -149,7 +163,8 @@ class _CustomTableCalendar extends StatelessWidget {
 
     return TableCalendar(
       locale: 'ru_RU',
-      availableGestures: AvailableGestures.none,
+      availableGestures:
+          kIsWeb ? AvailableGestures.none : AvailableGestures.all,
       startingDayOfWeek: StartingDayOfWeek.monday,
       firstDay: firstDayOfPreviousMonth,
       lastDay: lastDayOfNextMonth,

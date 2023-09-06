@@ -17,7 +17,10 @@ final $darkThemeData = ThemeData(
   dividerTheme: const DividerThemeData(color: Color(0xFF191919)),
   appBarTheme: const AppBarTheme(
     backgroundColor: Color(0xFF191919),
-    surfaceTintColor: Color(0xFF191919),
+    surfaceTintColor: Color(0x1FFFFFFF),
+  ),
+  iconTheme: const IconThemeData(
+    color: Color(0xFFECD8BD),
   ),
   scaffoldBackgroundColor: const Color(0xFF101010),
 );
