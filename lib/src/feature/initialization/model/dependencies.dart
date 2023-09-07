@@ -1,13 +1,21 @@
+import 'package:ln_employee/src/feature/employee/data/employee_repository.dart';
 import 'package:ln_employee/src/feature/timetable/data/timetable_repository.dart';
+import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Dependencies container.
 abstract interface class Dependencies {
-  /// Shared preferences
+  /// [SharedPreferences] instanse.
   abstract final SharedPreferences sharedPreferences;
 
-  /// Wardrobe repository.
+  /// [RestClient] instance.
+  abstract final RestClient restClient;
+
+  /// Timetable repository.
   abstract final TimetableRepository timetableRepository;
+
+  /// Employee repository.
+  abstract final EmployeeRepository employeeRepository;
 
   /// Freeze dependencies, so they cannot be modified.
   Dependencies freeze();
@@ -20,15 +28,23 @@ final class Dependencies$Mutable implements Dependencies {
   Dependencies$Mutable();
 
   @override
+  late SharedPreferences sharedPreferences;
+
+  @override
+  late RestClient restClient;
+
+  @override
   late TimetableRepository timetableRepository;
 
   @override
-  late SharedPreferences sharedPreferences;
+  late EmployeeRepository employeeRepository;
 
   @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
+        restClient: restClient,
         timetableRepository: timetableRepository,
+        employeeRepository: employeeRepository,
       );
 }
 
@@ -38,14 +54,22 @@ final class Dependencies$Mutable implements Dependencies {
 final class _Dependencies$Immutable implements Dependencies {
   const _Dependencies$Immutable({
     required this.sharedPreferences,
+    required this.restClient,
     required this.timetableRepository,
+    required this.employeeRepository,
   });
 
   @override
   final SharedPreferences sharedPreferences;
 
   @override
+  final RestClient restClient;
+
+  @override
   final TimetableRepository timetableRepository;
+
+  @override
+  final EmployeeRepository employeeRepository;
 
   @override
   Dependencies freeze() => this;
