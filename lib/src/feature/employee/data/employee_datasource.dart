@@ -19,7 +19,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
   Future<EmployeeModel> fetchEmployee(int id) async {
     final response = await restClient.get('/api/employee/$id');
 
-    final employee = response['data'] as Map<String, dynamic>;
+    final employee = response;
 
     final decoded = EmployeeModel.fromJson(employee);
 

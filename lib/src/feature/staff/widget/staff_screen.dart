@@ -87,14 +87,16 @@ class StaffScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const StarRating(rating: 3)
+                              StarRating(
+                                rating: state.employeeStaff[index].stars,
+                              )
                             ],
                           ),
                         ),
                         GestureDetector(
                           child: const Icon(Icons.edit),
                           onTap: () => context.go(
-                            '/staff/employee/${state.employeeStaff[index]}',
+                            '/staff/employee/${state.employeeStaff[index].id}',
                           ),
                         ),
                       ],

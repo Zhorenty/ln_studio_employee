@@ -60,7 +60,9 @@ class EmployeeModel {
       percentageOfSales: json['percentage_of_sales'] as double,
       stars: json['stars'] as int,
       isDismiss: json['is_dismiss'] as bool,
-      dismissDate: DateTime.parse(json['dismiss_date'] as String),
+      dismissDate: json['dismiss_date'] != null
+          ? DateTime.parse(json['dismiss_date'] as String)
+          : null,
       userModel: UserModel.fromJson(json['user'] as Map<String, dynamic>),
       jobPlaceModel: JobPlaceModel.fromJson(
         json['job_place'] as Map<String, dynamic>,

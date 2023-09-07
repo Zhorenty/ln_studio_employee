@@ -5,10 +5,13 @@ import 'package:ln_employee/src/feature/staff/model/user_preview.dart';
 
 class EmployeePreview {
   EmployeePreview({
+    required this.id,
     required this.stars,
     required this.userPreview,
     required this.jobPlaceName,
   });
+
+  final int id;
 
   final int stars;
 
@@ -18,6 +21,7 @@ class EmployeePreview {
 
   factory EmployeePreview.fromJson(Map<String, dynamic> json) {
     return EmployeePreview(
+      id: json['id'] as int,
       stars: json['stars'] as int,
       userPreview: UserPreview.fromJson(json['user']),
       jobPlaceName: JobPlacePreview.fromJson(json['job_place']),
