@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/feature/staff/model/mock.dart';
 import '/src/feature/timetable/widget/salon_choice_widget.dart';
 
 class StaffScreen extends StatelessWidget {
@@ -48,7 +47,7 @@ class StaffScreen extends StatelessWidget {
         SliverPadding(
           padding: const EdgeInsets.all(8),
           sliver: SliverList.builder(
-            itemCount: $staff.length,
+            itemCount: 1,
             itemBuilder: (context, index) {
               return Container(
                 padding: const EdgeInsets.all(16),
@@ -70,13 +69,13 @@ class StaffScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 8),
                           Text(
-                            '${$staff[index].user.firstName} ${$staff[index].user.lastName}',
+                            'sdfasdf asdfasdf',
                             style: context.textTheme.titleLarge?.copyWith(
                               fontFamily: FontFamily.geologica,
                             ),
                           ),
                           Text(
-                            $staff[index].jobPlace.name,
+                            'Master',
                             style: context.textTheme.titleSmall?.copyWith(
                               fontFamily: FontFamily.geologica,
                               color: const Color(0xFFA8A6A6),
@@ -90,7 +89,7 @@ class StaffScreen extends StatelessWidget {
                     GestureDetector(
                       child: const Icon(Icons.edit),
                       onTap: () => context.go(
-                        '/staff/employee/${$staff[index].id}',
+                        '/staff/employee/1',
                       ),
                     ),
                   ],

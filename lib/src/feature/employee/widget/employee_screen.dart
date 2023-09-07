@@ -45,7 +45,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '${state.employee?.id}',
+                      state.employee!.description,
                       style: context.textTheme.titleLarge!.copyWith(
                         fontFamily: FontFamily.geologica,
                       ),
@@ -172,16 +172,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           color: context.colorScheme.onBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Column(
+                        child: const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Персональная информация'),
-                            ElevatedButton(
-                              onPressed: () {
-                                EmployeeEvent.fetch(widget.employeeId);
-                              },
-                              child: const Text('Preess'),
-                            )
+                            Text('Персональная информация'),
                           ],
                         ),
                       ),
