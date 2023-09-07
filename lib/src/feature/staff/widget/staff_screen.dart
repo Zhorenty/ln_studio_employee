@@ -74,7 +74,7 @@ class StaffScreen extends StatelessWidget {
                             children: [
                               const SizedBox(height: 8),
                               Text(
-                                '${state.employeeStaff[index].firstName} ${state.employeeStaff[index].lastName}',
+                                '${state.employeeStaff[index].userPreview.firstName} ${state.employeeStaff[index].userPreview.lastName}',
                                 style: context.textTheme.titleLarge?.copyWith(
                                   fontFamily: FontFamily.geologica,
                                 ),
