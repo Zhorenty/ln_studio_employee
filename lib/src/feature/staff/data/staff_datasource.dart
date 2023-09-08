@@ -1,10 +1,10 @@
-import 'package:ln_employee/src/feature/staff/model/employee_preview.dart';
+import '/src/feature/staff/model/employee.dart';
 import 'package:rest_client/rest_client.dart';
 
 ///
 abstract interface class StaffDatasource {
   ///
-  Future<List<EmployeePreview>> fetchStaff();
+  Future<List<EmployeeModel>> fetchStaff();
 }
 
 /// Implementation of Staff datasource.
@@ -15,11 +15,11 @@ class StaffDatasourceImpl implements StaffDatasource {
   final RestClient restClient;
 
   @override
-  Future<List<EmployeePreview>> fetchStaff() async {
+  Future<List<EmployeeModel>> fetchStaff() async {
     final response = await restClient.get('/api/employee/all');
 
     final staff = List.from((response['data'] as List))
-        .map((e) => EmployeePreview.fromJson(e))
+        .map((e) => EmployeeModel.fromJson(e))
         .toList();
 
     return staff;

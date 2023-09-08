@@ -1,6 +1,6 @@
-import 'package:ln_employee/src/feature/employee/model/job_place.dart';
-import 'package:ln_employee/src/feature/employee/model/salon.dart';
-import 'package:ln_employee/src/feature/employee/model/user.dart';
+import 'job_place.dart';
+import 'salon.dart';
+import 'user.dart';
 
 class EmployeeModel {
   EmployeeModel({

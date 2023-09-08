@@ -4,7 +4,6 @@ import 'package:ln_employee/src/feature/staff/bloc/staff_bloc.dart';
 import 'package:ln_employee/src/feature/staff/bloc/staff_event.dart';
 
 import '../../../common/router/app_router_scope.dart';
-import '../../employee/bloc/employee_bloc.dart';
 import '../../timetable/bloc/timetable_bloc.dart';
 import '../../timetable/bloc/timetable_event.dart';
 import '/src/common/widget/scope_widgets.dart';
@@ -31,11 +30,6 @@ class App extends StatelessWidget {
             create: (context) => TimetableBloc(
               timetableRepository: result.dependencies.timetableRepository,
             )..add(const TimetableEvent.fetch()),
-          ),
-          BlocProvider(
-            create: (context) => EmployeeBloc(
-              employeeRepository: result.dependencies.employeeRepository,
-            ),
           ),
           BlocProvider(
             create: (context) => StaffBloc(

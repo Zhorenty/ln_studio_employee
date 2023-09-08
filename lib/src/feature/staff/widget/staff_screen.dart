@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/staff/bloc/staff_bloc.dart';
-import 'package:ln_employee/src/feature/staff/bloc/staff_state.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/feature/staff/bloc/staff_bloc.dart';
+import '/src/feature/staff/bloc/staff_state.dart';
 import '/src/feature/timetable/widget/salon_choice_widget.dart';
 
 class StaffScreen extends StatelessWidget {
@@ -74,13 +74,13 @@ class StaffScreen extends StatelessWidget {
                             children: [
                               const SizedBox(height: 8),
                               Text(
-                                '${state.employeeStaff[index].userPreview.firstName} ${state.employeeStaff[index].userPreview.lastName}',
+                                '${state.employeeStaff[index].userModel.firstName} ${state.employeeStaff[index].userModel.lastName}',
                                 style: context.textTheme.titleLarge?.copyWith(
                                   fontFamily: FontFamily.geologica,
                                 ),
                               ),
                               Text(
-                                state.employeeStaff[index].jobPlaceName.name,
+                                state.employeeStaff[index].jobPlaceModel.name,
                                 style: context.textTheme.titleSmall?.copyWith(
                                   fontFamily: FontFamily.geologica,
                                   color: const Color(0xFFA8A6A6),
@@ -96,7 +96,8 @@ class StaffScreen extends StatelessWidget {
                         GestureDetector(
                           child: const Icon(Icons.edit),
                           onTap: () => context.go(
-                            '/staff/employee/${state.employeeStaff[index].id}',
+                            '/staff/employee',
+                            extra: state.employeeStaff[index],
                           ),
                         ),
                       ],

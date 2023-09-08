@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:ln_employee/src/feature/staff/model/employee_preview.dart';
 
+import '/src/feature/staff/model/employee.dart';
 import '/src/common/utils/pattern_match.dart';
 
 /// Staff states.
@@ -9,13 +9,13 @@ sealed class StaffState extends _$StaffStateBase {
 
   /// Staff is idle.
   const factory StaffState.idle({
-    List<EmployeePreview> employeeStaff,
+    List<EmployeeModel> employeeStaff,
     String? error,
   }) = _StaffState$Idle;
 
   /// Staff is loaded.
   const factory StaffState.loaded({
-    required List<EmployeePreview> employeeStaff,
+    required List<EmployeeModel> employeeStaff,
     String? error,
   }) = _StaffState$Loaded;
 }
@@ -42,7 +42,7 @@ abstract base class _$StaffStateBase {
   const _$StaffStateBase({required this.employeeStaff, this.error});
 
   @nonVirtual
-  final List<EmployeePreview> employeeStaff;
+  final List<EmployeeModel> employeeStaff;
 
   @nonVirtual
   final String? error;
