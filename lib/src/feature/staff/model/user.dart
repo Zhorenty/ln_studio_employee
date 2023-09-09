@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -18,28 +16,40 @@ final class UserModel {
     required this.isActive,
   });
 
+  /// UUID of the user.
   final int id;
 
+  /// User's photo as [String].
   final String? photo;
 
+  /// Username of the user.
   final String username;
 
+  /// Password of the user.
   final String password;
 
+  /// Email address of the user.
   final String email;
 
+  /// First name of the user.
   final String firstName;
 
+  /// Last name of the user.
   final String lastName;
 
+  /// Phone number of the user.
   final String phone;
 
+  /// Birth date of the user.
   final DateTime birthDate;
 
+  /// Indicator whether user is a superuser.
   final bool isSuperuser;
 
+  /// Indicator whether user is active.
   final bool isActive;
 
+  /// Returns [UserModel] from [json].
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as int,
@@ -56,6 +66,7 @@ final class UserModel {
     );
   }
 
+  /// Converts [UserModel] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'photo': photo,

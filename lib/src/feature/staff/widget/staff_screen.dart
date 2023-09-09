@@ -1,99 +1,82 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/custom_app_bar.dart';
+import '/src/common/widget/star_rating.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';
+import '/src/feature/staff/bloc/staff_event.dart';
 import '/src/feature/staff/bloc/staff_state.dart';
-import '/src/feature/timetable/widget/salon_choice_widget.dart';
 
-class StaffScreen extends StatelessWidget {
+/// {@template staff_screen}
+/// Staff screen.
+/// {@endtemplate}
+class StaffScreen extends StatefulWidget {
+  /// {@macro staff_screen}
   const StaffScreen({super.key});
 
   @override
+  State<StaffScreen> createState() => _StaffScreenState();
+}
+
+class _StaffScreenState extends State<StaffScreen> {
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<StaffBloc, StaffState>(
-      builder: (context, state) {
-        return CustomScrollView(
+      builder: (context, state) => Scaffold(
+        body: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              centerTitle: false,
-              title: Text(
-                'Сотрудники',
-                style: context.textTheme.titleLarge!.copyWith(
-                  color: context.colorScheme.primary,
-                  fontFamily: FontFamily.geologica,
-                ),
-              ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 4, top: 4),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.more_horiz_outlined,
-                      color: context.colorScheme.primary,
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-              floating: true,
-              pinned: true,
-              stretch: true,
-              bottom: const PreferredSize(
-                preferredSize: Size(300, 70),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 15),
-                  child: SalonChoiceWidget(),
-                ),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(8),
-              sliver: SliverList.builder(
-                itemCount: state.employeeStaff.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.all(16),
+            CustomSliverAppBar(title: context.stringOf().employees),
+            CupertinoSliverRefreshControl(onRefresh: _refresh),
+            if (state.hasStaff) ...[
+              SliverPadding(
+                padding: const EdgeInsets.all(8),
+                sliver: SliverList.builder(
+                  itemCount: state.employeeStaff.length,
+                  itemBuilder: (context, index) => Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4 + 2),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                     decoration: BoxDecoration(
                       color: context.colorScheme.onBackground,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CircleAvatar(
-                          radius: 50,
+                          radius: 45,
                           backgroundColor: context.colorScheme.secondary,
                         ),
-                        const SizedBox(width: 32),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 8 + 2),
-                              Text(
-                                '${state.employeeStaff[index].userModel.firstName} ${state.employeeStaff[index].userModel.lastName}',
-                                style: context.textTheme.titleMedium?.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 8 + 2),
+                            Text(
+                              '${state.employeeStaff[index].userModel.firstName}'
+                              ' ${state.employeeStaff[index].userModel.lastName}',
+                              style: context.textTheme.titleMedium?.copyWith(
+                                fontFamily: FontFamily.geologica,
                               ),
-                              Text(
-                                state.employeeStaff[index].jobPlaceModel.name,
-                                style: context.textTheme.labelMedium?.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                  color: const Color(0xFFA8A6A6),
-                                ),
+                            ),
+                            Text(
+                              state.employeeStaff[index].jobPlaceModel.name,
+                              style: context.textTheme.labelMedium?.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: context.colorScheme.primaryContainer,
                               ),
-                              const SizedBox(height: 4),
-                              StarRating(
-                                rating: state.employeeStaff[index].stars,
-                              )
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 4),
+                            StarRating(
+                              rating: state.employeeStaff[index].stars,
+                            )
+                          ],
                         ),
+                        const SizedBox.shrink(),
                         GestureDetector(
                           child: const Icon(Icons.edit, size: 20),
                           onTap: () => context.go(
@@ -103,63 +86,64 @@ class StaffScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  );
-                },
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 64),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: context.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.sizeOf(context).width / 8,
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      context.stringOf().addEmployee,
+                      style: context.textTheme.titleMedium!.copyWith(
+                        color: context.colorScheme.background,
+                        fontFamily: FontFamily.geologica,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ] else
+              SliverFillRemaining(
                 child: Center(
                   child: Text(
-                    'Добавить сотрудника',
+                    context.stringOf().noEmployees,
                     style: context.textTheme.titleMedium!.copyWith(
-                      color: context.colorScheme.background,
                       fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.primary,
                     ),
                   ),
                 ),
               ),
-            ),
           ],
-        );
-      },
-    );
-  }
-}
-
-///
-class StarRating extends StatelessWidget {
-  const StarRating({
-    super.key,
-    required this.rating,
-    this.size = 24.0,
-  });
-
-  ///
-  final int rating;
-
-  ///
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(
-        5,
-        (index) => Icon(
-          index < rating ? Icons.star_outlined : Icons.star_border_outlined,
-          size: size,
-          color: index < rating
-              ? context.colorScheme.primary
-              : const Color(0xFF9E9E9E),
         ),
+        floatingActionButton: !state.hasStaff
+            ? FloatingActionButton.extended(
+                backgroundColor: context.colorScheme.primary,
+                label: Text(
+                  context.stringOf().addEmployee,
+                  style: context.textTheme.bodySmall!.copyWith(
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.background,
+                  ),
+                ),
+                onPressed: () {},
+              )
+            : const SizedBox.shrink(),
       ),
     );
+  }
+
+  Future<void> _refresh() async {
+    final block = context.read<StaffBloc>().stream.first;
+    context.read<StaffBloc>().add(const StaffEvent.fetch());
+    await block;
   }
 }

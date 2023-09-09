@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_employee/src/common/widget/star_rating.dart';
 import 'package:ln_employee/src/feature/staff/model/employee.dart';
-import 'package:ln_employee/src/feature/staff/widget/staff_screen.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 
-///
+/// {@template employee_screen}
+/// Employee screen.
+/// {@endtemplate}
 class EmployeeScreen extends StatelessWidget {
+  /// {@macro employee_screen}
   const EmployeeScreen({super.key, required this.employee});
 
-  ///
+  /// EmployeeModel of this [EmployeeScreen].
   final EmployeeModel employee;
 
   @override
@@ -19,8 +22,7 @@ class EmployeeScreen extends StatelessWidget {
       ..text = employee.userModel.firstName;
     final lastNameController = TextEditingController()
       ..text = employee.userModel.lastName;
-    final nicknameController = TextEditingController()
-      ..text = employee.userModel.username;
+
     final phoneController = TextEditingController()
       ..text = employee.userModel.phone;
     final addressController = TextEditingController()..text = employee.address;
@@ -189,32 +191,28 @@ class EmployeeScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: firstNameController,
                           dense: false,
                           label: 'Имя',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: lastNameController,
                           label: 'Фамилия',
                         ),
-                        CustomTextField(
-                          controller: nicknameController,
-                          label: 'Никнейм',
-                        ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: phoneController,
                           label: 'Номер телефона',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: addressController,
                           label: 'Домашний адрес',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: emailController,
                           label: 'Электронный адрес',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: birthDateController,
                           label: 'Дата рождения',
                         ),
@@ -233,28 +231,28 @@ class EmployeeScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           dense: false,
                           controller: salonController,
                           label: 'Салон',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: contractNumberController,
                           label: 'Номер договора',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: jobPlaceController,
                           label: 'Специальность + Оклад',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: descriptonController,
                           label: 'Описание сотрудника',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: dateOfEmploymentController,
                           label: 'Дата принятия на работу',
                         ),
-                        CustomTextField(
+                        _CustomTextField(
                           controller: percentageOfSalesController,
                           label: 'Процент от продаж',
                         ),
@@ -272,9 +270,8 @@ class EmployeeScreen extends StatelessWidget {
   }
 }
 
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
-    super.key,
+class _CustomTextField extends StatelessWidget {
+  const _CustomTextField({
     required this.controller,
     this.label,
     this.dense = true,

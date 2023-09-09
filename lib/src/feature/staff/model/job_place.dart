@@ -1,7 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:flutter/foundation.dart';
 
+/// Representing a job place with its properties.
 @immutable
 final class JobPlaceModel {
   const JobPlaceModel({
@@ -10,12 +9,16 @@ final class JobPlaceModel {
     required this.oklad,
   });
 
+  /// Id of the job place.
   final int id;
 
+  /// Name of the job place.
   final String name;
 
+  /// Salary of the job place.
   final int oklad;
 
+  /// Returns [JobPlaceModel] from [json].
   factory JobPlaceModel.fromJson(Map<String, dynamic> json) {
     return JobPlaceModel(
       id: json['id'] as int,
@@ -24,6 +27,7 @@ final class JobPlaceModel {
     );
   }
 
+  /// Converts [JobPlaceModel] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'name': name,

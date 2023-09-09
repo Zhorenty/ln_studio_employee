@@ -50,8 +50,8 @@ abstract base class _$StaffStateBase {
   /// Indicator of whether there is an error.
   bool get hasError => error != null;
 
-  /// Indicator whether Staffs is not empty.
-  bool get hasStaffs => employeeStaff.isNotEmpty;
+  /// Indicator whether staff is not empty.
+  bool get hasStaff => employeeStaff.isNotEmpty;
 
   /// Indicator whether state is already loaded.
   bool get isLoaded => maybeMap(

@@ -7,8 +7,10 @@ import '/src/common/utils/pattern_match.dart';
 sealed class TimetableEvent extends _$TimetableEventBase {
   const TimetableEvent();
 
+  /// Factory for Timetable fetching.
   const factory TimetableEvent.fetch() = TimetableEvent$Fetch;
 
+  /// Factory for filling timetable.
   const factory TimetableEvent.fillTimetable({
     required int employeeId,
     required int salonId,

@@ -1,6 +1,9 @@
 {
-  "appTitle": "LN Studio",
-  "wardrobeEmpty": "У Вас нет записей",
+  "appTitle": "LN Employee",
+  "employees": "Сотрудники",
+  "noEmployees": "Нет сотрудников",
+  "addEmployee": "Добавить сотрудника",
+  "workShedule": "График работы",
   "unknownError": "Неизвестная ошибка: {value}",
   "exceptionOccurred": "Возникло исключение: {value}"
 }

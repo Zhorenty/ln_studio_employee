@@ -3,11 +3,11 @@ import 'package:go_router/go_router.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 
-///
+/// Custom-styled [BottomNavigationBar].
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar(this.navigationShell, {super.key});
 
-  ///
+  /// Widget for managing the state of a [StatefulShellRoute].
   final StatefulNavigationShell navigationShell;
 
   @override
@@ -29,7 +29,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
             activeIcon: CircleAvatar(
               radius: 20,
               backgroundColor: context.colorScheme.primary,
-              child: const Icon(Icons.receipt_rounded, color: Colors.black87),
+              child: Icon(
+                Icons.receipt_rounded,
+                color: context.colorScheme.onBackground,
+              ),
             ),
             label: '',
           ),
@@ -41,9 +44,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
             activeIcon: CircleAvatar(
               radius: 20,
               backgroundColor: context.colorScheme.primary,
-              child: const Icon(
+              child: Icon(
                 Icons.people_alt_rounded,
-                color: Colors.black87,
+                color: context.colorScheme.onBackground,
               ),
             ),
             label: '',
@@ -56,7 +59,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
             activeIcon: CircleAvatar(
               radius: 20,
               backgroundColor: context.colorScheme.primary,
-              child: const Icon(Icons.settings, color: Colors.black87),
+              child: Icon(
+                Icons.settings,
+                color: context.colorScheme.onBackground,
+              ),
             ),
             label: '',
           ),

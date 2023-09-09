@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:ln_employee/src/common/widget/custom_app_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -10,7 +10,6 @@ import '/src/common/utils/extensions/context_extension.dart';
 import '/src/feature/timetable/bloc/timetable_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_event.dart';
 import '/src/feature/timetable/bloc/timetable_state.dart';
-import '/src/feature/timetable/widget/salon_choice_widget.dart';
 
 /// {@template timetable_screen}
 /// Timetable screen.
@@ -34,111 +33,95 @@ class _TimetableScreenState extends State<TimetableScreen> {
     _timetableBloc = BlocProvider.of<TimetableBloc>(context);
   }
 
-  Future<void> _refresh() async {
-    Future block = context.read<TimetableBloc>().stream.first;
-    context.read<TimetableBloc>().add(const TimetableEvent.fetch());
-    await block;
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimetableBloc, TimetableState>(
       builder: (context, state) => CustomScrollView(
         slivers: [
-          SliverAppBar(
-            centerTitle: false,
-            title: Text(
-              'График работы',
-              style: context.textTheme.titleLarge!.copyWith(
-                color: context.colorScheme.primary,
-                fontFamily: FontFamily.geologica,
+          CustomSliverAppBar(title: context.stringOf().workShedule),
+          CupertinoSliverRefreshControl(onRefresh: _refresh),
+          if (state.hasTimetables)
+            SliverPadding(
+              padding: const EdgeInsets.all(8),
+              sliver: SliverList.builder(
+                itemCount: state.employeeTimetable.length,
+                itemBuilder: (context, index) {
+                  if (index >= _focusedDays.length) {
+                    _focusedDays.add(DateTime.now());
+                  }
+                  final employeeTimetable = state.employeeTimetable[index];
+                  final employee = employeeTimetable.employee;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Text(
+                          '${employee.firstName} ${employee.lastName}',
+                          style: context.textTheme.headlineSmall!.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: context.colorScheme.onBackground,
+                        ),
+                        child: _CustomTableCalendar(
+                          focusedDay: _focusedDays[index],
+                          selectedDayPredicate: (day) {
+                            return employeeTimetable.timetableItems.any(
+                              (timetable) =>
+                                  timetable.dateAt.year == day.year &&
+                                  timetable.dateAt.month == day.month &&
+                                  timetable.dateAt.day == day.day,
+                            );
+                          },
+
+                          /// TODO: Implement EditScheduleScreen.
+                          onDaySelected: (selectedDay, focusedDay) {
+                            _focusedDays[index] = selectedDay;
+
+                            _timetableBloc.add(
+                              TimetableEvent.fillTimetable(
+                                employeeId: employee.id,
+                                salonId: 1,
+                                dateAt: selectedDay,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const Divider()
+                    ],
+                  );
+                },
               ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 4),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.notifications,
+            )
+          else
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Center(
+                child: Text(
+                  context.stringOf().noEmployees,
+                  style: context.textTheme.titleMedium!.copyWith(
+                    fontFamily: FontFamily.geologica,
                     color: context.colorScheme.primary,
                   ),
-                  onPressed: () {},
                 ),
               ),
-            ],
-            floating: true,
-            pinned: true,
-            bottom: const PreferredSize(
-              preferredSize: Size(300, 70),
-              child: Padding(
-                padding: EdgeInsets.only(top: 5, bottom: 15),
-                child: SalonChoiceWidget(),
-              ),
             ),
-          ),
-          CupertinoSliverRefreshControl(onRefresh: _refresh),
-          SliverList.builder(
-            itemCount: state.employeeTimetable.length,
-            itemBuilder: (context, index) {
-              if (index >= _focusedDays.length) {
-                _focusedDays.add(DateTime.now());
-              }
-              final employeeTimetable = state.employeeTimetable[index];
-              final employee = employeeTimetable.employee;
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 12,
-                      right: 12,
-                      top: index == 0 ? 26 : 0,
-                    ),
-                    child: Text(
-                      '${employee.firstName} ${employee.lastName}',
-                      style: context.textTheme.headlineSmall!.copyWith(
-                        fontFamily: FontFamily.geologica,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: context.colorScheme.onBackground,
-                    ),
-                    child: _CustomTableCalendar(
-                      focusedDay: _focusedDays[index],
-                      selectedDayPredicate: (day) {
-                        return employeeTimetable.timetableItems.any(
-                          (timetable) =>
-                              timetable.dateAt.year == day.year &&
-                              timetable.dateAt.month == day.month &&
-                              timetable.dateAt.day == day.day,
-                        );
-                      },
-                      onDaySelected: (selectedDay, focusedDay) {
-                        _focusedDays[index] = selectedDay;
-
-                        _timetableBloc.add(
-                          TimetableEvent.fillTimetable(
-                            employeeId: employee.id,
-                            salonId: 1,
-                            dateAt: selectedDay,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  const Divider()
-                ],
-              );
-            },
-          ),
         ],
       ),
     );
+  }
+
+  Future<void> _refresh() async {
+    final block = context.read<TimetableBloc>().stream.first;
+    context.read<TimetableBloc>().add(const TimetableEvent.fetch());
+    await block;
   }
 }
 
@@ -191,7 +174,6 @@ class _CustomTableCalendar extends StatelessWidget {
         ),
       ),
       calendarStyle: CalendarStyle(
-        cellMargin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         todayTextStyle: context.textTheme.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
@@ -212,39 +194,40 @@ class _CustomTableCalendar extends StatelessWidget {
         ),
         weekendTextStyle: context.textTheme.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
-          color: Colors.grey,
+          color: context.colorScheme.primaryContainer,
         ),
         outsideTextStyle: context.textTheme.titleSmall!.copyWith(
           fontFamily: FontFamily.geologica,
-          color: Colors.grey,
+          color: context.colorScheme.primaryContainer,
         ),
-        defaultDecoration: const BoxDecoration(
+        defaultDecoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.transparent,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          color: context.colorScheme.scrim,
         ),
-        weekendDecoration: const BoxDecoration(
+        weekendDecoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.transparent,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          color: context.colorScheme.scrim,
         ),
-        holidayDecoration: const BoxDecoration(
+        holidayDecoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.transparent,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          color: context.colorScheme.scrim,
         ),
-        outsideDecoration: const BoxDecoration(
+        outsideDecoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.transparent,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          color: context.colorScheme.scrim,
         ),
         selectedDecoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
           color: context.colorScheme.primary,
         ),
         todayDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          shape: BoxShape.rectangle,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
           color: context.colorScheme.secondary,
         ),
       ),
