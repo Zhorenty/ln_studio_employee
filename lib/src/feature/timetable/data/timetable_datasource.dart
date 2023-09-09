@@ -25,11 +25,11 @@ class TimetableDatasourceImpl implements TimetableDatasource {
 
   @override
   Future<List<EmployeeTimetable>> fetchEmployeesTimetables() async {
-    final response = await restClient.get('/api/timetable/timeblocks');
+    final response = await restClient.get('/api/timetable/all');
 
-    final employeesTimetables = List.from(
-      (response['response'] as Map)['data'] as List,
-    ).map((e) => EmployeeTimetable.fromJson(e)).toList();
+    final employeesTimetables = List.from((response['data'] as List))
+        .map((e) => EmployeeTimetable.fromJson(e))
+        .toList();
 
     return employeesTimetables;
   }
@@ -41,7 +41,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
     required DateTime dateAt,
   }) async {
     await restClient.post(
-      '/api/timetable/fill_timeblock',
+      '/api/timetable/fill',
       body: {
         'employee_id': employeeId,
         'salon_id': salonId,

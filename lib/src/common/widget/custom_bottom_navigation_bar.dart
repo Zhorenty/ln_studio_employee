@@ -22,8 +22,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
         backgroundColor: context.colorScheme.onBackground,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon:
-                Icon(Icons.receipt_rounded, color: context.colorScheme.primary),
+            icon: Icon(
+              Icons.receipt_outlined,
+              color: context.colorScheme.primary,
+            ),
             activeIcon: CircleAvatar(
               radius: 20,
               backgroundColor: context.colorScheme.primary,
@@ -32,8 +34,25 @@ class CustomBottomNavigationBar extends StatelessWidget {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings_rounded,
-                color: context.colorScheme.primary),
+            icon: Icon(
+              Icons.people_alt_outlined,
+              color: context.colorScheme.primary,
+            ),
+            activeIcon: CircleAvatar(
+              radius: 20,
+              backgroundColor: context.colorScheme.primary,
+              child: const Icon(
+                Icons.people_alt_rounded,
+                color: Colors.black87,
+              ),
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.settings_rounded,
+              color: context.colorScheme.primary,
+            ),
             activeIcon: CircleAvatar(
               radius: 20,
               backgroundColor: context.colorScheme.primary,

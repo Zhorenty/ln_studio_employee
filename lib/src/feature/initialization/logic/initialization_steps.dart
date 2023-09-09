@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/staff/data/staff_datasource.dart';
+import 'package:ln_employee/src/feature/staff/data/staff_repository.dart';
 import 'package:ln_employee/src/feature/timetable/data/timetable_datasource.dart';
 import 'package:ln_employee/src/feature/timetable/data/timetable_repository.dart';
 import 'package:rest_client/rest_client.dart';
@@ -17,19 +19,25 @@ mixin InitializationSteps {
       final sharedPreferences = await SharedPreferences.getInstance();
       progress.dependencies.sharedPreferences = sharedPreferences;
     },
-    'Timetable repository & Rest client': (progress) async {
+    'Rest Client': (progress) async {
       final restClient = RestClient(
-        Dio(
-          BaseOptions(baseUrl: 'http://31.129.104.75'),
-        ),
+        Dio(BaseOptions(baseUrl: 'http://31.129.104.75')),
       );
-
-      final TimetableDatasource timetableDatasource = TimetableDatasourceImpl(
-        restClient: restClient,
-      );
-
-      final profileARepository = TimetableRepositoryImpl(timetableDatasource);
-      progress.dependencies.timetableRepository = profileARepository;
+      progress.dependencies.restClient = restClient;
     },
+    'Timetable repository': (progress) async {
+      final TimetableDatasource timetableDatasource = TimetableDatasourceImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final timetableRepository = TimetableRepositoryImpl(timetableDatasource);
+      progress.dependencies.timetableRepository = timetableRepository;
+    },
+    'Staff repository': (progress) async {
+      final StaffDatasource staffDatasource = StaffDatasourceImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final staffRepository = StaffRepositoryImpl(staffDatasource);
+      progress.dependencies.staffRepository = staffRepository;
+    }
   };
 }
