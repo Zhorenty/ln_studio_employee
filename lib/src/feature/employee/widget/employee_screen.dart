@@ -15,11 +15,50 @@ class EmployeeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nameController = TextEditingController();
+    final firstNameController = TextEditingController()
+      ..text = employee.userModel.firstName;
+    final lastNameController = TextEditingController()
+      ..text = employee.userModel.lastName;
+    final nicknameController = TextEditingController()
+      ..text = employee.userModel.username;
+    final phoneController = TextEditingController()
+      ..text = employee.userModel.phone;
+    final addressController = TextEditingController()..text = employee.address;
+    final emailController = TextEditingController()
+      ..text = employee.userModel.email;
 
-    nameController.text = employee.address;
+    /// TODO: Make calendar
+    final birthDateController = TextEditingController()
+      ..text = employee.userModel.birthDate.toString();
+
+    final contractNumberController = TextEditingController()
+      ..text = employee.contractNumber;
+
+    /// TODO: Make addable list of specializations + oklad.
+    final jobPlaceController = TextEditingController()
+      ..text =
+          '${employee.jobPlaceModel.name} ${employee.jobPlaceModel.oklad.toString()}';
+
+    /// TODO: Redirect to another page(?) with description edition,
+    /// or make huge TextField.
+    final descriptonController = TextEditingController()
+      ..text = employee.description;
+
+    /// TODO: Make calendar.
+    final dateOfEmploymentController = TextEditingController()
+      ..text = employee.dateOfEmployment.toString();
+
+    /// TODO: Make showModalBottomSheet.
+    final salonController = TextEditingController()
+      ..text = employee.salonModel.address;
+
+    /// TODO: Make DropDownButton.
+    final percentageOfSalesController = TextEditingController()
+      ..text = employee.percentageOfSales.toString();
+
     return Scaffold(
       body: CustomScrollView(
+        physics: const ClampingScrollPhysics(),
         slivers: [
           SliverAppBar(
             backgroundColor: context.colorScheme.background,
@@ -53,6 +92,16 @@ class EmployeeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 100),
+                child: IconButton(
+                  /// TODO: Button "Delete employee here"
+                  onPressed: () {},
+                  icon: const Icon(Icons.more_horiz_outlined),
+                ),
+              )
+            ],
             bottom: PreferredSize(
               preferredSize: const Size(300, 68),
               child: Padding(
@@ -125,34 +174,91 @@ class EmployeeScreen extends StatelessWidget {
                             StarRating(rating: employee.stars)
                           ],
                         ),
-                        CustomTextField(
-                          controller: nameController,
-                          label: 'Имя сотрудника',
+                        const SizedBox(height: 32),
+                        Text(
+                          'Личная информация',
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                        Container(
+                          height: 3,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: context.colorScheme.secondary,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         CustomTextField(
-                          controller: nameController,
-                          label: 'E-Mail',
+                          controller: firstNameController,
+                          dense: false,
+                          label: 'Имя',
                         ),
                         CustomTextField(
-                          controller: nameController,
+                          controller: lastNameController,
+                          label: 'Фамилия',
+                        ),
+                        CustomTextField(
+                          controller: nicknameController,
+                          label: 'Никнейм',
+                        ),
+                        CustomTextField(
+                          controller: phoneController,
                           label: 'Номер телефона',
                         ),
                         CustomTextField(
-                          controller: nameController,
+                          controller: addressController,
                           label: 'Домашний адрес',
                         ),
                         CustomTextField(
-                          controller: nameController,
+                          controller: emailController,
+                          label: 'Электронный адрес',
+                        ),
+                        CustomTextField(
+                          controller: birthDateController,
                           label: 'Дата рождения',
                         ),
-                        CustomTextField(
-                          controller: nameController,
-                          label: 'Принят',
+                        const SizedBox(height: 32),
+                        Text(
+                          'Рабочая информация',
+                          style: context.textTheme.bodyLarge!.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                        Container(
+                          height: 3,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: context.colorScheme.secondary,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         CustomTextField(
-                          controller: nameController,
+                          dense: false,
+                          controller: salonController,
+                          label: 'Салон',
+                        ),
+                        CustomTextField(
+                          controller: contractNumberController,
                           label: 'Номер договора',
                         ),
+                        CustomTextField(
+                          controller: jobPlaceController,
+                          label: 'Специальность + Оклад',
+                        ),
+                        CustomTextField(
+                          controller: descriptonController,
+                          label: 'Описание сотрудника',
+                        ),
+                        CustomTextField(
+                          controller: dateOfEmploymentController,
+                          label: 'Дата принятия на работу',
+                        ),
+                        CustomTextField(
+                          controller: percentageOfSalesController,
+                          label: 'Процент от продаж',
+                        ),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ),
@@ -167,22 +273,40 @@ class EmployeeScreen extends StatelessWidget {
 }
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({super.key, required this.controller, this.label});
+  const CustomTextField({
+    super.key,
+    required this.controller,
+    this.label,
+    this.dense = true,
+  });
 
   final TextEditingController controller;
+
+  final bool dense;
 
   final String? label;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: EdgeInsets.only(top: dense ? 10 : 4),
       child: TextFormField(
         controller: controller,
         style: context.textTheme.bodyLarge!.copyWith(
           fontFamily: FontFamily.geologica,
         ),
         decoration: InputDecoration(
+          labelStyle: context.textTheme.bodyMedium!.copyWith(
+            color: context.colorScheme.primary,
+            fontFamily: FontFamily.geologica,
+            fontWeight: FontWeight.bold,
+          ),
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFA8A6A6)),
+          ),
+          disabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFA8A6A6)),
+          ),
           labelText: label,
           isDense: true,
         ),

@@ -73,16 +73,16 @@ class StaffScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 8 + 2),
                               Text(
                                 '${state.employeeStaff[index].userModel.firstName} ${state.employeeStaff[index].userModel.lastName}',
-                                style: context.textTheme.titleLarge?.copyWith(
+                                style: context.textTheme.titleMedium?.copyWith(
                                   fontFamily: FontFamily.geologica,
                                 ),
                               ),
                               Text(
                                 state.employeeStaff[index].jobPlaceModel.name,
-                                style: context.textTheme.titleSmall?.copyWith(
+                                style: context.textTheme.labelMedium?.copyWith(
                                   fontFamily: FontFamily.geologica,
                                   color: const Color(0xFFA8A6A6),
                                 ),
@@ -95,7 +95,7 @@ class StaffScreen extends StatelessWidget {
                           ),
                         ),
                         GestureDetector(
-                          child: const Icon(Icons.edit),
+                          child: const Icon(Icons.edit, size: 20),
                           onTap: () => context.go(
                             '/staff/employee',
                             extra: state.employeeStaff[index],
