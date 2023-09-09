@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +34,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
     _timetableBloc = BlocProvider.of<TimetableBloc>(context);
   }
 
+  Future<void> _refresh() async {
+    Future block = context.read<TimetableBloc>().stream.first;
+    context.read<TimetableBloc>().add(const TimetableEvent.fetch());
+    await block;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimetableBloc, TimetableState>(
@@ -61,7 +68,6 @@ class _TimetableScreenState extends State<TimetableScreen> {
             ],
             floating: true,
             pinned: true,
-            stretch: true,
             bottom: const PreferredSize(
               preferredSize: Size(300, 70),
               child: Padding(
@@ -70,6 +76,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
               ),
             ),
           ),
+          CupertinoSliverRefreshControl(onRefresh: _refresh),
           SliverList.builder(
             itemCount: state.employeeTimetable.length,
             itemBuilder: (context, index) {
