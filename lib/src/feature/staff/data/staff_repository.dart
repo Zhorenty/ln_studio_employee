@@ -1,13 +1,13 @@
 import '/src/feature/staff/model/employee.dart';
 import 'staff_datasource.dart';
 
-/// Repository for Staffs data.
+/// Repository for staff data.
 abstract interface class StaffRepository {
-  /// Get Staffs.
+  /// Get staff.
   Future<List<EmployeeModel>> getStaff();
 }
 
-/// Implementation of the Staff repository.
+/// Implementation of the staff repository.
 final class StaffRepositoryImpl implements StaffRepository {
   StaffRepositoryImpl(this._dataSource);
 

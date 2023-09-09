@@ -14,10 +14,10 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
     );
   }
 
-  /// Repository for Staffs data
+  /// Repository for staff data.
   final StaffRepository staffRepository;
 
-  /// Fetch Staffs from repository.
+  /// Fetch staff from repository.
   Future<void> _fetch(
     StaffEvent$Fetch event,
     Emitter<StaffState> emit,

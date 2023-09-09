@@ -1,7 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:flutter/foundation.dart';
 
+/// Represents a salon with its properties.
 @immutable
 final class SalonModel {
   const SalonModel({
@@ -12,16 +11,22 @@ final class SalonModel {
     required this.description,
   });
 
+  /// The id of the salon.
   final int id;
 
+  /// The address of the salon.
   final String address;
 
+  /// The phone number of the salon.
   final String phone;
 
+  /// The email of the salon.
   final String email;
 
+  /// The description of the salon.
   final String description;
 
+  /// Returns [SalonModel] from [json].
   factory SalonModel.fromJson(Map<String, dynamic> json) {
     return SalonModel(
       id: json['id'] as int,
@@ -32,6 +37,7 @@ final class SalonModel {
     );
   }
 
+  /// Converts [SalonModel] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'address': address,

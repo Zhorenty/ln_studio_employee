@@ -37,9 +37,11 @@ final darkColorScheme = ColorScheme.fromSeed(
   seedColor: const Color(0xFF000000),
   primary: const Color(0xFFECD8BD),
   secondary: const Color(0xFFFFFFFF),
+  primaryContainer: const Color(0xFF9E9E9E),
   secondaryContainer: const Color(0xFFD9D9D9),
   background: const Color(0xFF101010),
   onBackground: const Color(0xFF191919),
+  scrim: const Color(0x00000000),
 );
 
 const bottomNavigationBarThemeDataDark = BottomNavigationBarThemeData(

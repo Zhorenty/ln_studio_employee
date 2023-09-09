@@ -1,9 +1,9 @@
 import '/src/feature/staff/model/employee.dart';
 import 'package:rest_client/rest_client.dart';
 
-///
+/// Datasource for staff data.
 abstract interface class StaffDatasource {
-  ///
+  /// Fetch staff.
   Future<List<EmployeeModel>> fetchStaff();
 }
 

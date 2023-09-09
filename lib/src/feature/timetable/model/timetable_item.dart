@@ -30,9 +30,6 @@ final class TimetableItem {
         onWork: json['on_work'] as bool,
       );
 
-  /// Convert [TimetableItem] to json.
-  Map<String, Object?> toJson() => {};
-
   @override
   String toString() => 'Employee(dateAt: $dateAt)';
 }

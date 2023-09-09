@@ -1,11 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/foundation.dart';
 
 import 'job_place.dart';
 import 'salon.dart';
 import 'user.dart';
 
-class EmployeeModel {
-  EmployeeModel({
+/// Represents an employee in a salon with its properties.
+@immutable
+final class EmployeeModel {
+  const EmployeeModel({
     required this.id,
     required this.address,
     required this.jobPlaceId,
@@ -22,34 +24,49 @@ class EmployeeModel {
     this.dismissDate,
   });
 
+  /// UUID of employee.
   final int id;
 
+  /// Residential address of employee.
   final String address;
 
+  /// Id of employee's special skill.
   final int jobPlaceId;
 
+  /// Id of employee's salon.
   final int salonId;
 
+  /// Description of employee.
   final String description;
 
+  /// Date of employment.
   final DateTime dateOfEmployment;
 
+  /// Contract number of employee.
   final String contractNumber;
 
+  /// Percentage of sales earned by the employee.
   final double percentageOfSales;
 
+  /// Number of stars received by the employee.
   final int stars;
 
+  /// Indicates whether the employee is dismissed or not.
   final bool isDismiss;
 
+  /// Date of dismissal (if applicable).
   final DateTime? dismissDate;
 
+  /// User associated with the employee.
   final UserModel userModel;
 
+  /// Job place associated with the employee's special skill.
   final JobPlaceModel jobPlaceModel;
 
+  /// Salon associated with the employee.
   final SalonModel salonModel;
 
+  /// Returns [EmployeeModel] from [json].
   factory EmployeeModel.fromJson(Map<String, dynamic> json) {
     return EmployeeModel(
       id: json['id'] as int,
@@ -73,6 +90,7 @@ class EmployeeModel {
     );
   }
 
+  /// Converts [EmployeeModel] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'address': address,
