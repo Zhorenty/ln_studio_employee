@@ -31,19 +31,18 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/staff',
-              builder: (context, state) => const StaffScreen(),
-              routes: [
-                GoRoute(
-                  path: 'employee',
-                  parentNavigatorKey: _parentKey,
-                  builder: (context, state) {
-                    final employee = state.extra as EmployeeModel;
-                    return EmployeeScreen(employee: employee);
-                  },
-                ),
-              ],
-            ),
+                path: '/staff',
+                builder: (context, state) => const StaffScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'employee',
+                    parentNavigatorKey: _parentKey,
+                    builder: (context, state) {
+                      final employee = state.extra as EmployeeModel;
+                      return EmployeeScreen(employee: employee);
+                    },
+                  ),
+                ]),
           ],
         ),
         StatefulShellBranch(

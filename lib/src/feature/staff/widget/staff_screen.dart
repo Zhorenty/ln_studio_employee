@@ -55,6 +55,7 @@ class StaffScreen extends StatelessWidget {
                 itemCount: state.employeeStaff.length,
                 itemBuilder: (context, index) {
                   return Container(
+                    margin: const EdgeInsets.all(8),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: context.colorScheme.onBackground,
@@ -152,9 +153,11 @@ class StarRating extends StatelessWidget {
       children: List.generate(
         5,
         (index) => Icon(
-          index < rating ? Icons.star : Icons.star_border,
+          index < rating ? Icons.star_outlined : Icons.star_border_outlined,
           size: size,
-          color: index < rating ? context.colorScheme.primary : Colors.grey,
+          color: index < rating
+              ? context.colorScheme.primary
+              : const Color(0xFF9E9E9E),
         ),
       ),
     );

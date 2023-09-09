@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/feature/staff/model/employee.dart';
+import 'package:ln_employee/src/feature/staff/widget/staff_screen.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 
@@ -15,6 +16,8 @@ class EmployeeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nameController = TextEditingController();
+
+    nameController.text = employee.address;
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -30,7 +33,7 @@ class EmployeeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  employee.userModel.firstName,
+                  '${employee.userModel.firstName} ${employee.userModel.lastName}',
                   style: context.textTheme.titleLarge!.copyWith(
                     fontFamily: FontFamily.geologica,
                   ),
@@ -110,7 +113,18 @@ class EmployeeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Персональная информация'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Рейтинг',
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                              ),
+                            ),
+                            StarRating(rating: employee.stars)
+                          ],
+                        ),
                         CustomTextField(
                           controller: nameController,
                           label: 'Имя сотрудника',
@@ -146,28 +160,6 @@ class EmployeeScreen extends StatelessWidget {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.only(top: 8),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.onBackground,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Персональная информация'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -187,11 +179,12 @@ class CustomTextField extends StatelessWidget {
       padding: const EdgeInsets.only(top: 16),
       child: TextFormField(
         controller: controller,
+        style: context.textTheme.bodyLarge!.copyWith(
+          fontFamily: FontFamily.geologica,
+        ),
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          isDense: true,
         ),
       ),
     );

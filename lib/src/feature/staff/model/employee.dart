@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'job_place.dart';
 import 'salon.dart';
 import 'user.dart';
@@ -70,4 +72,21 @@ class EmployeeModel {
       salonModel: SalonModel.fromJson(json['salon'] as Map<String, dynamic>),
     );
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'address': address,
+        'job_place_id': jobPlaceId,
+        'salon_id': salonId,
+        'description': description,
+        'date_of_employment': dateOfEmployment.millisecondsSinceEpoch,
+        'contract_number': contractNumber,
+        'percentage_of_sales': percentageOfSales,
+        'stars': stars,
+        'is_dismiss': isDismiss,
+        'dismiss_date': dismissDate?.millisecondsSinceEpoch,
+        'user': userModel.toJson(),
+        'job_place': jobPlaceModel.toJson(),
+        'salon': salonModel.toJson(),
+      };
 }

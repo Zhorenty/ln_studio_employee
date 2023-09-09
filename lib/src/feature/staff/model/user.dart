@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:flutter/foundation.dart';
 
 @immutable
@@ -53,4 +55,18 @@ final class UserModel {
       isActive: json['is_active'] as bool,
     );
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'photo': photo,
+        'username': username,
+        'password': password,
+        'email': email,
+        'first_name': firstName,
+        'last_name': lastName,
+        'phone': phone,
+        'birth_date': birthDate.millisecondsSinceEpoch,
+        'is_superuser': isSuperuser,
+        'is_active': isActive,
+      };
 }
