@@ -176,7 +176,7 @@ class EmployeeScreen extends StatelessWidget {
                             StarRating(rating: employee.stars)
                           ],
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 16 + 8),
                         Text(
                           'Личная информация',
                           style: context.textTheme.bodyLarge!.copyWith(
