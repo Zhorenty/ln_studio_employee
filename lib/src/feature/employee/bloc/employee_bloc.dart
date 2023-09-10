@@ -4,7 +4,7 @@ import 'package:ln_employee/src/feature/employee/data/employee_repository.dart';
 import 'employee_event.dart';
 import 'employee_state.dart';
 
-/// Timetable bloc.
+/// Employee bloc.
 class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   EmployeeBloc({required this.employeeRepository})
       : super(const EmployeeState.idle()) {
@@ -18,7 +18,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   /// Repository for timetables data
   final EmployeeRepository employeeRepository;
 
-  /// Fill timetable items from repository.
+  /// Edit employee from repository.
   Future<void> _editEmployee(
     EmployeeEvent$EditEmployee event,
     Emitter<EmployeeState> emit,

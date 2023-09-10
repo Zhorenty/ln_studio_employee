@@ -1,9 +1,9 @@
 import 'package:intl/intl.dart';
 import 'package:rest_client/rest_client.dart';
 
-/// Datasource for staff data.
+/// Datasource for employee data.
 abstract interface class EmployeeDatasource {
-  /// Fetch staff.
+  /// Edit employee by [id].
   Future<void> editEmployee({
     required int id,
     required String firstName,
@@ -18,7 +18,7 @@ abstract interface class EmployeeDatasource {
   });
 }
 
-/// Implementation of Staff datasource.
+/// Implementation of employee datasource.
 class EmployeeDatasourceImpl implements EmployeeDatasource {
   EmployeeDatasourceImpl({required this.restClient});
 
@@ -27,16 +27,19 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
 
   @override
   Future<void> editEmployee({
+    /// Employee information
     required int id,
+    required String description,
+    required String address,
+    required String contractNumber,
+    required double percentageOfSales,
+    required int stars,
+
+    /// User information
+    required String email,
     required String firstName,
     required String lastName,
     required String phone,
-    required String address,
-    required String description,
-    required String contractNumber,
-    required String email,
-    required double percentageOfSales,
-    required int stars,
   }) async {
     restClient.put(
       '/api/employee/edit/$id',

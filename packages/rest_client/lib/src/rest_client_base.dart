@@ -48,6 +48,7 @@ base class RestClientBase implements RestClient {
       _send(
         path,
         method: 'PUT',
+        body: body,
         headers: headers,
         queryParams: queryParams,
       );

@@ -41,7 +41,6 @@ final class EmployeeEvent$EditEmployee extends EmployeeEvent {
   final String firstName;
   final String lastName;
   final String phone;
-
   final String address;
   final String description;
   final String email;

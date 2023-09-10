@@ -22,18 +22,14 @@ sealed class EmployeeState extends _$EmployeeStateBase {
 
 /// [EmployeeState.idle] state matcher.
 final class _EmployeeState$Idle extends EmployeeState {
-  const _EmployeeState$Idle({
-    super.employeeTimetable = const [],
-    super.error,
-  }) : super._();
+  const _EmployeeState$Idle({super.employeeTimetable = const [], super.error})
+      : super._();
 }
 
 /// [EmployeeState.loaded] state matcher.
 final class _EmployeeState$Loaded extends EmployeeState {
-  const _EmployeeState$Loaded({
-    required super.employeeTimetable,
-    super.error,
-  }) : super._();
+  const _EmployeeState$Loaded({required super.employeeTimetable, super.error})
+      : super._();
 }
 
 /// Timetable state base class.

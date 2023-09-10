@@ -287,6 +287,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               email: emailController.text,
                             ),
                           );
+                      _fetch();
                     },
                     child: const Text('Отправить'),
                   ),

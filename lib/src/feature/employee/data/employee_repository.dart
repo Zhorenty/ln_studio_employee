@@ -1,8 +1,8 @@
-import 'package:ln_employee/src/feature/employee/data/employee_datasource.dart';
+import '/src/feature/employee/data/employee_datasource.dart';
 
-/// Repository for timetables data.
+/// Repository for employee data.
 abstract interface class EmployeeRepository {
-  /// Fill time block items.
+  /// Edit employee by [id].
   Future<void> editEmployee({
     required int id,
     required String firstName,
@@ -17,7 +17,7 @@ abstract interface class EmployeeRepository {
   });
 }
 
-/// Implementation of the timetable repository.
+/// Implementation of the employee repository.
 final class EmployeeRepositoryImpl implements EmployeeRepository {
   EmployeeRepositoryImpl(this._dataSource);
 
