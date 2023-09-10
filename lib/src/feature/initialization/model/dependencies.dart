@@ -1,3 +1,4 @@
+import 'package:ln_employee/src/feature/employee/data/employee_repository.dart';
 import 'package:ln_employee/src/feature/staff/data/staff_repository.dart';
 import 'package:ln_employee/src/feature/timetable/data/timetable_repository.dart';
 import 'package:rest_client/rest_client.dart';
@@ -15,6 +16,8 @@ abstract interface class Dependencies {
   abstract final TimetableRepository timetableRepository;
 
   abstract final StaffRepository staffRepository;
+
+  abstract final EmployeeRepository employeeRepository;
 
   /// Freeze dependencies, so they cannot be modified.
   Dependencies freeze();
@@ -39,11 +42,15 @@ final class Dependencies$Mutable implements Dependencies {
   late StaffRepository staffRepository;
 
   @override
+  late EmployeeRepository employeeRepository;
+
+  @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
         timetableRepository: timetableRepository,
         staffRepository: staffRepository,
+        employeeRepository: employeeRepository,
       );
 }
 
@@ -56,6 +63,7 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.restClient,
     required this.timetableRepository,
     required this.staffRepository,
+    required this.employeeRepository,
   });
 
   @override
@@ -69,6 +77,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final StaffRepository staffRepository;
+
+  @override
+  final EmployeeRepository employeeRepository;
 
   @override
   Dependencies freeze() => this;

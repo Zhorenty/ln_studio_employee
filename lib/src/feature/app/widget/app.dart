@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/feature/employee/bloc/employee_bloc.dart';
 import 'package:ln_employee/src/feature/staff/bloc/staff_bloc.dart';
 import 'package:ln_employee/src/feature/staff/bloc/staff_event.dart';
 
@@ -35,6 +36,11 @@ class App extends StatelessWidget {
             create: (context) => StaffBloc(
               staffRepository: result.dependencies.staffRepository,
             )..add(const StaffEvent.fetch()),
+          ),
+          BlocProvider(
+            create: (context) => EmployeeBloc(
+              employeeRepository: result.dependencies.employeeRepository,
+            ),
           ),
         ],
         child: ScopesProvider(

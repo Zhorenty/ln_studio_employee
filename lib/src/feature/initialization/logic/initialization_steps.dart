@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/employee/data/employee_datasource.dart';
+import 'package:ln_employee/src/feature/employee/data/employee_repository.dart';
 import 'package:ln_employee/src/feature/staff/data/staff_datasource.dart';
 import 'package:ln_employee/src/feature/staff/data/staff_repository.dart';
 import 'package:ln_employee/src/feature/timetable/data/timetable_datasource.dart';
@@ -38,6 +40,13 @@ mixin InitializationSteps {
       );
       final staffRepository = StaffRepositoryImpl(staffDatasource);
       progress.dependencies.staffRepository = staffRepository;
+    },
+    'Employee repository': (progress) async {
+      final EmployeeDatasource employeeDatasource = EmployeeDatasourceImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final employeeRepository = EmployeeRepositoryImpl(employeeDatasource);
+      progress.dependencies.employeeRepository = employeeRepository;
     }
   };
 }
