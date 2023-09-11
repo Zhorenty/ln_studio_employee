@@ -1,19 +1,27 @@
+import 'package:ln_employee/src/feature/staff/model/employee.dart';
+
 import '/src/feature/employee/data/employee_datasource.dart';
 
 /// Repository for employee data.
 abstract interface class EmployeeRepository {
+  /// Fetch employee by id.
+  Future<EmployeeModel> getEmployee({required int id});
+
   /// Edit employee by [id].
-  Future<void> editEmployee({
+  Future<EmployeeModel> editEmployee({
+    /// Employee information
     required int id,
+    required String description,
+    required String address,
+    required String contractNumber,
+    required double percentageOfSales,
+    required int stars,
+
+    /// User information
+    required String email,
     required String firstName,
     required String lastName,
     required String phone,
-    required String address,
-    required String description,
-    required String contractNumber,
-    required String email,
-    required double percentageOfSales,
-    required int stars,
   });
 }
 
@@ -25,17 +33,24 @@ final class EmployeeRepositoryImpl implements EmployeeRepository {
   final EmployeeDatasource _dataSource;
 
   @override
-  Future<void> editEmployee({
+  Future<EmployeeModel> getEmployee({required int id}) =>
+      _dataSource.fetchEmployee(id: id);
+
+  @override
+  Future<EmployeeModel> editEmployee({
+    /// Employee information
     required int id,
-    required String firstName,
-    required String email,
-    required String lastName,
-    required String phone,
-    required String address,
     required String description,
+    required String address,
     required String contractNumber,
     required double percentageOfSales,
     required int stars,
+
+    /// User information
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String phone,
   }) =>
       _dataSource.editEmployee(
         id: id,

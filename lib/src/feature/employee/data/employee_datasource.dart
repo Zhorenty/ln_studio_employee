@@ -1,20 +1,28 @@
 import 'package:intl/intl.dart';
+import 'package:ln_employee/src/feature/staff/model/employee.dart';
+
 import 'package:rest_client/rest_client.dart';
 
 /// Datasource for employee data.
 abstract interface class EmployeeDatasource {
+  /// Fetch employee by id.
+  Future<EmployeeModel> fetchEmployee({required int id});
+
   /// Edit employee by [id].
-  Future<void> editEmployee({
+  Future<EmployeeModel> editEmployee({
+    /// Employee information
     required int id,
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required String address,
     required String description,
-    required String email,
+    required String address,
     required String contractNumber,
     required double percentageOfSales,
     required int stars,
+
+    /// User information
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String phone,
   });
 }
 
@@ -26,7 +34,14 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
   final RestClient restClient;
 
   @override
-  Future<void> editEmployee({
+  Future<EmployeeModel> fetchEmployee({required int id}) async {
+    final response = await restClient.get('/api/employee/$id');
+
+    return EmployeeModel.fromJson(response);
+  }
+
+  @override
+  Future<EmployeeModel> editEmployee({
     /// Employee information
     required int id,
     required String description,
@@ -41,7 +56,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
     required String lastName,
     required String phone,
   }) async {
-    restClient.put(
+    final result = await restClient.put(
       '/api/employee/edit/$id',
       body: {
         'address': address,
@@ -61,5 +76,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
         },
       },
     );
+
+    return EmployeeModel.fromJson(result);
   }
 }

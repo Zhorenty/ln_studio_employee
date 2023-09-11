@@ -45,6 +45,7 @@ dependencies:
     path: packages/rest_client
   dio: ^5.3.2
   table_calendar: ^3.0.9
+  shimmer: ^3.0.0
 
 dev_dependencies:
   # Testing
@@ -72,7 +73,9 @@ flutter_native_splash:
 
 flutter:
   uses-material-design: true
-
+  
+  shaders:
+    - assets/shaders/shimmer.frag
   assets:
     - assets/images/
   fonts:

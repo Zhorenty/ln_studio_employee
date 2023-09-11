@@ -1,95 +1,94 @@
 import 'package:flutter/foundation.dart';
+import 'package:ln_employee/src/feature/staff/model/employee.dart';
 
 import '/src/common/utils/pattern_match.dart';
-import '/src/feature/timetable/model/employee_timetable.dart';
+import '/src/feature/timetable/model/employee.dart';
 
-/// Timetable states.
 sealed class EmployeeState extends _$EmployeeStateBase {
-  const EmployeeState._({required super.employeeTimetable, super.error});
+  const EmployeeState._({
+    super.employee,
+    super.error,
+  });
 
-  /// Timetable is idle.
   const factory EmployeeState.idle({
-    List<EmployeeTimetable> employeeTimetable,
+    EmployeeModel? employee,
     String? error,
   }) = _EmployeeState$Idle;
 
-  /// Timetable is loaded.
-  const factory EmployeeState.loaded({
-    required List<EmployeeTimetable> employeeTimetable,
+  const factory EmployeeState.processing({
+    EmployeeModel? employee,
     String? error,
-  }) = _EmployeeState$Loaded;
+  }) = _EmployeeState$Processing;
 }
 
-/// [EmployeeState.idle] state matcher.
 final class _EmployeeState$Idle extends EmployeeState {
-  const _EmployeeState$Idle({super.employeeTimetable = const [], super.error})
-      : super._();
+  const _EmployeeState$Idle({
+    super.employee,
+    super.error,
+  }) : super._();
 }
 
-/// [EmployeeState.loaded] state matcher.
-final class _EmployeeState$Loaded extends EmployeeState {
-  const _EmployeeState$Loaded({required super.employeeTimetable, super.error})
-      : super._();
+final class _EmployeeState$Processing extends EmployeeState {
+  const _EmployeeState$Processing({
+    super.employee,
+    super.error,
+  }) : super._();
 }
 
-/// Timetable state base class.
 @immutable
 abstract base class _$EmployeeStateBase {
-  const _$EmployeeStateBase({required this.employeeTimetable, this.error});
+  const _$EmployeeStateBase({
+    this.employee,
+    this.error,
+  });
 
   @nonVirtual
-  final List<EmployeeTimetable> employeeTimetable;
+  final EmployeeModel? employee;
 
   @nonVirtual
   final String? error;
 
-  /// Indicator of whether there is an error.
   bool get hasError => error != null;
 
-  /// Indicator whether timetables is not empty.
-  bool get hasTimetables => employeeTimetable.isNotEmpty;
+  bool get hasEmployee => employee != null;
 
-  /// Indicator whether state is already loaded.
-  bool get isLoaded => maybeMap(
-        loaded: (_) => true,
+  bool get isProcessing => maybeMap(
+        processing: (_) => true,
         orElse: () => false,
       );
 
-  /// Indicator whether state is already idling.
   bool get isIdling => maybeMap(
         idle: (_) => true,
         orElse: () => false,
       );
 
-  /// Map over state union.
   R map<R>({
     required PatternMatch<R, _EmployeeState$Idle> idle,
-    required PatternMatch<R, _EmployeeState$Loaded> loaded,
+    required PatternMatch<R, _EmployeeState$Processing> processing,
   }) =>
       switch (this) {
         final _EmployeeState$Idle idleState => idle(idleState),
-        final _EmployeeState$Loaded loadedState => loaded(loadedState),
+        final _EmployeeState$Processing processingState =>
+          processing(processingState),
         _ => throw UnsupportedError('Unsupported state: $this'),
       };
 
-  /// Map over state union or return default if no match.
   R maybeMap<R>({
     required R Function() orElse,
     PatternMatch<R, _EmployeeState$Idle>? idle,
-    PatternMatch<R, _EmployeeState$Loaded>? loaded,
+    PatternMatch<R, _EmployeeState$Processing>? processing,
   }) =>
       map(
         idle: idle ?? (_) => orElse(),
-        loaded: loaded ?? (_) => orElse(),
+        processing: processing ?? (_) => orElse(),
       );
 
   @override
-  String toString() =>
-      'EmployeeState(Timetable: $employeeTimetable, error: $error)';
+  String toString() => 'EmployeeState(Employee: $Employee, error: $error)';
 
   @override
   bool operator ==(Object other) => identical(this, other);
 
   @override
-  int get hashCode => Object.hash(employeeTimetable, error);
+  int get hashCode => Object.hash(Employee, error);
 }

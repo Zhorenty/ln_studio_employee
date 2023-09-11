@@ -10,6 +10,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       : super(const EmployeeState.idle()) {
     on<EmployeeEvent>(
       (event, emit) => event.map(
+        fetch: (event) => _fetchEmployee(event, emit),
         editEmployee: (event) => _editEmployee(event, emit),
       ),
     );
@@ -19,23 +20,43 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   final EmployeeRepository employeeRepository;
 
   /// Edit employee from repository.
+  Future<void> _fetchEmployee(
+    EmployeeEvent$Fetch event,
+    Emitter<EmployeeState> emit,
+  ) async {
+    emit(EmployeeState.processing(employee: state.employee));
+    try {
+      final employee = await employeeRepository.getEmployee(id: event.id);
+      emit(EmployeeState.idle(employee: employee));
+    } on Object catch (e) {
+      emit(EmployeeState.idle(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  /// Edit employee from repository.
   Future<void> _editEmployee(
     EmployeeEvent$EditEmployee event,
     Emitter<EmployeeState> emit,
   ) async {
     try {
-      await employeeRepository.editEmployee(
+      final result = await employeeRepository.editEmployee(
+        /// Employee information
         id: event.id,
-        firstName: event.firstName,
-        lastName: event.lastName,
-        phone: event.phone,
-        address: event.address,
         description: event.description,
+        address: event.address,
         contractNumber: event.contractNumber,
         percentageOfSales: event.percentageOfSales,
         stars: event.stars,
+
+        /// User information
         email: event.email,
+        firstName: event.firstName,
+        lastName: event.lastName,
+        phone: event.phone,
       );
+
+      emit(EmployeeState.idle(employee: result));
     } on Object catch (e) {
       emit(EmployeeState.idle(error: e.toString()));
       rethrow;

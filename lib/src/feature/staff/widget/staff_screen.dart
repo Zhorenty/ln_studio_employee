@@ -83,7 +83,7 @@ class _StaffScreenState extends State<StaffScreen> {
                             _refresh();
                             context.go(
                               '/staff/employee',
-                              extra: state.employeeStaff[index],
+                              extra: state.employeeStaff[index].id,
                             );
                           },
                         ),
