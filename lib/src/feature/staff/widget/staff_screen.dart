@@ -72,17 +72,20 @@ class _StaffScreenState extends State<StaffScreen> {
                             ),
                             const SizedBox(height: 4),
                             StarRating(
-                              rating: state.employeeStaff[index].stars,
+                              initialRating: state.employeeStaff[index].stars,
                             )
                           ],
                         ),
                         const SizedBox.shrink(),
                         GestureDetector(
                           child: const Icon(Icons.edit, size: 20),
-                          onTap: () => context.go(
-                            '/staff/employee',
-                            extra: state.employeeStaff[index],
-                          ),
+                          onTap: () {
+                            _refresh();
+                            context.go(
+                              '/staff/employee',
+                              extra: state.employeeStaff[index].id,
+                            );
+                          },
                         ),
                       ],
                     ),

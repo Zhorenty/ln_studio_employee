@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/staff/model/employee.dart';
 import 'package:ln_employee/src/feature/staff/widget/staff_screen.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
@@ -31,18 +30,34 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-                path: '/staff',
-                builder: (context, state) => const StaffScreen(),
-                routes: [
-                  GoRoute(
-                    path: 'employee',
-                    parentNavigatorKey: _parentKey,
-                    builder: (context, state) {
-                      final employee = state.extra as EmployeeModel;
-                      return EmployeeScreen(employee: employee);
-                    },
-                  ),
-                ]),
+              path: '/staff',
+              builder: (context, state) => const StaffScreen(),
+              routes: [
+                GoRoute(
+                  path: 'employee',
+                  parentNavigatorKey: _parentKey,
+                  pageBuilder: (context, state) {
+                    final id = state.extra as int;
+                    return CustomTransitionPage<void>(
+                      key: state.pageKey,
+                      child: EmployeeScreen(employeeid: id),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        const begin = Offset(0.0, 1.0);
+                        const end = Offset.zero;
+                        final tween = Tween(begin: begin, end: end);
+                        final offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
           ],
         ),
         StatefulShellBranch(
