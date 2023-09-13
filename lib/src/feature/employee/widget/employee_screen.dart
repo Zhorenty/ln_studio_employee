@@ -7,16 +7,17 @@ import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
 import '/src/common/widget/custom_date_picker.dart';
+import '/src/common/widget/overlay/message_popup.dart';
 import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/bloc/employee_bloc.dart';
 import '/src/feature/employee/bloc/employee_event.dart';
 import '/src/feature/employee/bloc/employee_state.dart';
-import '/src/feature/employee/widget/expanded_app_bar.dart';
 import '/src/feature/employee/widget/skeleton_employee_screen.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';
 import '/src/feature/staff/bloc/staff_event.dart';
 
-import 'custom_text_field.dart';
+import 'components/custom_text_field.dart';
+import 'components/expanded_app_bar.dart';
 
 /// {@template employee_screen}
 /// Employee screen.
@@ -65,6 +66,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         } else {
           final employee = state.employee!;
           final user = state.employee!.userModel;
+          final dissmised = state.employee!.isDismiss;
 
           int stars = employee.stars;
           DateTime birthDate = user.birthDate;
@@ -137,6 +139,27 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       fontFamily: FontFamily.geologica,
                     ),
                   ),
+                  additionalTrailing: [
+                    ElevatedButton(
+                      onPressed: () {
+                        dissmised
+                            ? _reinstatement(employee.id)
+                            : _dismiss(employee.id);
+                        context.pop();
+                        MessagePopup.success(
+                          context,
+                          dissmised
+                              ? 'Вы вернули сотрудника на должность'
+                              : 'Сотрудник успешно уволен',
+                        );
+                      },
+                      child: Text(
+                        dissmised
+                            ? 'Восстановить сотрудника в должности'
+                            : 'Уволить сотрудника',
+                      ),
+                    ),
+                  ],
                   onExit: () => _refreshStaff().then((_) => context.pop()),
                 ),
                 CupertinoSliverRefreshControl(
@@ -164,7 +187,26 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 16 + 8),
+                            const SizedBox(height: 16),
+                            DefaultTextStyle(
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: dissmised
+                                    ? const Color(0xFFF45636)
+                                    : context.colorScheme.primary,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const _Header(label: 'Статус сотрудника'),
+                                  dissmised
+                                      ? const Text('Уволен')
+                                      : const Text('Работает')
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                             const _Header(label: 'Личная информация'),
                             const _UnderscoreWidget(),
                             CustomTextField(
@@ -237,6 +279,16 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         }
       },
     );
+  }
+
+  /// Dismiss employee by [id].
+  Future<void> _dismiss(int id) async {
+    context.read<EmployeeBloc>().add(EmployeeEvent.dismiss(id: id));
+  }
+
+  /// Dismiss employee by [id].
+  Future<void> _reinstatement(int id) async {
+    context.read<EmployeeBloc>().add(EmployeeEvent.reinstatement(id: id));
   }
 
   /// Fetch employee by [id].

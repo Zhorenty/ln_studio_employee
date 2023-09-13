@@ -28,6 +28,14 @@ sealed class EmployeeEvent extends _$EmployeeEventBase {
     required String phone,
     required DateTime birthDate,
   }) = EmployeeEvent$EditEmployee;
+
+  /// Factory for dismissing employee by id.
+  const factory EmployeeEvent.dismiss({required int id}) =
+      EmployeeEvent$Dismiss;
+
+  /// Factory for reinstatement employee by id.
+  const factory EmployeeEvent.reinstatement({required int id}) =
+      EmployeeEvent$Reinstatement;
 }
 
 /// [EmployeeEvent.fetch] event.
@@ -75,6 +83,22 @@ final class EmployeeEvent$EditEmployee extends EmployeeEvent {
   final DateTime birthDate;
 }
 
+/// [EmployeeEvent.dismiss] event.
+final class EmployeeEvent$Dismiss extends EmployeeEvent {
+  const EmployeeEvent$Dismiss({required this.id}) : super();
+
+  /// Employee's id.
+  final int id;
+}
+
+/// [EmployeeEvent.reinstatement] event.
+final class EmployeeEvent$Reinstatement extends EmployeeEvent {
+  const EmployeeEvent$Reinstatement({required this.id}) : super();
+
+  /// Employee's id.
+  final int id;
+}
+
 /// Timetable events base class.
 abstract base class _$EmployeeEventBase {
   const _$EmployeeEventBase();
@@ -83,10 +107,14 @@ abstract base class _$EmployeeEventBase {
   R map<R>({
     required PatternMatch<R, EmployeeEvent$Fetch> fetch,
     required PatternMatch<R, EmployeeEvent$EditEmployee> editEmployee,
+    required PatternMatch<R, EmployeeEvent$Dismiss> dismiss,
+    required PatternMatch<R, EmployeeEvent$Reinstatement> reinstatement,
   }) =>
       switch (this) {
         final EmployeeEvent$Fetch s => fetch(s),
         final EmployeeEvent$EditEmployee s => editEmployee(s),
+        final EmployeeEvent$Dismiss s => dismiss(s),
+        final EmployeeEvent$Reinstatement s => reinstatement(s),
         _ => throw AssertionError(),
       };
 
@@ -95,19 +123,27 @@ abstract base class _$EmployeeEventBase {
     required R Function() orElse,
     PatternMatch<R, EmployeeEvent$Fetch>? fetch,
     PatternMatch<R, EmployeeEvent$EditEmployee>? editEmployee,
+    PatternMatch<R, EmployeeEvent$Dismiss>? dismiss,
+    PatternMatch<R, EmployeeEvent$Reinstatement>? reinstatement,
   }) =>
       map<R>(
         fetch: fetch ?? (_) => orElse(),
         editEmployee: editEmployee ?? (_) => orElse(),
+        dismiss: dismiss ?? (_) => orElse(),
+        reinstatement: reinstatement ?? (_) => orElse(),
       );
 
   /// Map over state union or return null if no match.
   R? mapOrNull<R>({
     PatternMatch<R, EmployeeEvent$Fetch>? fetch,
     PatternMatch<R, EmployeeEvent$EditEmployee>? editEmployee,
+    PatternMatch<R, EmployeeEvent$Dismiss>? dismiss,
+    PatternMatch<R, EmployeeEvent$Reinstatement>? reinstatement,
   }) =>
       map<R?>(
         fetch: fetch ?? (_) => null,
         editEmployee: editEmployee ?? (_) => null,
+        dismiss: dismiss ?? (_) => null,
+        reinstatement: reinstatement ?? (_) => null,
       );
 }

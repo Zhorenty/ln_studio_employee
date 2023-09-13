@@ -25,6 +25,12 @@ abstract interface class EmployeeRepository {
     required String phone,
     required DateTime birthDate,
   });
+
+  /// Dismiss employee by id.
+  Future<void> dismissEmployee({required int id});
+
+  /// Reinstatement employee by id.
+  Future<void> reinstatementmployee({required int id});
 }
 
 /// Implementation of the employee repository.
@@ -70,4 +76,12 @@ final class EmployeeRepositoryImpl implements EmployeeRepository {
         email: email,
         birthDate: birthDate,
       );
+
+  @override
+  Future<void> dismissEmployee({required int id}) =>
+      _dataSource.dismissEmployee(id: id);
+
+  @override
+  Future<void> reinstatementmployee({required int id}) =>
+      _dataSource.reinstatementEmployee(id: id);
 }

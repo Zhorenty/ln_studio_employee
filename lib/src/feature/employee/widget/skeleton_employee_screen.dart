@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/shimmer.dart';
-import '/src/feature/employee/widget/expanded_app_bar.dart';
+import 'components/expanded_app_bar.dart';
 
 class SkeletonEmployeeScreen extends StatelessWidget {
   const SkeletonEmployeeScreen({super.key});

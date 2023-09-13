@@ -35,7 +35,7 @@ abstract class RestClient {
 
   Future<Map<String, Object?>> patch(
     String path, {
-    required Map<String, Object?> body,
+    Map<String, Object?> body,
     Map<String, Object?>? headers,
     Map<String, Object?>? queryParams,
   });

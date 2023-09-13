@@ -26,6 +26,12 @@ abstract interface class EmployeeDatasource {
     required String phone,
     required DateTime birthDate,
   });
+
+  /// Dismiss employee by id.
+  Future<void> dismissEmployee({required int id});
+
+  /// Reinstatement employee by id.
+  Future<void> reinstatementEmployee({required int id});
 }
 
 /// Implementation of employee datasource.
@@ -85,4 +91,12 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
 
     return EmployeeModel.fromJson(result);
   }
+
+  @override
+  Future<void> dismissEmployee({required int id}) async =>
+      await restClient.delete('/api/employee/dismiss/$id');
+
+  @override
+  Future<void> reinstatementEmployee({required int id}) async =>
+      await restClient.patch('/api/employee/return/$id');
 }

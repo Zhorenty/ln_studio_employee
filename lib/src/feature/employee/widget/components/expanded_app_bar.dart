@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/animated_button.dart';
+import '/src/common/widget/overlay/message_popup.dart';
 
 /// Custom-styled expanded [SliverAppBar].
 class ExpandedAppBar extends StatelessWidget {
@@ -11,6 +12,7 @@ class ExpandedAppBar extends StatelessWidget {
     required this.title,
     required this.leading,
     required this.trailing,
+    this.additionalTrailing = const <Widget>[],
     this.onExit,
   });
 
@@ -22,6 +24,9 @@ class ExpandedAppBar extends StatelessWidget {
 
   /// Trailing widget of this [ExpandedAppBar].
   final Widget trailing;
+
+  /// Additional trailing widgets.
+  final List<Widget> additionalTrailing;
 
   /// Callback, called when icon is pressed.
   final void Function()? onExit;
@@ -46,14 +51,12 @@ class ExpandedAppBar extends StatelessWidget {
       pinned: true,
       leading: Align(
         alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: IconButton(
-            onPressed: onExit,
-            icon: Icon(
-              Icons.arrow_back_ios_new_outlined,
-              color: context.colorScheme.primary,
-            ),
+        child: AnimatedButton(
+          padding: const EdgeInsets.only(top: 16 + 8 + 4, left: 8),
+          onPressed: onExit,
+          child: Icon(
+            Icons.arrow_back_ios_new_outlined,
+            color: context.colorScheme.primary,
           ),
         ),
       ),
@@ -61,14 +64,20 @@ class ExpandedAppBar extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 100),
           child: AnimatedButton(
-            padding: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 8 + 2),
             child: Icon(
-              Icons.notifications_rounded,
+              Icons.more_horiz_rounded,
               color: context.colorScheme.primary,
             ),
 
             /// TODO(zhorenty): Button "Delete employee here"
-            onPressed: () {},
+            onPressed: () {
+              MessagePopup.bottomSheet(
+                context,
+                'Действия с сотрудником',
+                additional: additionalTrailing,
+              );
+            },
           ),
         )
       ],
