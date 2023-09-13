@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/overlay/message_popup.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -142,6 +143,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       onPressed: () {
                         _dismiss(employee.id).then((_) => _fetch(employee.id));
                         context.pop();
+                        MessagePopup.success(
+                          context,
+                          'Сотрудник успешно уволен',
+                        );
                       },
                       child: const Text('Уволить сотрудника'),
                     ),
