@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/animated_button.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -77,9 +78,9 @@ class _StaffScreenState extends State<StaffScreen> {
                           ],
                         ),
                         const SizedBox.shrink(),
-                        GestureDetector(
+                        AnimatedButton(
                           child: const Icon(Icons.edit, size: 20),
-                          onTap: () {
+                          onPressed: () {
                             _refresh();
                             context.go(
                               '/staff/employee',

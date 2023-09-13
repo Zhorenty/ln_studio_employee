@@ -84,10 +84,8 @@ class CustomTextField extends StatelessWidget {
                     color: context.colorScheme.primary,
                   ),
                   onPressed: () {
-                    Clipboard.setData(
-                      ClipboardData(text: controller!.text),
-                    );
-                    MessagePopup.error(context, 'Скопировано');
+                    Clipboard.setData(ClipboardData(text: controller!.text));
+                    MessagePopup.success(context, 'Скопировано');
                   },
                 )
               : const SizedBox.shrink(),

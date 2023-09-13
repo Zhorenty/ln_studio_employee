@@ -66,6 +66,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         } else {
           final employee = state.employee!;
           final user = state.employee!.userModel;
+          final dissmised = state.employee!.isDismiss;
 
           int stars = employee.stars;
           DateTime birthDate = user.birthDate;
@@ -141,14 +142,22 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   additionalTrailing: [
                     ElevatedButton(
                       onPressed: () {
-                        _dismiss(employee.id).then((_) => _fetch(employee.id));
+                        dissmised
+                            ? _reinstatement(employee.id)
+                            : _dismiss(employee.id);
                         context.pop();
                         MessagePopup.success(
                           context,
-                          'Сотрудник успешно уволен',
+                          dissmised
+                              ? 'Вы вернули сотрудника на должность'
+                              : 'Сотрудник успешно уволен',
                         );
                       },
-                      child: const Text('Уволить сотрудника'),
+                      child: Text(
+                        dissmised
+                            ? 'Восстановить сотрудника в должности'
+                            : 'Уволить сотрудника',
+                      ),
                     ),
                   ],
                   onExit: () => _refreshStaff().then((_) => context.pop()),
@@ -182,7 +191,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                             DefaultTextStyle(
                               style: context.textTheme.bodyLarge!.copyWith(
                                 fontFamily: FontFamily.geologica,
-                                color: employee.isDismiss
+                                color: dissmised
                                     ? const Color(0xFFF45636)
                                     : context.colorScheme.primary,
                               ),
@@ -191,7 +200,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   const _Header(label: 'Статус сотрудника'),
-                                  employee.isDismiss
+                                  dissmised
                                       ? const Text('Уволен')
                                       : const Text('Работает')
                                 ],
@@ -272,9 +281,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
-  /// Fetch employee by [id].
+  /// Dismiss employee by [id].
   Future<void> _dismiss(int id) async {
     context.read<EmployeeBloc>().add(EmployeeEvent.dismiss(id: id));
+  }
+
+  /// Dismiss employee by [id].
+  Future<void> _reinstatement(int id) async {
+    context.read<EmployeeBloc>().add(EmployeeEvent.reinstatement(id: id));
   }
 
   /// Fetch employee by [id].

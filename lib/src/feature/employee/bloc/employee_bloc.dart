@@ -13,6 +13,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
         fetch: (event) => _fetchEmployee(event, emit),
         editEmployee: (event) => _editEmployee(event, emit),
         dismiss: (event) => _dismissEmployee(event, emit),
+        reinstatement: (event) => _reinstatementEmployee(event, emit),
       ),
     );
   }
@@ -42,8 +43,10 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   ) async {
     try {
       final employee = await employeeRepository.editEmployee(
-        /// Employee information
+        /// Employee id
         id: event.id,
+
+        /// Employee information
         description: event.description,
         address: event.address,
         contractNumber: event.contractNumber,
@@ -73,6 +76,22 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     emit(EmployeeState.processing(employee: state.employee));
     try {
       await employeeRepository.dismissEmployee(id: event.id);
+      add(EmployeeEvent.fetch(id: event.id));
+    } on Object catch (e) {
+      emit(EmployeeState.idle(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  /// Reinstatement employee from repository.
+  Future<void> _reinstatementEmployee(
+    EmployeeEvent$Reinstatement event,
+    Emitter<EmployeeState> emit,
+  ) async {
+    emit(EmployeeState.processing(employee: state.employee));
+    try {
+      await employeeRepository.reinstatementmployee(id: event.id);
+      add(EmployeeEvent.fetch(id: event.id));
     } on Object catch (e) {
       emit(EmployeeState.idle(error: e.toString()));
       rethrow;

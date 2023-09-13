@@ -51,14 +51,12 @@ class ExpandedAppBar extends StatelessWidget {
       pinned: true,
       leading: Align(
         alignment: Alignment.topLeft,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: IconButton(
-            onPressed: onExit,
-            icon: Icon(
-              Icons.arrow_back_ios_new_outlined,
-              color: context.colorScheme.primary,
-            ),
+        child: AnimatedButton(
+          padding: const EdgeInsets.only(top: 16 + 8 + 4, left: 8),
+          onPressed: onExit,
+          child: Icon(
+            Icons.arrow_back_ios_new_outlined,
+            color: context.colorScheme.primary,
           ),
         ),
       ),
