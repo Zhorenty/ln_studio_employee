@@ -1,8 +1,9 @@
-import 'package:ln_employee/src/feature/employee/data/employee_repository.dart';
-import 'package:ln_employee/src/feature/staff/data/staff_repository.dart';
-import 'package:ln_employee/src/feature/timetable/data/timetable_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '/src/feature/employee/data/employee_repository.dart';
+import '/src/feature/staff/data/staff_repository.dart';
+import '/src/feature/timetable/data/timetable_repository.dart';
 
 /// Dependencies container.
 abstract interface class Dependencies {
@@ -15,8 +16,10 @@ abstract interface class Dependencies {
   /// Timetable repository.
   abstract final TimetableRepository timetableRepository;
 
+  /// Staff repository.
   abstract final StaffRepository staffRepository;
 
+  /// Employee  repository.
   abstract final EmployeeRepository employeeRepository;
 
   /// Freeze dependencies, so they cannot be modified.
