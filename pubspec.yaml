@@ -3,12 +3,12 @@ description: >
   Bla bla bla
 
 # Prevent accidental publishing to pub.dev.
-publish_to: 'none' 
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.6 <4.0.0'
+  sdk: ">=3.0.6 <4.0.0"
 
 dependencies:
   # Flutter SDK
@@ -50,7 +50,6 @@ dependencies:
   # Widgets
   table_calendar: ^3.0.9
 
-
 dev_dependencies:
   # Testing
   flutter_test:
@@ -62,6 +61,7 @@ dev_dependencies:
 
   # Lints
   flutter_lints: ^2.0.0
+  meta: ^1.10.0
 
   # Splash & launcher icon
   flutter_launcher_icons: ^0.11.0
@@ -77,7 +77,7 @@ flutter_native_splash:
 
 flutter:
   uses-material-design: true
-  
+
   shaders:
     - assets/shaders/shimmer.frag
   assets:

@@ -94,21 +94,24 @@ class _StaffScreenState extends State<StaffScreen> {
                 ),
               ),
               SliverToBoxAdapter(
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.sizeOf(context).width / 8,
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text(
-                      context.stringOf().addEmployee,
-                      style: context.textTheme.titleMedium!.copyWith(
-                        color: context.colorScheme.background,
-                        fontFamily: FontFamily.geologica,
+                child: GestureDetector(
+                  onTap: () => context.goNamed('/create_employee'),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.sizeOf(context).width / 8,
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        context.stringOf().addEmployee,
+                        style: context.textTheme.titleMedium!.copyWith(
+                          color: context.colorScheme.background,
+                          fontFamily: FontFamily.geologica,
+                        ),
                       ),
                     ),
                   ),
