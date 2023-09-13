@@ -12,6 +12,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       (event, emit) => event.map(
         fetch: (event) => _fetchEmployee(event, emit),
         editEmployee: (event) => _editEmployee(event, emit),
+        dismiss: (event) => _dismissEmployee(event, emit),
       ),
     );
   }
@@ -58,6 +59,20 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
         birthDate: event.birthDate,
       );
       emit(EmployeeState.idle(employee: employee));
+    } on Object catch (e) {
+      emit(EmployeeState.idle(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  /// Dismiss employee from repository.
+  Future<void> _dismissEmployee(
+    EmployeeEvent$Dismiss event,
+    Emitter<EmployeeState> emit,
+  ) async {
+    emit(EmployeeState.processing(employee: state.employee));
+    try {
+      await employeeRepository.dismissEmployee(id: event.id);
     } on Object catch (e) {
       emit(EmployeeState.idle(error: e.toString()));
       rethrow;

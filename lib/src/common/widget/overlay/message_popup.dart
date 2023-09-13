@@ -30,7 +30,7 @@ class MessagePopup {
   /// and [additional] widgets to put under the [description].
   static Future<bool?> bottomSheet(
     BuildContext context,
-    String title, {
+    String? title, {
     List<TextSpan> description = const [],
     List<Widget> additional = const [],
   }) {
@@ -67,14 +67,6 @@ class MessagePopup {
                       ),
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(height: 25),
-              Padding(
-                padding: ModalPopup.padding(context),
-                child: ElevatedButton(
-                  child: const Text('btn_proceed'),
-                  onPressed: () => context.pop(),
                 ),
               ),
               const SizedBox(height: 16),

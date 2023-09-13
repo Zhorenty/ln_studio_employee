@@ -11,12 +11,12 @@ import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/bloc/employee_bloc.dart';
 import '/src/feature/employee/bloc/employee_event.dart';
 import '/src/feature/employee/bloc/employee_state.dart';
-import '/src/feature/employee/widget/expanded_app_bar.dart';
 import '/src/feature/employee/widget/skeleton_employee_screen.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';
 import '/src/feature/staff/bloc/staff_event.dart';
 
-import 'custom_text_field.dart';
+import 'components/custom_text_field.dart';
+import 'components/expanded_app_bar.dart';
 
 /// {@template employee_screen}
 /// Employee screen.
@@ -137,6 +137,15 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       fontFamily: FontFamily.geologica,
                     ),
                   ),
+                  additionalTrailing: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _dismiss(employee.id).then((_) => _fetch(employee.id));
+                        context.pop();
+                      },
+                      child: const Text('Уволить сотрудника'),
+                    ),
+                  ],
                   onExit: () => _refreshStaff().then((_) => context.pop()),
                 ),
                 CupertinoSliverRefreshControl(
@@ -164,7 +173,26 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 16 + 8),
+                            const SizedBox(height: 16),
+                            DefaultTextStyle(
+                              style: context.textTheme.bodyLarge!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: employee.isDismiss
+                                    ? const Color(0xFFF45636)
+                                    : context.colorScheme.primary,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const _Header(label: 'Статус сотрудника'),
+                                  employee.isDismiss
+                                      ? const Text('Уволен')
+                                      : const Text('Работает')
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                             const _Header(label: 'Личная информация'),
                             const _UnderscoreWidget(),
                             CustomTextField(
@@ -237,6 +265,11 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         }
       },
     );
+  }
+
+  /// Fetch employee by [id].
+  Future<void> _dismiss(int id) async {
+    context.read<EmployeeBloc>().add(EmployeeEvent.dismiss(id: id));
   }
 
   /// Fetch employee by [id].

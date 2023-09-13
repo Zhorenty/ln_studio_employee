@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/widget/overlay/message_popup.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -11,6 +12,7 @@ class ExpandedAppBar extends StatelessWidget {
     required this.title,
     required this.leading,
     required this.trailing,
+    this.additionalTrailing = const <Widget>[],
     this.onExit,
   });
 
@@ -22,6 +24,9 @@ class ExpandedAppBar extends StatelessWidget {
 
   /// Trailing widget of this [ExpandedAppBar].
   final Widget trailing;
+
+  ///
+  final List<Widget> additionalTrailing;
 
   /// Callback, called when icon is pressed.
   final void Function()? onExit;
@@ -61,14 +66,20 @@ class ExpandedAppBar extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 100),
           child: AnimatedButton(
-            padding: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 8 + 2),
             child: Icon(
-              Icons.notifications_rounded,
+              Icons.more_horiz_rounded,
               color: context.colorScheme.primary,
             ),
 
             /// TODO(zhorenty): Button "Delete employee here"
-            onPressed: () {},
+            onPressed: () {
+              MessagePopup.bottomSheet(
+                context,
+                'Действия с сотрудником',
+                additional: additionalTrailing,
+              );
+            },
           ),
         )
       ],
