@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/animated_button.dart';
 
 /// Custom-styled [SliverAppBar].
 class CustomSliverAppBar extends StatelessWidget {
@@ -23,12 +24,13 @@ class CustomSliverAppBar extends StatelessWidget {
         ),
       ),
       actions: [
-        IconButton(
-          icon: Icon(
+        AnimatedButton(
+          padding: const EdgeInsets.only(right: 8),
+          child: Icon(
             Icons.notifications_rounded,
             color: context.colorScheme.primary,
           ),
-          // TODO: Implement NotificationsScreen.
+          // TODO(zhorenty): Implement NotificationsScreen.
           onPressed: () {},
         ),
       ],
@@ -38,7 +40,7 @@ class CustomSliverAppBar extends StatelessWidget {
         preferredSize: Size(300, 62),
         child: Padding(
           padding: EdgeInsets.only(bottom: 12),
-          // TODO: Fetch salon from backend.
+          // TODO(zhorenty): Fetch salon from backend.
           child: _GesturedContainer(label: 'ул. Степана Разина, д. 72'),
         ),
       ),
@@ -56,7 +58,7 @@ class _GesturedContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GestureDetector(
         onTap: () {
-          /// TODO: Move into separate widget
+          /// TODO(zhorenty): Move into separate widget
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {

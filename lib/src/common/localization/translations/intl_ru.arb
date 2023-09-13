@@ -1,9 +1,17 @@
 {
-  "appTitle": "LN Employee",
-  "employees": "Сотрудники",
+  "@_Summary" :{},
   "noEmployees": "Нет сотрудников",
-  "addEmployee": "Добавить сотрудника",
-  "workShedule": "График работы",
   "unknownError": "Неизвестная ошибка: {value}",
-  "exceptionOccurred": "Возникло исключение: {value}"
+  "exceptionOccurred": "Возникло исключение: {value}",
+
+  "@_Timetable" :{},
+  "workShedule": "График работы",
+
+  "@_Staff" :{},
+  "employees": "Сотрудники",
+  "addEmployee": "Добавить сотрудника",
+
+  "@_Employee" :{},
+  "amountOfClients": "Кол-во клиентов",
+  "daysWorkedOut": "Дней отработано"
 }

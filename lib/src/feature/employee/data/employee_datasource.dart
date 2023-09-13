@@ -1,7 +1,7 @@
-import 'package:intl/intl.dart';
-import 'package:ln_employee/src/feature/staff/model/employee.dart';
-
 import 'package:rest_client/rest_client.dart';
+
+import '/src/common/utils/extensions/date_time_extension.dart';
+import '/src/feature/staff/model/employee.dart';
 
 /// Datasource for employee data.
 abstract interface class EmployeeDatasource {
@@ -17,12 +17,14 @@ abstract interface class EmployeeDatasource {
     required String contractNumber,
     required double percentageOfSales,
     required int stars,
+    required DateTime dateOfEmployment,
 
     /// User information
     required String email,
     required String firstName,
     required String lastName,
     required String phone,
+    required DateTime birthDate,
   });
 }
 
@@ -40,6 +42,8 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
     return EmployeeModel.fromJson(response);
   }
 
+  /// TODO(zhorenty): Может быть можно поменять это все на EmployeeModel
+  ///  и UserModel.
   @override
   Future<EmployeeModel> editEmployee({
     /// Employee information
@@ -49,12 +53,14 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
     required String contractNumber,
     required double percentageOfSales,
     required int stars,
+    required DateTime dateOfEmployment,
 
     /// User information
     required String email,
     required String firstName,
     required String lastName,
     required String phone,
+    required DateTime birthDate,
   }) async {
     final result = await restClient.put(
       '/api/employee/edit/$id',
@@ -63,7 +69,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
         'job_place_id': 1,
         'salon_id': 1,
         'description': description,
-        'date_of_employment': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        'date_of_employment': dateOfEmployment.format(),
         'contract_number': contractNumber,
         'percentage_of_sales': percentageOfSales,
         'stars': stars,
@@ -72,7 +78,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
           'first_name': firstName,
           'last_name': lastName,
           'phone': phone,
-          'birth_date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          'birth_date': birthDate.format(),
         },
       },
     );

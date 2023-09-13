@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '/src/common/utils/extensions/date_time_extension.dart';
 import 'job_place.dart';
 import 'salon.dart';
 import 'user.dart';
@@ -97,7 +98,7 @@ final class EmployeeModel {
         'job_place_id': jobPlaceId,
         'salon_id': salonId,
         'description': description,
-        'date_of_employment': dateOfEmployment.millisecondsSinceEpoch,
+        'date_of_employment': dateOfEmployment.format(),
         'contract_number': contractNumber,
         'percentage_of_sales': percentageOfSales,
         'stars': stars,

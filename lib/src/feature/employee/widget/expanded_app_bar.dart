@@ -2,24 +2,29 @@ import 'package:flutter/material.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/animated_button.dart';
 
-/// TODO: Refactor
+/// Custom-styled expanded [SliverAppBar].
 class ExpandedAppBar extends StatelessWidget {
   const ExpandedAppBar({
     super.key,
     required this.title,
     required this.leading,
     required this.trailing,
-    this.onPressed,
+    this.onExit,
   });
 
+  /// Primary widget displayed in the app bar under the [CircleAvatar].
   final Widget title;
 
+  /// Leading widget of this [ExpandedAppBar].
   final Widget leading;
 
+  /// Trailing widget of this [ExpandedAppBar].
   final Widget trailing;
 
-  final void Function()? onPressed;
+  /// Callback, called when icon is pressed.
+  final void Function()? onExit;
 
   @override
   Widget build(BuildContext context) {
@@ -44,18 +49,26 @@ class ExpandedAppBar extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 16),
           child: IconButton(
-            onPressed: onPressed,
-            icon: const Icon(Icons.arrow_back_ios_new_outlined),
+            onPressed: onExit,
+            icon: Icon(
+              Icons.arrow_back_ios_new_outlined,
+              color: context.colorScheme.primary,
+            ),
           ),
         ),
       ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(bottom: 100),
-          child: IconButton(
-            /// TODO: Button "Delete employee here"
+          child: AnimatedButton(
+            padding: const EdgeInsets.only(right: 8),
+            child: Icon(
+              Icons.notifications_rounded,
+              color: context.colorScheme.primary,
+            ),
+
+            /// TODO(zhorenty): Button "Delete employee here"
             onPressed: () {},
-            icon: const Icon(Icons.more_horiz_outlined),
           ),
         )
       ],
@@ -70,7 +83,7 @@ class ExpandedAppBar extends StatelessWidget {
                 children: [
                   leading,
                   Text(
-                    'Кол-во клиентов',
+                    context.stringOf().amountOfClients,
                     style: context.textTheme.titleSmall!.copyWith(
                       fontFamily: FontFamily.geologica,
                       color: const Color(0xFFA8A6A6),
@@ -82,7 +95,7 @@ class ExpandedAppBar extends StatelessWidget {
                 children: [
                   trailing,
                   Text(
-                    'Дней отработано',
+                    context.stringOf().daysWorkedOut,
                     style: context.textTheme.titleSmall!.copyWith(
                       fontFamily: FontFamily.geologica,
                       color: const Color(0xFFA8A6A6),

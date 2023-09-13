@@ -16,12 +16,14 @@ abstract interface class EmployeeRepository {
     required String contractNumber,
     required double percentageOfSales,
     required int stars,
+    required DateTime dateOfEmployment,
 
     /// User information
     required String email,
     required String firstName,
     required String lastName,
     required String phone,
+    required DateTime birthDate,
   });
 }
 
@@ -45,23 +47,27 @@ final class EmployeeRepositoryImpl implements EmployeeRepository {
     required String contractNumber,
     required double percentageOfSales,
     required int stars,
+    required DateTime dateOfEmployment,
 
     /// User information
     required String email,
     required String firstName,
     required String lastName,
     required String phone,
+    required DateTime birthDate,
   }) =>
       _dataSource.editEmployee(
         id: id,
         firstName: firstName,
         lastName: lastName,
         phone: phone,
+        dateOfEmployment: dateOfEmployment,
         address: address,
         description: description,
         contractNumber: contractNumber,
         percentageOfSales: percentageOfSales,
         stars: stars,
         email: email,
+        birthDate: birthDate,
       );
 }

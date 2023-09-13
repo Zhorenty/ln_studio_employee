@@ -1,6 +1,6 @@
-import 'package:intl/intl.dart';
 import 'package:rest_client/rest_client.dart';
 
+import '/src/common/utils/extensions/date_time_extension.dart';
 import '/src/feature/timetable/model/employee_timetable.dart';
 
 /// Datasource for timetables data.
@@ -45,7 +45,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
       body: {
         'employee_id': employeeId,
         'salon_id': salonId,
-        'date_at': DateFormat('yyyy-MM-dd').format(dateAt),
+        'date_at': dateAt.format(),
       },
     );
   }

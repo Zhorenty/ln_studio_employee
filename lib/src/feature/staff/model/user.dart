@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '/src/common/utils/extensions/date_time_extension.dart';
+
 @immutable
 final class UserModel {
   const UserModel({
@@ -76,7 +78,7 @@ final class UserModel {
         'first_name': firstName,
         'last_name': lastName,
         'phone': phone,
-        'birth_date': birthDate.millisecondsSinceEpoch,
+        'birth_date': birthDate.format(),
         'is_superuser': isSuperuser,
         'is_active': isActive,
       };

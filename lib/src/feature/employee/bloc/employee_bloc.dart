@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/employee/data/employee_repository.dart';
 
+import '/src/feature/employee/data/employee_repository.dart';
 import 'employee_event.dart';
 import 'employee_state.dart';
 
@@ -16,7 +16,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     );
   }
 
-  /// Repository for timetables data
+  /// Repository for employee data
   final EmployeeRepository employeeRepository;
 
   /// Edit employee from repository.
@@ -40,7 +40,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     Emitter<EmployeeState> emit,
   ) async {
     try {
-      final result = await employeeRepository.editEmployee(
+      final employee = await employeeRepository.editEmployee(
         /// Employee information
         id: event.id,
         description: event.description,
@@ -48,15 +48,16 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
         contractNumber: event.contractNumber,
         percentageOfSales: event.percentageOfSales,
         stars: event.stars,
+        dateOfEmployment: event.dateOfEmployment,
 
         /// User information
         email: event.email,
         firstName: event.firstName,
         lastName: event.lastName,
         phone: event.phone,
+        birthDate: event.birthDate,
       );
-
-      emit(EmployeeState.idle(employee: result));
+      emit(EmployeeState.idle(employee: employee));
     } on Object catch (e) {
       emit(EmployeeState.idle(error: e.toString()));
       rethrow;

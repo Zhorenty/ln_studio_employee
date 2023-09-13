@@ -7,20 +7,21 @@ final $lightThemeData = ThemeData(
   useMaterial3: true,
 );
 
-final lightColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color(0xFFFFFFFF),
-  primary: const Color(0xFFFFFFFF),
-  secondary: const Color(0xFFD9D9D9),
-  onBackground: const Color(0xFF000000),
+const lightColorScheme = ColorScheme.light(
+  primary: Color(0xFFFFFFFF),
+  secondary: Color(0xFFD9D9D9),
+  onBackground: Color(0xFF000000),
 );
 
 /// Dark theme of this application.
 final $darkThemeData = ThemeData(
+  useMaterial3: true,
   colorScheme: darkColorScheme,
   bottomNavigationBarTheme: bottomNavigationBarThemeDataDark,
+  splashColor: Colors.transparent,
+  highlightColor: Colors.transparent,
   textTheme: Typography.whiteHelsinki,
   brightness: Brightness.dark,
-  useMaterial3: true,
   dividerTheme: const DividerThemeData(color: Color(0xFF191919)),
   appBarTheme: const AppBarTheme(
     backgroundColor: Color(0xFF191919),
@@ -30,18 +31,20 @@ final $darkThemeData = ThemeData(
     color: Color(0xFFECD8BD),
   ),
   scaffoldBackgroundColor: const Color(0xFF101010),
+  datePickerTheme: const DatePickerThemeData(
+    backgroundColor: Color(0xFF191919),
+  ),
 );
 
-final darkColorScheme = ColorScheme.fromSeed(
+const darkColorScheme = ColorScheme.dark(
   brightness: Brightness.dark,
-  seedColor: const Color(0xFF000000),
-  primary: const Color(0xFFECD8BD),
-  secondary: const Color(0xFFFFFFFF),
-  primaryContainer: const Color(0xFF9E9E9E),
-  secondaryContainer: const Color(0xFFD9D9D9),
-  background: const Color(0xFF101010),
-  onBackground: const Color(0xFF191919),
-  scrim: const Color(0x00000000),
+  primary: Color(0xFFECD8BD),
+  secondary: Color(0xFFFFFFFF),
+  primaryContainer: Color(0xFF9E9E9E),
+  secondaryContainer: Color(0xFFD9D9D9),
+  background: Color(0xFF101010),
+  onBackground: Color(0xFF191919),
+  scrim: Color(0x00000000),
 );
 
 const bottomNavigationBarThemeDataDark = BottomNavigationBarThemeData(

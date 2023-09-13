@@ -72,7 +72,7 @@ class _StaffScreenState extends State<StaffScreen> {
                             ),
                             const SizedBox(height: 4),
                             StarRating(
-                              rating: state.employeeStaff[index].stars,
+                              initialRating: state.employeeStaff[index].stars,
                             )
                           ],
                         ),

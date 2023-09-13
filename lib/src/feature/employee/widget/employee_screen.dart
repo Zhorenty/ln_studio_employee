@@ -2,17 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_employee/src/common/widget/star_rating.dart';
-import 'package:ln_employee/src/feature/employee/bloc/employee_bloc.dart';
-import 'package:ln_employee/src/feature/employee/bloc/employee_event.dart';
-import 'package:ln_employee/src/feature/employee/bloc/employee_state.dart';
-import 'package:ln_employee/src/feature/employee/widget/expanded_app_bar.dart';
-import 'package:ln_employee/src/feature/employee/widget/skeleton_employee_screen.dart';
-import 'package:ln_employee/src/feature/staff/bloc/staff_bloc.dart';
-import 'package:ln_employee/src/feature/staff/bloc/staff_event.dart';
 
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/utils/phone_input_formatter.dart';
+import '/src/common/widget/custom_date_picker.dart';
+import '/src/common/widget/star_rating.dart';
+import '/src/feature/employee/bloc/employee_bloc.dart';
+import '/src/feature/employee/bloc/employee_event.dart';
+import '/src/feature/employee/bloc/employee_state.dart';
+import '/src/feature/employee/widget/expanded_app_bar.dart';
+import '/src/feature/employee/widget/skeleton_employee_screen.dart';
+import '/src/feature/staff/bloc/staff_bloc.dart';
+import '/src/feature/staff/bloc/staff_event.dart';
+
 import 'custom_text_field.dart';
 
 /// {@template employee_screen}
@@ -22,7 +25,7 @@ class EmployeeScreen extends StatefulWidget {
   /// {@macro employee_screen}
   const EmployeeScreen({super.key, required this.employeeid});
 
-  /// EmployeeModel of this [EmployeeScreen].
+  /// Employee id.
   final int employeeid;
 
   @override
@@ -38,21 +41,20 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         );
   }
 
+  /// User information
   late final firstNameController = TextEditingController();
   late final lastNameController = TextEditingController();
   late final phoneController = TextEditingController();
   late final addressController = TextEditingController();
-  // TODO: Make calendar
-  late final birthDateController = TextEditingController();
+
+  /// Employee information
   late final contractNumberController = TextEditingController();
   late final starsController = TextEditingController();
-  // TODO: Make huge TextField.
+  // TODO(zhorenty): Make huge TextField.
   late final descriptonController = TextEditingController();
   late final emailController = TextEditingController();
-  // TODO: Make calendar
-  late final dateOfEmploymentController = TextEditingController();
-  // TODO: Make DropDownButton or something.
-  late final percentageOfSalesController = TextEditingController();
+  // TODO(zhorenty): Make DropDownButton or something.
+  late final salesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,215 +63,224 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         if (state.employee == null) {
           return const SkeletonEmployeeScreen();
         } else {
-          return Builder(
-            builder: (context) {
-              firstNameController.text = state.employee!.userModel.firstName;
-              lastNameController.text = state.employee!.userModel.lastName;
-              phoneController.text = state.employee!.userModel.phone;
-              addressController.text = state.employee!.address;
-              birthDateController.text =
-                  state.employee!.userModel.birthDate.toString();
-              contractNumberController.text = state.employee!.contractNumber;
-              starsController.text = state.employee!.stars.toString();
-              descriptonController.text = state.employee!.description;
-              emailController.text = state.employee!.userModel.email;
-              dateOfEmploymentController.text =
-                  state.employee!.dateOfEmployment.toString();
-              percentageOfSalesController.text =
-                  state.employee!.percentageOfSales.toString();
+          final employee = state.employee!;
+          final user = state.employee!.userModel;
 
-              return Scaffold(
-                floatingActionButton: FloatingActionButton.extended(
-                  onPressed: () {
-                    context.read<EmployeeBloc>().add(
-                          EmployeeEvent.editEmployee(
-                            id: state.employee!.id,
-                            firstName: firstNameController.text,
-                            lastName: lastNameController.text,
-                            phone: phoneController.text,
-                            address: addressController.text,
-                            description: descriptonController.text,
-                            contractNumber: contractNumberController.text,
-                            percentageOfSales: double.parse(
-                              percentageOfSalesController.text,
-                            ),
-                            stars: int.parse(starsController.text),
-                            email: emailController.text,
-                          ),
-                        );
-                  },
-                  label: Text(
-                    'Сохранить изменения',
-                    style: context.textTheme.bodyMedium!.copyWith(
-                      color: context.colorScheme.onBackground,
+          int stars = employee.stars;
+          DateTime birthDate = user.birthDate;
+          DateTime dateOfEmployment = employee.dateOfEmployment;
+
+          /// User information
+          firstNameController.text = user.firstName;
+          lastNameController.text = user.lastName;
+          phoneController.text = user.phone;
+          addressController.text = employee.address;
+          emailController.text = user.email;
+
+          /// Employee information
+          contractNumberController.text = employee.contractNumber;
+          descriptonController.text = employee.description;
+          salesController.text = employee.percentageOfSales.toString();
+
+          return Scaffold(
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () => context.read<EmployeeBloc>().add(
+                    EmployeeEvent.editEmployee(
+                      // Id of employee
+                      id: employee.id,
+
+                      // User information
+                      firstName: firstNameController.text,
+                      lastName: lastNameController.text,
+                      phone: phoneController.text,
+                      address: addressController.text,
+                      email: emailController.text,
+                      birthDate: birthDate,
+
+                      /// Employee information
+                      contractNumber: contractNumberController.text,
+                      stars: stars,
+                      description: descriptonController.text,
+                      percentageOfSales: double.parse(salesController.text),
+                      dateOfEmployment: dateOfEmployment,
                     ),
                   ),
-                  backgroundColor: context.colorScheme.primary,
+              label: Text(
+                'Сохранить изменения',
+                style: context.textTheme.bodyMedium!.copyWith(
+                  color: context.colorScheme.onBackground,
                 ),
-                backgroundColor: context.colorScheme.background,
-                body: CustomScrollView(
-                  slivers: [
-                    ExpandedAppBar(
-                      title: Text(
-                        '${state.employee!.userModel.firstName} ${state.employee!.userModel.lastName}',
-                        style: context.textTheme.titleLarge!.copyWith(
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                      leading: Text(
-                        '24',
-                        style: context.textTheme.titleLarge!.copyWith(
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                      trailing: Text(
-                        '126',
-                        style: context.textTheme.titleLarge!.copyWith(
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                      onPressed: () {
-                        _refreshStaff();
-                        context.pop();
-                      },
+              ),
+              backgroundColor: context.colorScheme.primary,
+            ),
+            backgroundColor: context.colorScheme.background,
+            body: CustomScrollView(
+              slivers: [
+                ExpandedAppBar(
+                  title: Text(
+                    '${user.firstName} ${user.lastName}',
+                    style: context.textTheme.titleLarge!.copyWith(
+                      fontFamily: FontFamily.geologica,
                     ),
-                    CupertinoSliverRefreshControl(
-                      onRefresh: () => _fetch(state.employee!.id),
+                  ),
+                  leading: Text(
+                    // TODO(zhorenty): Fetch from repository.
+                    '24',
+                    style: context.textTheme.titleLarge!.copyWith(
+                      fontFamily: FontFamily.geologica,
                     ),
-                    SliverPadding(
-                      padding: const EdgeInsets.only(top: 8),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: context.colorScheme.onBackground,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Рейтинг',
-                                        style: context.textTheme.bodyLarge!
-                                            .copyWith(
-                                          fontFamily: FontFamily.geologica,
-                                        ),
-                                      ),
-                                      StarRating(
-                                        rating: state.employee!.stars,
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 16 + 8),
-                                  Text(
-                                    'Личная информация',
-                                    style:
-                                        context.textTheme.bodyLarge!.copyWith(
-                                      fontFamily: FontFamily.geologica,
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 3,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      color: context.colorScheme.secondary,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  CustomTextField(
-                                    controller: firstNameController,
-                                    dense: false,
-                                    label: 'Имя',
-                                  ),
-                                  CustomTextField(
-                                    controller: lastNameController,
-                                    label: 'Фамилия',
-                                  ),
-                                  CustomTextField(
-                                    controller: phoneController,
-                                    label: 'Номер телефона',
-                                  ),
-                                  CustomTextField(
-                                    controller: addressController,
-                                    label: 'Домашний адрес',
-                                  ),
-                                  CustomTextField(
-                                    controller: emailController,
-                                    label: 'Электронная почта',
-                                  ),
-                                  CustomTextField(
-                                    controller: birthDateController,
-                                    label: 'Дата рождения',
-                                  ),
-                                  const SizedBox(height: 32),
-                                  Text(
-                                    'Рабочая информация',
-                                    style:
-                                        context.textTheme.bodyLarge!.copyWith(
-                                      fontFamily: FontFamily.geologica,
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 3,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      color: context.colorScheme.secondary,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  CustomTextField(
-                                    controller: contractNumberController,
-                                    label: 'Номер договора',
-                                  ),
-                                  CustomTextField(
-                                    controller: starsController,
-                                    label: 'Рейтинг сотрудника',
-                                  ),
-                                  CustomTextField(
-                                    controller: descriptonController,
-                                    label: 'Описание сотрудника',
-                                  ),
-                                  CustomTextField(
-                                    controller: dateOfEmploymentController,
-                                    label: 'Дата принятия на работу',
-                                  ),
-                                  CustomTextField(
-                                    controller: percentageOfSalesController,
-                                    label: 'Процент от продаж',
-                                  ),
-                                  const SizedBox(height: 16),
-                                ],
+                  ),
+                  trailing: Text(
+                    // TODO(zhorenty): Fetch from repository.
+                    '126',
+                    style: context.textTheme.titleLarge!.copyWith(
+                      fontFamily: FontFamily.geologica,
+                    ),
+                  ),
+                  onExit: () => _refreshStaff().then((_) => context.pop()),
+                ),
+                CupertinoSliverRefreshControl(
+                  onRefresh: () => _fetch(employee.id),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.onBackground,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const _Header(label: 'Рейтинг'),
+                                StarRating(
+                                  initialRating: employee.stars,
+                                  onRatingChanged: (rating) => stars = rating,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16 + 8),
+                            const _Header(label: 'Личная информация'),
+                            const _UnderscoreWidget(),
+                            CustomTextField(
+                              controller: firstNameController,
+                              dense: false,
+                              label: 'Имя',
+                              keyboardType: TextInputType.name,
+                            ),
+                            CustomTextField(
+                              controller: lastNameController,
+                              label: 'Фамилия',
+                              keyboardType: TextInputType.name,
+                            ),
+                            CustomTextField(
+                              controller: phoneController,
+                              label: 'Номер телефона',
+                              inputFormatters: [RuPhoneInputFormatter()],
+                              keyboardType: TextInputType.phone,
+                              copyable: true,
+                            ),
+                            CustomTextField(
+                              controller: addressController,
+                              label: 'Домашний адрес',
+                              keyboardType: TextInputType.streetAddress,
+                            ),
+                            CustomTextField(
+                              controller: emailController,
+                              label: 'Электронная почта',
+                              copyable: true,
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            DatePickerButton(
+                              initialDate: birthDate,
+                              onDateSelected: (day) => birthDate = day,
+                            ),
+                            const SizedBox(height: 32),
+                            const _Header(label: 'Рабочая информация'),
+                            const _UnderscoreWidget(),
+                            CustomTextField(
+                              controller: contractNumberController,
+                              label: 'Номер договора',
+                            ),
+                            CustomTextField(
+                              controller: descriptonController,
+                              label: 'Описание сотрудника',
+                              keyboardType: TextInputType.multiline,
+                            ),
+                            CustomTextField(
+                              controller: salesController,
+                              label: 'Процент от продаж',
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: true,
                               ),
                             ),
+                            DatePickerButton(
+                              initialDate: dateOfEmployment,
+                              onDateSelected: (day) => dateOfEmployment = day,
+                            ),
+                            const SizedBox(height: 16),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              );
-            },
+              ],
+            ),
           );
         }
       },
     );
   }
 
-  /// TODO: Fetch user by id.
+  /// Fetch employee by [id].
   Future<void> _fetch(int id) async {
     context.read<EmployeeBloc>().add(EmployeeEvent.fetch(id: id));
   }
 
-  ///
+  /// Refresh all employee's.
   Future<void> _refreshStaff() async {
     final block = context.read<StaffBloc>().stream.first;
     context.read<StaffBloc>().add(const StaffEvent.fetch());
     await block;
   }
+}
+
+/// Horizontal line.
+///
+/// Usually used for underscores.
+class _UnderscoreWidget extends StatelessWidget {
+  const _UnderscoreWidget();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        height: 3,
+        width: 50,
+        decoration: BoxDecoration(
+          color: context.colorScheme.secondary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+      );
+}
+
+/// Header widget with provided [label].
+class _Header extends StatelessWidget {
+  const _Header({required this.label});
+
+  /// Label of this [_Header].
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Text(
+        label,
+        style: context.textTheme.bodyLarge!.copyWith(
+          fontFamily: FontFamily.geologica,
+        ),
+      );
 }

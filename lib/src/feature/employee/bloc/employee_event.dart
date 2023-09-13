@@ -2,11 +2,12 @@ import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/pattern_match.dart';
 
-/// Timetable events.
+/// Employee events.
 @immutable
 sealed class EmployeeEvent extends _$EmployeeEventBase {
   const EmployeeEvent();
 
+  /// Factory for fetching employee by id.
   const factory EmployeeEvent.fetch({required int id}) = EmployeeEvent$Fetch;
 
   /// Factory for filling timetable.
@@ -18,18 +19,22 @@ sealed class EmployeeEvent extends _$EmployeeEventBase {
     required String contractNumber,
     required double percentageOfSales,
     required int stars,
+    required DateTime dateOfEmployment,
 
     /// User information
     required String email,
     required String firstName,
     required String lastName,
     required String phone,
+    required DateTime birthDate,
   }) = EmployeeEvent$EditEmployee;
 }
 
+/// [EmployeeEvent.fetch] event.
 final class EmployeeEvent$Fetch extends EmployeeEvent {
   const EmployeeEvent$Fetch({required this.id}) : super();
 
+  /// Employee's id.
   final int id;
 }
 
@@ -43,12 +48,14 @@ final class EmployeeEvent$EditEmployee extends EmployeeEvent {
     required this.contractNumber,
     required this.percentageOfSales,
     required this.stars,
+    required this.dateOfEmployment,
 
     /// User information
     required this.email,
     required this.firstName,
     required this.lastName,
     required this.phone,
+    required this.birthDate,
   }) : super();
 
   /// Employee information
@@ -58,12 +65,14 @@ final class EmployeeEvent$EditEmployee extends EmployeeEvent {
   final String contractNumber;
   final double percentageOfSales;
   final int stars;
+  final DateTime dateOfEmployment;
 
   /// User information
   final String email;
   final String firstName;
   final String lastName;
   final String phone;
+  final DateTime birthDate;
 }
 
 /// Timetable events base class.
