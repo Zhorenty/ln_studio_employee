@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/widget/overlay/message_popup.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/animated_button.dart';
+import '/src/common/widget/overlay/message_popup.dart';
 
 /// Custom-styled expanded [SliverAppBar].
 class ExpandedAppBar extends StatelessWidget {
@@ -25,7 +25,7 @@ class ExpandedAppBar extends StatelessWidget {
   /// Trailing widget of this [ExpandedAppBar].
   final Widget trailing;
 
-  ///
+  /// Additional trailing widgets.
   final List<Widget> additionalTrailing;
 
   /// Callback, called when icon is pressed.

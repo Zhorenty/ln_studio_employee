@@ -26,7 +26,7 @@ abstract interface class EmployeeRepository {
     required DateTime birthDate,
   });
 
-  ///
+  /// Dismiss employee by id.
   Future<void> dismissEmployee({required int id});
 }
 
