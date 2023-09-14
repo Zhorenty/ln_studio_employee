@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/salon/data/salon_data_provider.dart';
+import 'package:ln_employee/src/feature/salon/data/salon_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,6 +49,14 @@ mixin InitializationSteps {
       );
       final employeeRepository = EmployeeRepositoryImpl(employeeDatasource);
       progress.dependencies.employeeRepository = employeeRepository;
-    }
+    },
+    'Salon repository': (progress) async {
+      final SalonDataProvider salonDataProvider = SalonDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+        prefs: progress.dependencies.sharedPreferences,
+      );
+      final salonRepository = SalonRepositoryImpl(salonDataProvider);
+      progress.dependencies.salonRepository = salonRepository;
+    },
   };
 }

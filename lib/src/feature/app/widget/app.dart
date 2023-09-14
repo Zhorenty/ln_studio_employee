@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_event.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
@@ -42,6 +44,11 @@ class App extends StatelessWidget {
             create: (context) => EmployeeBloc(
               employeeRepository: result.dependencies.employeeRepository,
             ),
+          ),
+          BlocProvider(
+            create: (context) => SalonBLoC(
+              repository: result.dependencies.salonRepository,
+            )..add(const SalonEvent.fetchAll()),
           ),
         ],
         child: ScopesProvider(

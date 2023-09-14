@@ -1,5 +1,6 @@
 import 'dart:async';
 
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:ln_employee/src/feature/create_employee/bloc/create_employee_event.dart';
 import 'package:ln_employee/src/feature/create_employee/bloc/create_employee_state.dart';
