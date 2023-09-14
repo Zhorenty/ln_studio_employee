@@ -1,12 +1,9 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/feature/create_employee/bloc/create_employee_event.dart';
 import 'package:ln_employee/src/feature/create_employee/bloc/create_employee_state.dart';
 import 'package:ln_employee/src/feature/create_employee/data/create_employee_repository.dart';
-
-// part 'create_employee_event.dart';
-// part 'create_employee_state.dart';
 
 /// Business Logic Component CreateEmployeeBLoC
 class CreateEmployeeBLoC extends Bloc<CreateEmployeeEvent, CreateEmployeeState>

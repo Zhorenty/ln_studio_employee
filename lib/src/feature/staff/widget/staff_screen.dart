@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/widget/animated_button.dart';
+import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
+import 'package:ln_employee/src/feature/create_employee/widget/create_employee_screen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -23,7 +25,27 @@ class StaffScreen extends StatefulWidget {
   State<StaffScreen> createState() => _StaffScreenState();
 }
 
-class _StaffScreenState extends State<StaffScreen> {
+class _StaffScreenState extends State<StaffScreen>
+    with TickerProviderStateMixin {
+  late AnimationController controller;
+  @override
+  initState() {
+    super.initState();
+    initController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void initController() {
+    controller = BottomSheet.createAnimationController(this);
+    controller.duration = const Duration(milliseconds: 700);
+    controller.reverseDuration = const Duration(milliseconds: 350);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<StaffBloc, StaffState>(
@@ -95,7 +117,12 @@ class _StaffScreenState extends State<StaffScreen> {
               ),
               SliverToBoxAdapter(
                 child: GestureDetector(
-                  onTap: () => context.goNamed('/create_employee'),
+                  onTap: () => ModalPopup.show(
+                    context: context,
+                    showDivider: false,
+                    transitionAnimationController: controller,
+                    child: const CreateEmployeeScreen(),
+                  ),
                   child: Container(
                     margin: EdgeInsets.symmetric(
                       horizontal: MediaQuery.sizeOf(context).width / 8,

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ln_employee/src/feature/create_employee/data/create_employee_data_provider.dart';
+import '/src/feature/create_employee/data/create_employee_data_provider.dart';
 
 abstract interface class CreateEmployeeRepository {
   Future<void> createEmployee({

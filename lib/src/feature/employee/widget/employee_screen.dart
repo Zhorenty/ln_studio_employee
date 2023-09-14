@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/header.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -180,7 +181,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const _Header(label: 'Рейтинг'),
+                                const HeaderWidget(label: 'Рейтинг'),
                                 StarRating(
                                   initialRating: employee.stars,
                                   onRatingChanged: (rating) => stars = rating,
@@ -199,7 +200,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const _Header(label: 'Статус сотрудника'),
+                                  const HeaderWidget(
+                                      label: 'Статус сотрудника'),
                                   dissmised
                                       ? const Text('Уволен')
                                       : const Text('Работает')
@@ -207,8 +209,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const _Header(label: 'Личная информация'),
-                            const _UnderscoreWidget(),
+                            const HeaderWidget(label: 'Личная информация'),
                             CustomTextField(
                               controller: firstNameController,
                               dense: false,
@@ -243,8 +244,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               onDateSelected: (day) => birthDate = day,
                             ),
                             const SizedBox(height: 32),
-                            const _Header(label: 'Рабочая информация'),
-                            const _UnderscoreWidget(),
+                            const HeaderWidget(label: 'Рабочая информация'),
                             CustomTextField(
                               controller: contractNumberController,
                               label: 'Номер договора',
@@ -302,37 +302,4 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     context.read<StaffBloc>().add(const StaffEvent.fetch());
     await block;
   }
-}
-
-/// Horizontal line.
-///
-/// Usually used for underscores.
-class _UnderscoreWidget extends StatelessWidget {
-  const _UnderscoreWidget();
-
-  @override
-  Widget build(BuildContext context) => Container(
-        height: 3,
-        width: 50,
-        decoration: BoxDecoration(
-          color: context.colorScheme.secondary,
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-}
-
-/// Header widget with provided [label].
-class _Header extends StatelessWidget {
-  const _Header({required this.label});
-
-  /// Label of this [_Header].
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Text(
-        label,
-        style: context.textTheme.bodyLarge!.copyWith(
-          fontFamily: FontFamily.geologica,
-        ),
-      );
 }

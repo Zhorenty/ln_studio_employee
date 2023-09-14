@@ -20,6 +20,7 @@ abstract class ModalPopup {
       maxWidth: double.infinity,
       maxHeight: double.infinity,
     ),
+    AnimationController? transitionAnimationController,
     BoxConstraints modalConstraints = const BoxConstraints(maxWidth: 380),
     BoxConstraints mobileConstraints = const BoxConstraints(
       maxWidth: double.infinity,
@@ -28,10 +29,12 @@ abstract class ModalPopup {
     EdgeInsets mobilePadding = const EdgeInsets.fromLTRB(10, 0, 10, 0),
     EdgeInsets desktopPadding = const EdgeInsets.all(10),
     bool isDismissible = true,
+    bool showDivider = true,
   }) {
     if (!kIsWeb) {
       return showModalBottomSheet(
         context: context,
+        transitionAnimationController: transitionAnimationController,
         barrierColor: context.colorScheme.background.withOpacity(.5),
         isScrollControlled: true,
         backgroundColor: context.colorScheme.onBackground,
@@ -52,7 +55,7 @@ abstract class ModalPopup {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 12),
-                if (isDismissible) ...[
+                if (isDismissible && showDivider) ...[
                   Center(
                     child: Container(
                       width: 60,

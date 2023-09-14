@@ -1,9 +1,9 @@
-import 'package:meta/meta.dart';
-
 // /// {@template create_employee_state_placeholder}
 // /// Entity placeholder for CreateEmployeeState
 // /// {@endtemplate}
 // typedef CreateEmployeeEntity = Object;
+
+import 'package:flutter/foundation.dart';
 
 /// {@template create_employee_state}
 /// CreateEmployeeState.

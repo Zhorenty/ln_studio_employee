@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/widget/header.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -51,7 +52,7 @@ class SkeletonEmployeeScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const _Header(label: 'Рейтинг'),
+                          const HeaderWidget(label: 'Рейтинг'),
                           Shimmer(
                             size: const Size(128, 25),
                             color: context.colorScheme.primary,
@@ -60,15 +61,13 @@ class SkeletonEmployeeScreen extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 16 + 8),
-                      const _Header(label: 'Личная информация'),
-                      const _UnderscoreWidget(),
+                      const HeaderWidget(label: 'Личная информация'),
                       const CustomShimmer(label: 'Имя', dense: true),
                       const CustomShimmer(label: 'Фамилия'),
                       const CustomShimmer(label: 'Номер телефона'),
                       const CustomShimmer(label: 'Домашний адрес'),
                       const CustomShimmer(label: 'Электронная почта'),
-                      const _Header(label: 'Рабочая информация'),
-                      const _UnderscoreWidget(),
+                      const HeaderWidget(label: 'Рабочая информация'),
                       const CustomShimmer(label: 'Номер договора', dense: true),
                       const CustomShimmer(label: 'Описание сотрудника'),
                     ],
@@ -122,37 +121,4 @@ class CustomShimmer extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Horizontal line.
-///
-/// Usually used for underscores.
-class _UnderscoreWidget extends StatelessWidget {
-  const _UnderscoreWidget();
-
-  @override
-  Widget build(BuildContext context) => Container(
-        height: 3,
-        width: 50,
-        decoration: BoxDecoration(
-          color: context.colorScheme.secondary,
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-}
-
-/// Header widget with provided [label].
-class _Header extends StatelessWidget {
-  const _Header({required this.label});
-
-  /// Label of this [_Header].
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Text(
-        label,
-        style: context.textTheme.bodyLarge!.copyWith(
-          fontFamily: FontFamily.geologica,
-        ),
-      );
 }
