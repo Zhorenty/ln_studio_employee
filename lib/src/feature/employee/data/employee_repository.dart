@@ -7,24 +7,11 @@ abstract interface class EmployeeRepository {
   /// Fetch employee by id.
   Future<EmployeeModel> getEmployee({required int id});
 
-  /// Edit employee by [id].
-  Future<EmployeeModel> editEmployee({
-    /// Employee information
-    required int id,
-    required String description,
-    required String address,
-    required String contractNumber,
-    required double percentageOfSales,
-    required int stars,
-    required DateTime dateOfEmployment,
+  /// Create employee.
+  Future<void> createEmployee({required EmployeeModel employee});
 
-    /// User information
-    required String email,
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required DateTime birthDate,
-  });
+  /// Edit employee by id.
+  Future<EmployeeModel> editEmployee({required EmployeeModel employee});
 
   /// Dismiss employee by id.
   Future<void> dismissEmployee({required int id});
@@ -45,37 +32,12 @@ final class EmployeeRepositoryImpl implements EmployeeRepository {
       _dataSource.fetchEmployee(id: id);
 
   @override
-  Future<EmployeeModel> editEmployee({
-    /// Employee information
-    required int id,
-    required String description,
-    required String address,
-    required String contractNumber,
-    required double percentageOfSales,
-    required int stars,
-    required DateTime dateOfEmployment,
+  Future<void> createEmployee({required EmployeeModel employee}) =>
+      _dataSource.createEmployee(employee: employee);
 
-    /// User information
-    required String email,
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required DateTime birthDate,
-  }) =>
-      _dataSource.editEmployee(
-        id: id,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        dateOfEmployment: dateOfEmployment,
-        address: address,
-        description: description,
-        contractNumber: contractNumber,
-        percentageOfSales: percentageOfSales,
-        stars: stars,
-        email: email,
-        birthDate: birthDate,
-      );
+  @override
+  Future<EmployeeModel> editEmployee({required EmployeeModel employee}) =>
+      _dataSource.editEmployee(employee: employee);
 
   @override
   Future<void> dismissEmployee({required int id}) =>

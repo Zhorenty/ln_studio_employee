@@ -6,7 +6,7 @@ import 'staff_state.dart';
 
 /// Staff bloc.
 class StaffBloc extends Bloc<StaffEvent, StaffState> {
-  StaffBloc({required this.staffRepository}) : super(const StaffState.idle()) {
+  StaffBloc({required this.repository}) : super(const StaffState.idle()) {
     on<StaffEvent>(
       (event, emit) => event.map(
         fetch: (event) => _fetch(event, emit),
@@ -15,7 +15,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
   }
 
   /// Repository for staff data.
-  final StaffRepository staffRepository;
+  final StaffRepository repository;
 
   /// Fetch staff from repository.
   Future<void> _fetch(
@@ -23,7 +23,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
     Emitter<StaffState> emit,
   ) async {
     try {
-      final employeeStaff = await staffRepository.getStaff();
+      final employeeStaff = await repository.getStaff();
       emit(StaffState.loaded(employeeStaff: employeeStaff));
     } on Object catch (e) {
       emit(StaffState.idle(error: e.toString()));

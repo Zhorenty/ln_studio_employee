@@ -8,24 +8,11 @@ abstract interface class EmployeeDatasource {
   /// Fetch employee by id.
   Future<EmployeeModel> fetchEmployee({required int id});
 
-  /// Edit employee by [id].
-  Future<EmployeeModel> editEmployee({
-    /// Employee information
-    required int id,
-    required String description,
-    required String address,
-    required String contractNumber,
-    required double percentageOfSales,
-    required int stars,
-    required DateTime dateOfEmployment,
+  ///
+  Future<void> createEmployee({required EmployeeModel employee});
 
-    /// User information
-    required String email,
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required DateTime birthDate,
-  });
+  /// Edit employee by [id].
+  Future<EmployeeModel> editEmployee({required EmployeeModel employee});
 
   /// Dismiss employee by id.
   Future<void> dismissEmployee({required int id});
@@ -48,43 +35,42 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
     return EmployeeModel.fromJson(response);
   }
 
-  /// TODO(zhorenty): Может быть можно поменять это все на EmployeeModel
-  ///  и UserModel.
   @override
-  Future<EmployeeModel> editEmployee({
-    /// Employee information
-    required int id,
-    required String description,
-    required String address,
-    required String contractNumber,
-    required double percentageOfSales,
-    required int stars,
-    required DateTime dateOfEmployment,
+  Future<void> createEmployee({required EmployeeModel employee}) async =>
+      await restClient.post(
+        '/api/employee/create',
+        body: {
+          'first_name': employee.userModel.firstName,
+          'last_name': employee.userModel.lastName,
+          'phone': employee.userModel.phone,
+          'address': employee.address,
+          'description': employee.description,
+          'specializationId': employee.jobPlaceId,
+          'salon_id': employee.salonId,
+          'stars': employee.stars,
+          'percentage_of_sales': employee.percentageOfSales,
+        },
+      );
 
-    /// User information
-    required String email,
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required DateTime birthDate,
-  }) async {
+  @override
+  Future<EmployeeModel> editEmployee({required EmployeeModel employee}) async {
     final result = await restClient.put(
-      '/api/employee/edit/$id',
+      '/api/employee/edit/${employee.id}',
       body: {
-        'address': address,
-        'job_place_id': 1,
-        'salon_id': 1,
-        'description': description,
-        'date_of_employment': dateOfEmployment.format(),
-        'contract_number': contractNumber,
-        'percentage_of_sales': percentageOfSales,
-        'stars': stars,
+        'address': employee.address,
+        'job_place_id': employee.salonId,
+        'salon_id': employee.salonId,
+        'description': employee.description,
+        'date_of_employment': employee.dateOfEmployment.format(),
+        'contract_number': employee.contractNumber,
+        'percentage_of_sales': employee.percentageOfSales,
+        'stars': employee.stars,
         'user': {
-          'email': email,
-          'first_name': firstName,
-          'last_name': lastName,
-          'phone': phone,
-          'birth_date': birthDate.format(),
+          'email': employee.userModel.email,
+          'first_name': employee.userModel.firstName,
+          'last_name': employee.userModel.lastName,
+          'phone': employee.userModel.phone,
+          'birth_date': employee.userModel.birthDate.format(),
         },
       },
     );

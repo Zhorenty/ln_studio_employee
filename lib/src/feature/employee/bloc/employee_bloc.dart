@@ -6,12 +6,12 @@ import 'employee_state.dart';
 
 /// Employee bloc.
 class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
-  EmployeeBloc({required this.employeeRepository})
-      : super(const EmployeeState.idle()) {
+  EmployeeBloc({required this.repository}) : super(const EmployeeState.idle()) {
     on<EmployeeEvent>(
       (event, emit) => event.map(
         fetch: (event) => _fetchEmployee(event, emit),
-        editEmployee: (event) => _editEmployee(event, emit),
+        create: (event) => _create(event, emit),
+        edit: (event) => _editEmployee(event, emit),
         dismiss: (event) => _dismissEmployee(event, emit),
         reinstatement: (event) => _reinstatementEmployee(event, emit),
       ),
@@ -19,7 +19,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   }
 
   /// Repository for employee data
-  final EmployeeRepository employeeRepository;
+  final EmployeeRepository repository;
 
   /// Edit employee from repository.
   Future<void> _fetchEmployee(
@@ -28,8 +28,21 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   ) async {
     emit(EmployeeState.processing(employee: state.employee));
     try {
-      final employee = await employeeRepository.getEmployee(id: event.id);
+      final employee = await repository.getEmployee(id: event.id);
       emit(EmployeeState.idle(employee: employee));
+    } on Object catch (e) {
+      emit(EmployeeState.idle(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  /// Fetch event handler
+  Future<void> _create(
+      EmployeeEvent$Create event, Emitter<EmployeeState> emit) async {
+    try {
+      emit(EmployeeState.processing(employee: event.employee));
+      await repository.createEmployee(employee: event.employee);
+      emit(EmployeeState.successful(employee: state.employee));
     } on Object catch (e) {
       emit(EmployeeState.idle(error: e.toString()));
       rethrow;
@@ -38,29 +51,11 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
 
   /// Edit employee from repository.
   Future<void> _editEmployee(
-    EmployeeEvent$EditEmployee event,
+    EmployeeEvent$Edit event,
     Emitter<EmployeeState> emit,
   ) async {
     try {
-      final employee = await employeeRepository.editEmployee(
-        /// Employee id
-        id: event.id,
-
-        /// Employee information
-        description: event.description,
-        address: event.address,
-        contractNumber: event.contractNumber,
-        percentageOfSales: event.percentageOfSales,
-        stars: event.stars,
-        dateOfEmployment: event.dateOfEmployment,
-
-        /// User information
-        email: event.email,
-        firstName: event.firstName,
-        lastName: event.lastName,
-        phone: event.phone,
-        birthDate: event.birthDate,
-      );
+      final employee = await repository.editEmployee(employee: event.employee);
       emit(EmployeeState.idle(employee: employee));
     } on Object catch (e) {
       emit(EmployeeState.idle(error: e.toString()));
@@ -75,8 +70,9 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   ) async {
     emit(EmployeeState.processing(employee: state.employee));
     try {
-      await employeeRepository.dismissEmployee(id: event.id);
+      await repository.dismissEmployee(id: event.id);
       add(EmployeeEvent.fetch(id: event.id));
+      emit(EmployeeState.successful(employee: state.employee));
     } on Object catch (e) {
       emit(EmployeeState.idle(error: e.toString()));
       rethrow;
@@ -90,8 +86,9 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   ) async {
     emit(EmployeeState.processing(employee: state.employee));
     try {
-      await employeeRepository.reinstatementmployee(id: event.id);
+      await repository.reinstatementmployee(id: event.id);
       add(EmployeeEvent.fetch(id: event.id));
+      emit(EmployeeState.successful(employee: state.employee));
     } on Object catch (e) {
       emit(EmployeeState.idle(error: e.toString()));
       rethrow;

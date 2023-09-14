@@ -94,7 +94,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                           },
                         ),
                       ),
-                      const Divider()
+                      const Divider(),
                     ],
                   );
                 },

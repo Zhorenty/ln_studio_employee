@@ -59,60 +59,62 @@ class _StaffScreenState extends State<StaffScreen>
                 padding: const EdgeInsets.all(8),
                 sliver: SliverList.builder(
                   itemCount: state.employeeStaff.length,
-                  itemBuilder: (context, index) => Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4 + 2),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.onBackground,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 45,
-                          backgroundColor: context.colorScheme.secondary,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 8 + 2),
-                            Text(
-                              '${state.employeeStaff[index].userModel.firstName}'
-                              ' ${state.employeeStaff[index].userModel.lastName}',
-                              style: context.textTheme.titleMedium?.copyWith(
-                                fontFamily: FontFamily.geologica,
+                  itemBuilder: (context, index) {
+                    final employee = state.employeeStaff[index];
+                    final user = state.employeeStaff[index].userModel;
+                    final jobPlace = state.employeeStaff[index].jobPlaceModel;
+
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4 + 2),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.onBackground,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 45,
+                            backgroundColor: context.colorScheme.secondary,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 8 + 2),
+                              Text(
+                                '${user.firstName} ${user.lastName}',
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontFamily: FontFamily.geologica,
+                                ),
                               ),
-                            ),
-                            Text(
-                              state.employeeStaff[index].jobPlaceModel.name,
-                              style: context.textTheme.labelMedium?.copyWith(
-                                fontFamily: FontFamily.geologica,
-                                color: context.colorScheme.primaryContainer,
+                              Text(
+                                jobPlace.name,
+                                style: context.textTheme.labelMedium?.copyWith(
+                                  fontFamily: FontFamily.geologica,
+                                  color: context.colorScheme.primaryContainer,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            StarRating(
-                              initialRating: state.employeeStaff[index].stars,
-                            )
-                          ],
-                        ),
-                        const SizedBox.shrink(),
-                        AnimatedButton(
-                          child: const Icon(Icons.edit, size: 20),
-                          onPressed: () {
-                            _refresh();
-                            context.go(
-                              '/staff/employee',
-                              extra: state.employeeStaff[index].id,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                              const SizedBox(height: 4),
+                              StarRating(initialRating: employee.stars)
+                            ],
+                          ),
+                          const SizedBox.shrink(),
+                          AnimatedButton(
+                            child: const Icon(Icons.edit, size: 20),
+                            onPressed: () {
+                              _refresh();
+                              context.go('/staff/employee', extra: employee.id);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
               SliverToBoxAdapter(
@@ -163,7 +165,7 @@ class _StaffScreenState extends State<StaffScreen>
                 backgroundColor: context.colorScheme.primary,
                 label: Text(
                   context.stringOf().addEmployee,
-                  style: context.textTheme.bodySmall!.copyWith(
+                  style: context.textTheme.bodySmall?.copyWith(
                     fontFamily: FontFamily.geologica,
                     color: context.colorScheme.background,
                   ),

@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/widget/header.dart';
+import 'package:ln_employee/src/feature/staff/model/employee.dart';
+import 'package:ln_employee/src/feature/staff/model/job_place.dart';
+import 'package:ln_employee/src/feature/staff/model/salon.dart';
+import 'package:ln_employee/src/feature/staff/model/user.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -17,7 +21,7 @@ import '/src/feature/employee/widget/skeleton_employee_screen.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';
 import '/src/feature/staff/bloc/staff_event.dart';
 
-import 'components/custom_text_field.dart';
+import '../../../common/widget/custom_text_field.dart';
 import 'components/expanded_app_bar.dart';
 
 /// {@template employee_screen}
@@ -88,24 +92,43 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () => context.read<EmployeeBloc>().add(
-                    EmployeeEvent.editEmployee(
-                      // Id of employee
-                      id: employee.id,
-
-                      // User information
-                      firstName: firstNameController.text,
-                      lastName: lastNameController.text,
-                      phone: phoneController.text,
-                      address: addressController.text,
-                      email: emailController.text,
-                      birthDate: birthDate,
-
-                      /// Employee information
-                      contractNumber: contractNumberController.text,
-                      stars: stars,
-                      description: descriptonController.text,
-                      percentageOfSales: double.parse(salesController.text),
-                      dateOfEmployment: dateOfEmployment,
+                    EmployeeEvent.edit(
+                      employee: EmployeeModel(
+                        id: employee.id,
+                        address: addressController.text,
+                        jobPlaceId: 1,
+                        salonId: 1,
+                        description: descriptonController.text,
+                        dateOfEmployment: dateOfEmployment,
+                        contractNumber: contractNumberController.text,
+                        percentageOfSales: double.parse(salesController.text),
+                        stars: stars,
+                        isDismiss: employee.isDismiss,
+                        userModel: UserModel(
+                          id: employee.userModel.id,
+                          username: employee.userModel.username,
+                          password: employee.userModel.password,
+                          email: emailController.text,
+                          firstName: firstNameController.text,
+                          lastName: lastNameController.text,
+                          phone: phoneController.text,
+                          birthDate: birthDate,
+                          isSuperuser: employee.userModel.isSuperuser,
+                          isActive: employee.userModel.isActive,
+                        ),
+                        jobPlaceModel: JobPlaceModel(
+                          id: employee.jobPlaceModel.id,
+                          name: employee.jobPlaceModel.name,
+                          oklad: employee.jobPlaceModel.oklad,
+                        ),
+                        salonModel: SalonModel(
+                          id: employee.salonModel.id,
+                          address: employee.salonModel.address,
+                          phone: employee.salonModel.phone,
+                          email: employee.salonModel.email,
+                          description: employee.salonModel.description,
+                        ),
+                      ),
                     ),
                   ),
               label: Text(
@@ -149,7 +172,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         context.pop();
                         MessagePopup.success(
                           context,
-                          dissmised
+                          dissmised || state.isSuccessful
                               ? 'Вы вернули сотрудника на должность'
                               : 'Сотрудник успешно уволен',
                         );
@@ -181,7 +204,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const HeaderWidget(label: 'Рейтинг'),
+                                const HeaderWidget(
+                                  label: 'Рейтинг',
+                                  showUnderscore: false,
+                                ),
                                 StarRating(
                                   initialRating: employee.stars,
                                   onRatingChanged: (rating) => stars = rating,
@@ -201,7 +227,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   const HeaderWidget(
-                                      label: 'Статус сотрудника'),
+                                    label: 'Статус сотрудника',
+                                    showUnderscore: false,
+                                  ),
                                   dissmised
                                       ? const Text('Уволен')
                                       : const Text('Работает')

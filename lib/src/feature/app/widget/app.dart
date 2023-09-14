@@ -30,17 +30,17 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => TimetableBloc(
-              timetableRepository: result.dependencies.timetableRepository,
+              repository: result.dependencies.timetableRepository,
             )..add(const TimetableEvent.fetch()),
           ),
           BlocProvider(
             create: (context) => StaffBloc(
-              staffRepository: result.dependencies.staffRepository,
+              repository: result.dependencies.staffRepository,
             )..add(const StaffEvent.fetch()),
           ),
           BlocProvider(
             create: (context) => EmployeeBloc(
-              employeeRepository: result.dependencies.employeeRepository,
+              repository: result.dependencies.employeeRepository,
             ),
           ),
         ],

@@ -6,7 +6,7 @@ import 'package:ln_employee/src/common/utils/phone_input_formatter.dart';
 import 'package:ln_employee/src/common/widget/animated_button.dart';
 import 'package:ln_employee/src/common/widget/header.dart';
 import 'package:ln_employee/src/common/widget/star_rating.dart';
-import 'package:ln_employee/src/feature/employee/widget/components/custom_text_field.dart';
+import 'package:ln_employee/src/common/widget/custom_text_field.dart';
 
 class CreateEmployeeScreen extends StatefulWidget {
   const CreateEmployeeScreen({super.key});
