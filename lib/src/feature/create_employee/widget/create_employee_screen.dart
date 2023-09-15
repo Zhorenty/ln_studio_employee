@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
-import 'package:ln_employee/src/common/utils/phone_input_formatter.dart';
-import 'package:ln_employee/src/common/widget/animated_button.dart';
-import 'package:ln_employee/src/common/widget/header.dart';
-import 'package:ln_employee/src/common/widget/star_rating.dart';
-import 'package:ln_employee/src/common/widget/custom_text_field.dart';
+
+import '/src/common/assets/generated/fonts.gen.dart';
+import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/utils/phone_input_formatter.dart';
+import '/src/common/widget/animated_button.dart';
+import '/src/common/widget/header.dart';
+import '/src/common/widget/star_rating.dart';
+import '/src/common/widget/custom_text_field.dart';
 
 class CreateEmployeeScreen extends StatefulWidget {
   const CreateEmployeeScreen({super.key});
@@ -16,6 +17,11 @@ class CreateEmployeeScreen extends StatefulWidget {
 }
 
 class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
+  late final FocusNode firstNameFocusNode = FocusNode();
+  late final FocusNode phoneFocusNode = FocusNode();
+  late final FocusNode addressFocusNode = FocusNode();
+  late final FocusNode salesFocusNode = FocusNode();
+
   /// User information
   late final firstNameController = TextEditingController();
   late final lastNameController = TextEditingController();
@@ -32,13 +38,21 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   late final salesController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    firstNameFocusNode.requestFocus();
+  }
+
+  @override
   Widget build(BuildContext context) {
     int stars = 3;
 
-    return SafeArea(
-      child: Container(
+    return Scaffold(
+      backgroundColor: context.colorScheme.scrim,
+      resizeToAvoidBottomInset: true,
+      body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        height: MediaQuery.sizeOf(context).height / 1.32,
+        height: MediaQuery.sizeOf(context).height / 1.189,
         child: Column(
           children: [
             Row(
@@ -108,44 +122,65 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                         ),
                         const SizedBox(height: 16),
                         const HeaderWidget(label: 'Личная информация'),
-                        const CustomTextField(
+                        CustomTextField(
                           dense: false,
+                          controller: firstNameController,
+                          focusNode: firstNameFocusNode,
+                          textInputAction: TextInputAction.next,
                           label: 'Имя',
                           keyboardType: TextInputType.name,
                         ),
-                        const CustomTextField(
+                        CustomTextField(
+                          controller: lastNameController,
                           label: 'Фамилия',
+                          textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.name,
                         ),
                         CustomTextField(
+                          controller: phoneController,
+                          focusNode: phoneFocusNode,
                           label: 'Телефон',
+                          textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.phone,
                           inputFormatters: [RuPhoneInputFormatter()],
+                          onChanged: _checkPhoneNumber,
                         ),
-                        const CustomTextField(
+                        CustomTextField(
+                          controller: addressController,
+                          textInputAction: TextInputAction.next,
+                          focusNode: addressFocusNode,
                           label: 'Адрес проживания',
                           keyboardType: TextInputType.streetAddress,
                         ),
                         const SizedBox(height: 32),
                         const HeaderWidget(label: 'Рабочая информация'),
-
-                        const CustomTextField(
+                        CustomTextField(
+                          controller: descriptonController,
+                          textInputAction: TextInputAction.next,
                           dense: false,
                           label: 'Описание сотрудника',
                           keyboardType: TextInputType.multiline,
                         ),
                         const CustomTextField(
+                          textInputAction: TextInputAction.next,
                           label: 'Специализация',
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.name,
                         ),
                         // Изначально салон показывать нынешний выбранный
                         const CustomTextField(
+                          textInputAction: TextInputAction.next,
                           label: 'Салон',
                           keyboardType: TextInputType.number,
                         ),
-                        const CustomTextField(
+                        CustomTextField(
+                          controller: salesController,
+                          focusNode: salesFocusNode,
+                          textInputAction: TextInputAction.done,
                           label: 'Процент от продаж',
-                          keyboardType: TextInputType.number,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          onChanged: _checkSales,
                         ),
                         const SizedBox(height: 16 + 8),
                       ],
@@ -158,5 +193,19 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
         ),
       ),
     );
+  }
+
+  void _checkPhoneNumber(String value) {
+    if ((value.length == 18 && value.startsWith('+')) ||
+        (value.length == 17 && value.startsWith('8'))) {
+      phoneFocusNode.unfocus();
+      FocusScope.of(context).requestFocus(addressFocusNode);
+    }
+  }
+
+  void _checkSales(String value) {
+    if (value.length == 3) {
+      salesFocusNode.unfocus();
+    }
   }
 }

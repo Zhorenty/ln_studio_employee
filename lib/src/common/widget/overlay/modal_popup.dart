@@ -30,9 +30,11 @@ abstract class ModalPopup {
     EdgeInsets desktopPadding = const EdgeInsets.all(10),
     bool isDismissible = true,
     bool showDivider = true,
+    bool useRootNavigator = true,
   }) {
     if (!kIsWeb) {
       return showModalBottomSheet(
+        useRootNavigator: useRootNavigator,
         context: context,
         transitionAnimationController: transitionAnimationController,
         barrierColor: context.colorScheme.background.withOpacity(.5),

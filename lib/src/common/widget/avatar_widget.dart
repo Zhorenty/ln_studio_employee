@@ -1,15 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_employee/src/common/theme/theme.dart';
-import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
-import 'package:ln_employee/src/common/utils/extensions/string_extension.dart';
+
+import '/src/common/assets/generated/fonts.gen.dart';
+import '/src/common/theme/theme.dart';
+import '/src/common/utils/extensions/color_extension.dart';
+import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/utils/extensions/string_extension.dart';
 
 /// Widget to build an [Avatar].
 ///
-/// Displays a colored [BoxDecoration] with initials based on a [title] if
-/// [avatar] is not specified.
+/// Displays a colored [BoxDecoration] with initials based on a [title].
 class AvatarWidget extends StatelessWidget {
   const AvatarWidget({
     super.key,
@@ -91,106 +92,111 @@ class AvatarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colors;
-    return LayoutBuilder(builder: (context, constraints) {
-      final Color gradient;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final Color gradient;
 
-      if (color != null) {
-        gradient = colors.avatarColors[color! % colors.avatarColors.length];
-      } else if (title != null) {
-        gradient =
-            colors.avatarColors[(title!.hashCode) % colors.avatarColors.length];
-      } else {
-        gradient = const Color(0xFF666666);
-      }
+        if (color != null) {
+          gradient = colors.avatarColors[color! % colors.avatarColors.length];
+        } else if (title != null) {
+          gradient = colors
+              .avatarColors[(title!.hashCode) % colors.avatarColors.length];
+        } else {
+          gradient = const Color(0xFF666666);
+        }
 
-      double minWidth = min(_minDiameter, constraints.smallest.shortestSide);
-      double minHeight = min(_minDiameter, constraints.smallest.shortestSide);
-      double maxWidth = min(_maxDiameter, constraints.biggest.shortestSide);
-      double maxHeight = min(_maxDiameter, constraints.biggest.shortestSide);
+        double minWidth = min(_minDiameter, constraints.smallest.shortestSide);
+        double minHeight = min(_minDiameter, constraints.smallest.shortestSide);
+        double maxWidth = min(_maxDiameter, constraints.biggest.shortestSide);
+        double maxHeight = min(_maxDiameter, constraints.biggest.shortestSide);
 
-      final double badgeSize = maxWidth >= 40 ? maxWidth / 5 : maxWidth / 3.75;
+        final double badgeSize =
+            maxWidth >= 40 ? maxWidth / 5 : maxWidth / 3.75;
 
-      return Badge(
-        largeSize: badgeSize * 1.16,
-        isLabelVisible: isOnline,
-        alignment: Alignment.bottomRight,
-        backgroundColor: context.colorScheme.secondary,
-        padding: EdgeInsets.all(badgeSize / 12),
-        offset: maxWidth >= 40 ? const Offset(-2.5, -2.5) : const Offset(0, 0),
-        label: SizedBox(
-          width: badgeSize,
-          height: badgeSize,
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isAway ? Colors.orange : Colors.green,
+        return Badge(
+          largeSize: badgeSize * 1.16,
+          isLabelVisible: isOnline,
+          alignment: Alignment.bottomRight,
+          backgroundColor: context.colorScheme.secondary,
+          padding: EdgeInsets.all(badgeSize / 12),
+          offset:
+              maxWidth >= 40 ? const Offset(-2.5, -2.5) : const Offset(0, 0),
+          label: SizedBox(
+            width: badgeSize,
+            height: badgeSize,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isAway ? Colors.orange : Colors.green,
+              ),
             ),
           ),
-        ),
-        child: Stack(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(0.5),
-              constraints: BoxConstraints(
-                minHeight: minHeight,
-                minWidth: minWidth,
-                maxWidth: maxWidth,
-                maxHeight: maxHeight,
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [gradient.lighten(), gradient],
+          child: Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(0.5),
+                constraints: BoxConstraints(
+                  minHeight: minHeight,
+                  minWidth: minWidth,
+                  maxWidth: maxWidth,
+                  maxHeight: maxHeight,
                 ),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: label ??
-                    SelectionContainer.disabled(
-                      child: Text(
-                        (title ?? '??').initials(),
-                        style: context.textTheme.titleSmall!.copyWith(
-                          fontSize: 16 * (maxWidth / 40.0),
-                          color: context.colorScheme.secondary,
-                          fontFamily: FontFamily.geologica,
-                        ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [gradient.lighten(), gradient],
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: label ??
+                      SelectionContainer.disabled(
+                        child: Text(
+                          (title ?? '??').initials(),
+                          style: context.textTheme.titleSmall!.copyWith(
+                            fontSize: 16 * (maxWidth / 40.0),
+                            color: context.colorScheme.secondary,
+                            fontFamily: FontFamily.geologica,
+                          ),
 
-                        // Disable the accessibility size settings for this [Text].
-                        textScaleFactor: 1,
+                          // Disable the accessibility size settings for
+                          // this [Text].
+                          textScaleFactor: 1,
+                        ),
                       ),
-                    ),
+                ),
               ),
-            ),
-            // TODO(zhorenty): Implement avatar from backend
-            // if (avatar != null)
-            //   Positioned.fill(
-            //     child: ClipOval(
-            //       child: RetryImage(
-            //         maxWidth > 250
-            //             ? avatar!.full.url
-            //             : maxWidth > 100
-            //                 ? avatar!.big.url
-            //                 : maxWidth > 46
-            //                     ? avatar!.medium.url
-            //                     : avatar!.small.url,
-            //         checksum: maxWidth > 250
-            //             ? avatar!.full.checksum
-            //             : maxWidth > 100
-            //                 ? avatar!.big.checksum
-            //                 : maxWidth > 46
-            //                     ? avatar!.medium.checksum
-            //                     : avatar!.small.checksum,
-            //         fit: BoxFit.cover,
-            //         height: double.infinity,
-            //         width: double.infinity,
-            //         displayProgress: false,
-            //       ),
-            //     ),
-            //   ),
-          ],
-        ),
-      );
-    });
+              // TODO(zhorenty): Implement avatar from backend
+              // if (avatar != null)
+              //   Positioned.fill(
+              //     child: ClipOval(
+              //       child: RetryImage(
+              //         maxWidth > 250
+              //             ? avatar!.full.url
+              //             : maxWidth > 100
+              //                 ? avatar!.big.url
+              //                 : maxWidth > 46
+              //                     ? avatar!.medium.url
+              //                     : avatar!.small.url,
+              //         checksum: maxWidth > 250
+              //             ? avatar!.full.checksum
+              //             : maxWidth > 100
+              //                 ? avatar!.big.checksum
+              //                 : maxWidth > 46
+              //                     ? avatar!.medium.checksum
+              //                     : avatar!.small.checksum,
+              //         fit: BoxFit.cover,
+              //         height: double.infinity,
+              //         width: double.infinity,
+              //         displayProgress: false,
+              //       ),
+              //     ),
+              //   ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

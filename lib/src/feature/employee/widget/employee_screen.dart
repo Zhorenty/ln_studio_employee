@@ -2,27 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/widget/header.dart';
-import 'package:ln_employee/src/feature/staff/model/employee.dart';
-import 'package:ln_employee/src/feature/staff/model/job_place.dart';
-import 'package:ln_employee/src/feature/staff/model/salon.dart';
-import 'package:ln_employee/src/feature/staff/model/user.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
 import '/src/common/widget/custom_date_picker.dart';
+import '/src/common/widget/custom_text_field.dart';
+import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
 import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/bloc/employee_bloc.dart';
 import '/src/feature/employee/bloc/employee_event.dart';
 import '/src/feature/employee/bloc/employee_state.dart';
-import '/src/feature/employee/widget/skeleton_employee_screen.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';
 import '/src/feature/staff/bloc/staff_event.dart';
+import '/src/feature/staff/model/employee.dart';
+import '/src/feature/staff/model/job_place.dart';
+import '/src/feature/staff/model/salon.dart';
+import '/src/feature/staff/model/user.dart';
 
-import '../../../common/widget/custom_text_field.dart';
 import 'components/expanded_app_bar.dart';
+import 'skeleton_employee_screen.dart';
 
 /// {@template employee_screen}
 /// Employee screen.
@@ -185,7 +185,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       ),
                     ),
                   ],
-                  onExit: () => _refreshStaff().then((_) => context.pop()),
+                  onExit: () {
+                    _refreshStaff();
+                    context.pop();
+                  },
                 ),
                 CupertinoSliverRefreshControl(
                   onRefresh: () => _fetch(employee.id),
