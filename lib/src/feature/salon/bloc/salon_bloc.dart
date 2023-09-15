@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:ln_employee/src/feature/salon/data/salon_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/src/feature/salon/data/salon_repository.dart';
 import 'salon_event.dart';
 import 'salon_state.dart';
 
@@ -28,41 +28,39 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
     );
   }
 
+  ///
   final SalonRepository _repository;
 
   /// Fetch event handler
   Future<void> _fetchAll(Emitter<SalonState> emit) async {
     try {
-      emit(SalonState.processing(
-        data: state.data,
-        currentSalon: state.currentSalon,
-      ));
+      emit(
+        SalonState.processing(
+          data: state.data,
+          currentSalon: state.currentSalon,
+        ),
+      );
       final salons = await _repository.fetchSalons();
       final currentSalonIdFromDB = await _repository.getCurrentSalonId();
-      // TODO: Попробовать инкапсулировать логику в репозитории
+      // TODO(evklidus): Попробовать инкапсулировать логику в репозитории
       if (currentSalonIdFromDB == null) {
         await _repository.saveCurrentSalonId(salons.first.id);
       }
+
       final currentSalon = currentSalonIdFromDB != null
-          ? salons.firstWhere(
-              (salon) => salon.id == currentSalonIdFromDB,
-            )
+          ? salons.firstWhere((salon) => salon.id == currentSalonIdFromDB)
           : salons.first;
-      emit(SalonState.successful(
-        data: salons,
-        currentSalon: currentSalon,
-      ));
+
+      emit(SalonState.successful(data: salons, currentSalon: currentSalon));
     } on Object catch (err, _) {
-      emit(SalonState.error(
-        data: state.data,
-        currentSalon: state.currentSalon,
-      ));
+      emit(
+        SalonState.error(data: state.data, currentSalon: state.currentSalon),
+      );
       rethrow;
     } finally {
-      emit(SalonState.idle(
-        data: state.data,
-        currentSalon: state.currentSalon,
-      ));
+      emit(
+        SalonState.idle(data: state.data, currentSalon: state.currentSalon),
+      );
     }
   }
 
@@ -70,26 +68,23 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
   Future<void> _saveCurrent(
       SalonEvent$SaveCurrent event, Emitter<SalonState> emit) async {
     try {
-      emit(SalonState.processing(
-        data: state.data,
-        currentSalon: state.currentSalon,
-      ));
+      emit(
+        SalonState.processing(
+          data: state.data,
+          currentSalon: state.currentSalon,
+        ),
+      );
       await _repository.saveCurrentSalonId(event.salon.id);
-      emit(SalonState.successful(
-        data: state.data,
-        currentSalon: event.salon,
-      ));
+      emit(SalonState.successful(data: state.data, currentSalon: event.salon));
     } on Object catch (err, _) {
-      emit(SalonState.error(
-        data: state.data,
-        currentSalon: state.currentSalon,
-      ));
+      emit(
+        SalonState.error(data: state.data, currentSalon: state.currentSalon),
+      );
       rethrow;
     } finally {
-      emit(SalonState.idle(
-        data: state.data,
-        currentSalon: state.currentSalon,
-      ));
+      emit(
+        SalonState.idle(data: state.data, currentSalon: state.currentSalon),
+      );
     }
   }
 }

@@ -1,6 +1,7 @@
-import 'package:ln_employee/src/feature/salon/models/salon.dart';
-// ignore: depend_on_referenced_packages
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
+
+import '/src/common/utils/pattern_match.dart';
+import '/src/feature/salon/models/salon.dart';
 
 /// {@template salon_state_placeholder}
 /// Entity placeholder for SalonState
@@ -55,47 +56,48 @@ sealed class SalonState extends _$SalonStateBase {
 /// {@nodoc}
 final class SalonState$Idle extends SalonState with _$SalonState {
   /// {@nodoc}
-  const SalonState$Idle(
-      {required super.data,
-      required super.currentSalon,
-      super.message = 'Idling'});
+  const SalonState$Idle({
+    required super.data,
+    required super.currentSalon,
+    super.message = 'Idling',
+  });
 }
 
 /// Processing
 /// {@nodoc}
 final class SalonState$Processing extends SalonState with _$SalonState {
   /// {@nodoc}
-  const SalonState$Processing(
-      {required super.data,
-      required super.currentSalon,
-      super.message = 'Processing'});
+  const SalonState$Processing({
+    required super.data,
+    required super.currentSalon,
+    super.message = 'Processing',
+  });
 }
 
 /// Successful
 /// {@nodoc}
 final class SalonState$Successful extends SalonState with _$SalonState {
   /// {@nodoc}
-  const SalonState$Successful(
-      {required super.data,
-      required super.currentSalon,
-      super.message = 'Successful'});
+  const SalonState$Successful({
+    required super.data,
+    required super.currentSalon,
+    super.message = 'Successful',
+  });
 }
 
 /// Error
 /// {@nodoc}
 final class SalonState$Error extends SalonState with _$SalonState {
   /// {@nodoc}
-  const SalonState$Error(
-      {required super.data,
-      required super.currentSalon,
-      super.message = 'An error has occurred.'});
+  const SalonState$Error({
+    required super.data,
+    required super.currentSalon,
+    super.message = 'An error has occurred.',
+  });
 }
 
 /// {@nodoc}
 base mixin _$SalonState on SalonState {}
-
-/// Pattern matching for [SalonState].
-typedef SalonStateMatch<R, S extends SalonState> = R Function(S state);
 
 /// {@nodoc}
 @immutable
@@ -111,6 +113,7 @@ abstract base class _$SalonStateBase {
   @nonVirtual
   final SalonEntity? data;
 
+  ///
   final Salon? currentSalon;
 
   /// Message or state description.
@@ -124,18 +127,20 @@ abstract base class _$SalonStateBase {
   bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);
 
   /// Is in progress state?
-  bool get isProcessing =>
-      maybeMap<bool>(orElse: () => false, processing: (_) => true);
+  bool get isProcessing => maybeMap<bool>(
+        orElse: () => false,
+        processing: (_) => true,
+      );
 
   /// Is in idle state?
   bool get isIdling => !isProcessing;
 
   /// Pattern matching for [SalonState].
   R map<R>({
-    required SalonStateMatch<R, SalonState$Idle> idle,
-    required SalonStateMatch<R, SalonState$Processing> processing,
-    required SalonStateMatch<R, SalonState$Successful> successful,
-    required SalonStateMatch<R, SalonState$Error> error,
+    required PatternMatch<R, SalonState$Idle> idle,
+    required PatternMatch<R, SalonState$Processing> processing,
+    required PatternMatch<R, SalonState$Successful> successful,
+    required PatternMatch<R, SalonState$Error> error,
   }) =>
       switch (this) {
         SalonState$Idle s => idle(s),
@@ -147,10 +152,10 @@ abstract base class _$SalonStateBase {
 
   /// Pattern matching for [SalonState].
   R maybeMap<R>({
-    SalonStateMatch<R, SalonState$Idle>? idle,
-    SalonStateMatch<R, SalonState$Processing>? processing,
-    SalonStateMatch<R, SalonState$Successful>? successful,
-    SalonStateMatch<R, SalonState$Error>? error,
+    PatternMatch<R, SalonState$Idle>? idle,
+    PatternMatch<R, SalonState$Processing>? processing,
+    PatternMatch<R, SalonState$Successful>? successful,
+    PatternMatch<R, SalonState$Error>? error,
     required R Function() orElse,
   }) =>
       map<R>(
@@ -162,10 +167,10 @@ abstract base class _$SalonStateBase {
 
   /// Pattern matching for [SalonState].
   R? mapOrNull<R>({
-    SalonStateMatch<R, SalonState$Idle>? idle,
-    SalonStateMatch<R, SalonState$Processing>? processing,
-    SalonStateMatch<R, SalonState$Successful>? successful,
-    SalonStateMatch<R, SalonState$Error>? error,
+    PatternMatch<R, SalonState$Idle>? idle,
+    PatternMatch<R, SalonState$Processing>? processing,
+    PatternMatch<R, SalonState$Successful>? successful,
+    PatternMatch<R, SalonState$Error>? error,
   }) =>
       map<R?>(
         idle: idle ?? (_) => null,

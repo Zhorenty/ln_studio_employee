@@ -1,3 +1,7 @@
+import 'package:flutter/foundation.dart';
+
+///
+@immutable
 final class Salon {
   const Salon({
     required this.id,
@@ -9,14 +13,28 @@ final class Salon {
     required this.description,
   });
 
+  ///
   final int id;
+
+  ///
   final String code;
+
+  ///
   final String name;
+
+  ///
   final String address;
+
+  ///
   final String phone;
+
+  ///
   final String email;
+
+  ///
   final String description;
 
+  ///
   factory Salon.fromJson(Map<String, Object?> json) => Salon(
         id: json['id'] as int,
         code: json['code'] as String,

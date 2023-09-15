@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/common/widget/shimmer.dart';
-import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
-import 'package:ln_employee/src/feature/salon/bloc/salon_event.dart';
-import 'package:ln_employee/src/feature/salon/bloc/salon_state.dart';
+import 'package:go_router/go_router.dart';
+
+import '/src/common/widget/shimmer.dart';
+import '/src/feature/salon/bloc/salon_bloc.dart';
+import '/src/feature/salon/bloc/salon_event.dart';
+import '/src/feature/salon/bloc/salon_state.dart';
 
 import 'salon_choice_row.dart';
 
@@ -41,16 +43,20 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // TODO: Вынести в локаль
                     const Text('Выберите салон'),
                     ...salonBloc.state.data!.map(
+                      // TODO: Сделать так, чтобы нажатие срабатывало вдоль
+                      // всего Row, потому что попадать только по Radio - заеб.
                       (salon) => SalonChoiceRow(
                         salon: salon,
                         currentSalon: state.currentSalon,
-                        onChanged: (salon) =>
-                            salonBloc.add(SalonEvent.saveCurrent(salon!)),
+                        onChanged: (salon) {
+                          salonBloc.add(SalonEvent.saveCurrent(salon!));
+                          context.pop();
+                        },
                       ),
                     ),
-                    // TODO: Сделать pop на выбор или на кнопку ok
                   ],
                 )
               : const Shimmer();

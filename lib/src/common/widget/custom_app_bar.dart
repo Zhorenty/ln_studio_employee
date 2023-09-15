@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
-import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
-import 'package:ln_employee/src/feature/salon/bloc/salon_state.dart';
-import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/animated_button.dart';
+import '/src/common/widget/shimmer.dart';
+import '/src/common/widget/overlay/modal_popup.dart';
+import '/src/feature/salon/bloc/salon_bloc.dart';
+import '/src/feature/salon/bloc/salon_state.dart';
+import '/src/feature/salon/widget/salon_choice_screen.dart';
 
 /// Custom-styled [SliverAppBar].
 class CustomSliverAppBar extends StatelessWidget {
@@ -45,8 +46,10 @@ class CustomSliverAppBar extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: BlocBuilder<SalonBLoC, SalonState>(
-            builder: (context, state) => _GesturedContainer(
-              label: state.currentSalon?.address ?? 'ул. Степана Разина, д. 72',
+            builder: (context, state) => PopupButton(
+              label: state.currentSalon != null
+                  ? Text(state.currentSalon!.name)
+                  : const Shimmer(),
               child: const SalonChoiceScreen(),
             ),
           ),
@@ -56,52 +59,46 @@ class CustomSliverAppBar extends StatelessWidget {
   }
 }
 
-/// Container with [GestureDetector].
-class _GesturedContainer extends StatelessWidget {
-  const _GesturedContainer({
-    required this.label,
-    required this.child,
-  });
+/// Container with [ModalPopup.show] method.
+class PopupButton extends StatelessWidget {
+  const PopupButton({super.key, required this.child, this.label});
 
-  /// Label of this [_GesturedContainer].
-  final String? label;
+  /// Label of this [PopupButton].
+  final Widget? label;
+
+  /// Widget of this [PopupButton].
   final Widget child;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () {
-          /// TODO(zhorenty): Move into separate widget
-          ModalPopup.show(
-            context: context,
-            child: child,
-          );
-        },
+        onTap: () => ModalPopup.show(context: context, child: child),
         child: Container(
           height: 50,
-          width: 300,
+          margin: EdgeInsets.symmetric(
+            horizontal: MediaQuery.sizeOf(context).width / 8,
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
             color: context.colorScheme.primary,
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (label != null)
-                Text(
-                  label!,
-                  style: context.textTheme.titleMedium!.copyWith(
-                    fontSize: 17,
-                    color: context.colorScheme.onBackground,
-                    fontFamily: FontFamily.geologica,
-                  ),
+          child: DefaultTextStyle(
+            style: context.textTheme.titleMedium!.copyWith(
+              fontSize: 17,
+              color: context.colorScheme.onBackground,
+              fontFamily: FontFamily.geologica,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (label != null) label!,
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: context.colorScheme.onBackground,
+                  size: 18,
                 ),
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: context.colorScheme.onBackground,
-                size: 18,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
