@@ -49,7 +49,7 @@ class CustomSliverAppBar extends StatelessWidget {
             builder: (context, state) => PopupButton(
               label: state.currentSalon != null
                   ? Text(state.currentSalon!.name)
-                  : const Shimmer(),
+                  : Shimmer(backgroundColor: context.colorScheme.onBackground),
               child: const SalonChoiceScreen(),
             ),
           ),
@@ -73,11 +73,10 @@ class PopupButton extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
         onTap: () => ModalPopup.show(context: context, child: child),
         child: Container(
-          height: 50,
           margin: EdgeInsets.symmetric(
             horizontal: MediaQuery.sizeOf(context).width / 8,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8 + 4),
           decoration: BoxDecoration(
             color: context.colorScheme.primary,
             borderRadius: BorderRadius.circular(16),

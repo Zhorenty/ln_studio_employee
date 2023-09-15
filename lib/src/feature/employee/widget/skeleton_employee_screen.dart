@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/utils/extensions/color_extension.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -19,20 +20,20 @@ class SkeletonEmployeeScreen extends StatelessWidget {
             title: Shimmer(
               speed: 30,
               size: const Size(200, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              color: const Color(0xFF393939),
+              backgroundColor: context.colorScheme.background,
             ),
             leading: Shimmer(
               speed: 30,
               size: const Size(40, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              color: const Color(0xFF393939),
+              backgroundColor: context.colorScheme.background,
             ),
             trailing: Shimmer(
               speed: 30,
               size: const Size(40, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              color: const Color(0xFF393939),
+              backgroundColor: context.colorScheme.background,
             ),
           ),
           SliverList(
@@ -54,8 +55,8 @@ class SkeletonEmployeeScreen extends StatelessWidget {
                           const _Header(label: 'Рейтинг'),
                           Shimmer(
                             size: const Size(128, 25),
-                            color: context.colorScheme.primary,
-                            backgroundColor: const Color(0xFF525252),
+                            color: context.colorScheme.primary.darken(0.05),
+                            backgroundColor: context.colorScheme.background,
                           ),
                         ],
                       ),
@@ -112,8 +113,8 @@ class CustomShimmer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 64),
             child: Shimmer(
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              color: const Color(0xFF393939),
+              backgroundColor: context.colorScheme.background,
               size: const Size(double.infinity, 24),
             ),
           ),
