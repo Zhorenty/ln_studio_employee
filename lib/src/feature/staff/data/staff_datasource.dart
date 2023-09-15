@@ -5,6 +5,9 @@ import 'package:rest_client/rest_client.dart';
 abstract interface class StaffDatasource {
   /// Fetch staff.
   Future<List<EmployeeModel>> fetchStaff();
+
+  /// Fetch staff by salon id
+  Future<List<EmployeeModel>> fetchSalonEmployees(int salonId);
 }
 
 /// Implementation of Staff datasource.
@@ -17,6 +20,17 @@ class StaffDatasourceImpl implements StaffDatasource {
   @override
   Future<List<EmployeeModel>> fetchStaff() async {
     final response = await restClient.get('/api/employee/all');
+
+    final staff = List.from((response['data'] as List))
+        .map((e) => EmployeeModel.fromJson(e))
+        .toList();
+
+    return staff;
+  }
+
+  @override
+  Future<List<EmployeeModel>> fetchSalonEmployees(int salonId) async {
+    final response = await restClient.get('/api/employee/by_salon_id/$salonId');
 
     final staff = List.from((response['data'] as List))
         .map((e) => EmployeeModel.fromJson(e))

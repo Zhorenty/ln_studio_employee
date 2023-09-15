@@ -72,7 +72,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
       '/api/employee/edit/$id',
       body: {
         'address': address,
-        'job_place_id': 1,
+        'job_id': 1,
         'salon_id': 1,
         'description': description,
         'date_of_employment': dateOfEmployment.format(),
@@ -93,10 +93,10 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
   }
 
   @override
-  Future<void> dismissEmployee({required int id}) async =>
-      await restClient.delete('/api/employee/dismiss/$id');
+  Future<void> dismissEmployee({required int id}) =>
+      restClient.delete('/api/employee/dismiss/$id');
 
   @override
-  Future<void> reinstatementEmployee({required int id}) async =>
-      await restClient.patch('/api/employee/return/$id');
+  Future<void> reinstatementEmployee({required int id}) =>
+      restClient.patch('/api/employee/return/$id');
 }

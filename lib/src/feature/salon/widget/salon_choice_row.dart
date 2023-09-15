@@ -23,14 +23,14 @@ class SalonChoiceRow extends StatelessWidget {
   final void Function(Salon?)? onChanged;
 
   @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          Radio<Salon>(
-            value: salon,
-            groupValue: currentSalon,
-            onChanged: onChanged,
-          ),
-          Text(salon.name),
-        ],
+  Widget build(BuildContext context) => ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: Radio<Salon>(
+          value: salon,
+          groupValue: currentSalon,
+          onChanged: onChanged,
+        ),
+        title: Text(salon.name),
+        onTap: () => onChanged?.call(salon),
       );
 }

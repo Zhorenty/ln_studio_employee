@@ -9,7 +9,6 @@ import '/src/feature/employee/bloc/employee_bloc.dart';
 import '/src/feature/initialization/model/dependencies.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';
-import '/src/feature/staff/bloc/staff_event.dart';
 import '/src/feature/timetable/bloc/timetable_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_event.dart';
 
@@ -38,7 +37,7 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => StaffBloc(
               staffRepository: result.dependencies.staffRepository,
-            )..add(const StaffEvent.fetch()),
+            ),
           ),
           BlocProvider(
             create: (context) => EmployeeBloc(

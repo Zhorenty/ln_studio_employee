@@ -72,7 +72,7 @@ final class EmployeeModel {
     return EmployeeModel(
       id: json['id'] as int,
       address: json['address'] as String,
-      jobPlaceId: json['job_place_id'] as int,
+      jobPlaceId: json['job_id'] as int,
       salonId: json['salon_id'] as int,
       description: json['description'] as String,
       dateOfEmployment: DateTime.parse(json['date_of_employment'] as String),
@@ -85,7 +85,7 @@ final class EmployeeModel {
           : null,
       userModel: UserModel.fromJson(json['user'] as Map<String, dynamic>),
       jobPlaceModel: JobPlaceModel.fromJson(
-        json['job_place'] as Map<String, dynamic>,
+        json['job'] as Map<String, dynamic>,
       ),
       salonModel: SalonModel.fromJson(json['salon'] as Map<String, dynamic>),
     );

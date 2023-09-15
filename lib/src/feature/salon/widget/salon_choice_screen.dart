@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
 
 import '/src/common/widget/shimmer.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
@@ -40,25 +41,31 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
         },
         builder: (context, state) {
           return salonBloc.state.hasData
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // TODO(evklidus): Вынести в локаль.
-                    const Text('Выберите салон'),
-                    ...salonBloc.state.data!.map(
-                      // TODO(evklidus): Сделать так, чтобы нажатие срабатывало
-                      // вдоль всего Row, потому что попадать только по
-                      // Radio - заеб.
-                      (salon) => SalonChoiceRow(
-                        salon: salon,
-                        currentSalon: state.currentSalon,
-                        onChanged: (salon) {
-                          salonBloc.add(SalonEvent.saveCurrent(salon!));
-                          context.pop();
-                        },
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // TODO(evklidus): Вынести в локаль.
+                      Text(
+                        'Выберите салон',
+                        style: context.textTheme.bodyLarge,
                       ),
-                    ),
-                  ],
+                      ...salonBloc.state.data!.map(
+                        // TODO(evklidus): Сделать так, чтобы нажатие срабатывало
+                        // вдоль всего Row, потому что попадать только по
+                        // Radio - заеб.
+                        (salon) => SalonChoiceRow(
+                          salon: salon,
+                          currentSalon: state.currentSalon,
+                          onChanged: (salon) {
+                            salonBloc.add(SalonEvent.saveCurrent(salon!));
+                            context.pop();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               : const Shimmer();
         },

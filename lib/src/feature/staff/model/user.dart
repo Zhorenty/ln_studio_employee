@@ -56,7 +56,8 @@ final class UserModel {
     return UserModel(
       id: json['id'] as int,
       photo: json['photo'] as String?,
-      username: json['username'] as String,
+      // TODO: Убрать username
+      username: 'username',
       password: json['password'] as String,
       email: json['email'] as String,
       firstName: json['first_name'] as String,

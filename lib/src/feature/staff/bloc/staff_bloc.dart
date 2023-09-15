@@ -9,7 +9,8 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
   StaffBloc({required this.staffRepository}) : super(const StaffState.idle()) {
     on<StaffEvent>(
       (event, emit) => event.map(
-        fetch: (event) => _fetch(event, emit),
+        fetch: (event) => _fetchAllEmoloyees(event, emit),
+        fetchSalonEmployees: (event) => _fetchSalonEmployees(event, emit),
       ),
     );
   }
@@ -18,15 +19,36 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
   final StaffRepository staffRepository;
 
   /// Fetch staff from repository.
-  Future<void> _fetch(
+  Future<void> _fetchAllEmoloyees(
     StaffEvent$Fetch event,
     Emitter<StaffState> emit,
   ) async {
     try {
-      final employeeStaff = await staffRepository.getStaff();
-      emit(StaffState.loaded(employeeStaff: employeeStaff));
+      final employees = await staffRepository.getStaff();
+      emit(StaffState.loaded(employeeStaff: employees));
     } on Object catch (e) {
-      emit(StaffState.idle(error: e.toString()));
+      emit(StaffState.idle(
+        employeeStaff: state.employeeStaff,
+        error: e.toString(),
+      ));
+      rethrow;
+    }
+  }
+
+  /// Fetch staff from repository.
+  Future<void> _fetchSalonEmployees(
+    StaffEvent$FetchSalonEmployees event,
+    Emitter<StaffState> emit,
+  ) async {
+    try {
+      final employees =
+          await staffRepository.fetchSalonEmployees(event.salonId);
+      emit(StaffState.loaded(employeeStaff: employees));
+    } on Object catch (e) {
+      emit(StaffState.idle(
+        employeeStaff: state.employeeStaff,
+        error: e.toString(),
+      ));
       rethrow;
     }
   }
