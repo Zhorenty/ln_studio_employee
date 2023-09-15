@@ -43,11 +43,12 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // TODO(evklidus): Вынести в локаль
+                    // TODO(evklidus): Вынести в локаль.
                     const Text('Выберите салон'),
                     ...salonBloc.state.data!.map(
-                      // TODO(evklidus): Сделать так, чтобы нажатие срабатывало вдоль
-                      // всего Row, потому что попадать только по Radio - заеб.
+                      // TODO(evklidus): Сделать так, чтобы нажатие срабатывало
+                      // вдоль всего Row, потому что попадать только по
+                      // Radio - заеб.
                       (salon) => SalonChoiceRow(
                         salon: salon,
                         currentSalon: state.currentSalon,
