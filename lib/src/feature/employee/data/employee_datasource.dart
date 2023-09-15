@@ -80,9 +80,9 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
 
   @override
   Future<void> dismissEmployee({required int id}) async =>
-      await restClient.delete('/api/employee/dismiss/$id');
+      await restClient.patch('/api/employee/dismiss/$id');
 
   @override
   Future<void> reinstatementEmployee({required int id}) async =>
-      await restClient.patch('/api/employee/return/$id');
+      await restClient.patch('/api/employee/reinstatement/$id');
 }

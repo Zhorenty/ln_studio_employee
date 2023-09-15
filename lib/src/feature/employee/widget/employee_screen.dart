@@ -143,6 +143,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             body: CustomScrollView(
               slivers: [
                 ExpandedAppBar(
+                  label: '${user.firstName} ${user.lastName}',
                   title: Text(
                     '${user.firstName} ${user.lastName}',
                     style: context.textTheme.titleLarge!.copyWith(

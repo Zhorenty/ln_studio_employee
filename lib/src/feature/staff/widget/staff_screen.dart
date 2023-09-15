@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/widget/animated_button.dart';
+import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/create_employee/widget/create_employee_screen.dart';
 
@@ -78,9 +79,9 @@ class _StaffScreenState extends State<StaffScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: 45,
-                            backgroundColor: context.colorScheme.secondary,
+                          AvatarWidget(
+                            radius: 40,
+                            title: '${user.firstName} ${user.lastName}',
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
