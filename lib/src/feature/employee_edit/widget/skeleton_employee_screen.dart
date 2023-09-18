@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/widget/header.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/header.dart';
 import '/src/common/widget/shimmer.dart';
 import 'components/expanded_app_bar.dart';
 
@@ -62,14 +62,15 @@ class SkeletonEmployeeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16 + 8),
                       const HeaderWidget(label: 'Личная информация'),
-                      const CustomShimmer(label: 'Имя', dense: true),
-                      const CustomShimmer(label: 'Фамилия'),
-                      const CustomShimmer(label: 'Номер телефона'),
-                      const CustomShimmer(label: 'Домашний адрес'),
-                      const CustomShimmer(label: 'Электронная почта'),
+                      const _CustomShimmer(label: 'Имя', dense: true),
+                      const _CustomShimmer(label: 'Фамилия'),
+                      const _CustomShimmer(label: 'Номер телефона'),
+                      const _CustomShimmer(label: 'Домашний адрес'),
+                      const _CustomShimmer(label: 'Электронная почта'),
                       const HeaderWidget(label: 'Рабочая информация'),
-                      const CustomShimmer(label: 'Номер договора', dense: true),
-                      const CustomShimmer(label: 'Описание сотрудника'),
+                      const _CustomShimmer(
+                          label: 'Номер договора', dense: true),
+                      const _CustomShimmer(label: 'Описание сотрудника'),
                     ],
                   ),
                 )
@@ -82,12 +83,8 @@ class SkeletonEmployeeScreen extends StatelessWidget {
   }
 }
 
-class CustomShimmer extends StatelessWidget {
-  const CustomShimmer({
-    super.key,
-    required this.label,
-    this.dense = false,
-  });
+class _CustomShimmer extends StatelessWidget {
+  const _CustomShimmer({required this.label, this.dense = false});
 
   final bool dense;
 

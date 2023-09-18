@@ -1,6 +1,6 @@
-import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
-
 import 'staff_datasource.dart';
+
+import '/src/feature/employee/model/employee/employee.dart';
 
 /// Repository for staff data.
 abstract interface class StaffRepository {

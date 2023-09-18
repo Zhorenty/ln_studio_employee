@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '/src/common/utils/extensions/date_time_extension.dart';
 import 'user_create.dart';
 
+/// Represents an employee in a salon with its create properties.
 @immutable
 final class Employee$Create {
   const Employee$Create({
@@ -60,12 +61,13 @@ final class Employee$Create {
       percentageOfSales: json['percentage_of_sales'] as double,
       stars: json['stars'] as int,
       isDismiss: json['is_dismiss'] as bool,
-      userModel:
-          UserModel$Create.fromJson(json['user'] as Map<String, dynamic>),
+      userModel: UserModel$Create.fromJson(
+        json['user'] as Map<String, dynamic>,
+      ),
     );
   }
 
-  /// Converts [Employee] into json.
+  /// Converts [Employee$Create] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'address': address,
         'job_place_id': jobId,

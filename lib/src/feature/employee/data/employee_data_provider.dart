@@ -1,19 +1,19 @@
-import 'package:ln_employee/src/feature/employee/model/employee_create/employee_create.dart';
-import 'package:ln_employee/src/feature/employee/model/employee_edit/employee_edit.dart';
 import 'package:rest_client/rest_client.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
-import '../../employee/model/employee/employee.dart';
+import '/src/feature/employee/model/employee/employee.dart';
+import '/src/feature/employee/model/employee_create/employee_create.dart';
+import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 
 /// Datasource for employee data.
 abstract interface class EmployeeDataProvider {
   /// Fetch employee by id.
   Future<Employee> fetch({required int id});
 
-  ///
+  /// Create new employee.
   Future<void> createEmployee({required Employee$Create employee});
 
-  /// Edit employee by [id].
+  /// Edit employee.
   Future<Employee> editEmployee({required Employee$Edit employee});
 
   /// Dismiss employee by id.
@@ -33,7 +33,6 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   @override
   Future<Employee> fetch({required int id}) async {
     final response = await restClient.get('/api/employee/$id');
-
     return Employee.fromJson(response);
   }
 
@@ -82,7 +81,6 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
         },
       },
     );
-
     return Employee.fromJson(result);
   }
 

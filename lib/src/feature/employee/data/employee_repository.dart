@@ -1,11 +1,11 @@
-import 'package:ln_employee/src/feature/employee/data/employee_data_provider.dart';
-import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
-import 'package:ln_employee/src/feature/employee/model/employee_create/employee_create.dart';
-import 'package:ln_employee/src/feature/employee/model/employee_edit/employee_edit.dart';
+import '/src/feature/employee/data/employee_data_provider.dart';
+import '/src/feature/employee/model/employee/employee.dart';
+import '/src/feature/employee/model/employee_create/employee_create.dart';
+import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 
 /// Repository for employee data.
 abstract interface class EmployeeRepository {
-  /// Fetch employee by id.
+  /// Get employee by id.
   Future<Employee> get({required int id});
 
   /// Create employee.

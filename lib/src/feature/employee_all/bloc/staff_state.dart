@@ -1,21 +1,21 @@
 import 'package:flutter/foundation.dart';
-import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
 
 import '/src/common/utils/pattern_match.dart';
+import '/src/feature/employee/model/employee/employee.dart';
 
 /// Staff states.
 sealed class StaffState extends _$StaffStateBase {
-  const StaffState._({required super.employeeStaff, super.error});
+  const StaffState._({required super.staff, super.error});
 
   /// Staff is idle.
   const factory StaffState.idle({
-    List<Employee> employeeStaff,
+    List<Employee> staff,
     String? error,
   }) = _StaffState$Idle;
 
   /// Staff is loaded.
   const factory StaffState.loaded({
-    required List<Employee> employeeStaff,
+    required List<Employee> staff,
     String? error,
   }) = _StaffState$Loaded;
 }
@@ -23,7 +23,7 @@ sealed class StaffState extends _$StaffStateBase {
 /// [StaffState.idle] state matcher.
 final class _StaffState$Idle extends StaffState {
   const _StaffState$Idle({
-    super.employeeStaff = const [],
+    super.staff = const [],
     super.error,
   }) : super._();
 }
@@ -31,7 +31,7 @@ final class _StaffState$Idle extends StaffState {
 /// [StaffState.loaded] state matcher.
 final class _StaffState$Loaded extends StaffState {
   const _StaffState$Loaded({
-    required super.employeeStaff,
+    required super.staff,
     super.error,
   }) : super._();
 }
@@ -39,10 +39,10 @@ final class _StaffState$Loaded extends StaffState {
 /// Staff state base class.
 @immutable
 abstract base class _$StaffStateBase {
-  const _$StaffStateBase({required this.employeeStaff, this.error});
+  const _$StaffStateBase({required this.staff, this.error});
 
   @nonVirtual
-  final List<Employee> employeeStaff;
+  final List<Employee> staff;
 
   @nonVirtual
   final String? error;
@@ -51,7 +51,7 @@ abstract base class _$StaffStateBase {
   bool get hasError => error != null;
 
   /// Indicator whether staff is not empty.
-  bool get hasStaff => employeeStaff.isNotEmpty;
+  bool get hasStaff => staff.isNotEmpty;
 
   /// Indicator whether state is already loaded.
   bool get isLoaded => maybeMap(
@@ -88,11 +88,11 @@ abstract base class _$StaffStateBase {
       );
 
   @override
-  String toString() => 'StaffState(Staff: $employeeStaff, error: $error)';
+  String toString() => 'StaffState(Staff: $staff, error: $error)';
 
   @override
   bool operator ==(Object other) => identical(this, other);
 
   @override
-  int get hashCode => Object.hash(employeeStaff, error);
+  int get hashCode => Object.hash(staff, error);
 }

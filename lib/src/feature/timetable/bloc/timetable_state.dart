@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:ln_employee/src/feature/timetable/model/employee_timetable.dart';
 
 import '/src/common/utils/pattern_match.dart';
+import '/src/feature/timetable/model/employee_timetable.dart';
 
 /// Timetable states.
 sealed class TimetableState extends _$TimetableStateBase {

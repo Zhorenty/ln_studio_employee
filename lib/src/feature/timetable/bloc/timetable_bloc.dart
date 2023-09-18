@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/timetable/data/timetable_repository.dart';
 
+import '/src/feature/timetable/data/timetable_repository.dart';
 import 'timetable_event.dart';
 import 'timetable_state.dart';
 
