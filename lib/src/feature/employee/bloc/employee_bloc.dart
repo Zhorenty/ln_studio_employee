@@ -38,9 +38,11 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
 
   /// Fetch event handler
   Future<void> _create(
-      EmployeeEvent$Create event, Emitter<EmployeeState> emit) async {
+    EmployeeEvent$Create event,
+    Emitter<EmployeeState> emit,
+  ) async {
     try {
-      emit(EmployeeState.processing(employee: event.employee));
+      emit(const EmployeeState.processing());
       await repository.createEmployee(employee: event.employee);
       emit(EmployeeState.successful(employee: state.employee));
     } on Object catch (e) {

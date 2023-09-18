@@ -1,15 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
-import 'job.dart';
-import 'salon.dart';
-import 'user.dart';
+import 'user_create.dart';
 
-/// Represents an employee in a salon with its properties.
 @immutable
-final class EmployeeModel {
-  const EmployeeModel({
-    required this.id,
+final class EmployeeModel$Create {
+  const EmployeeModel$Create({
     required this.address,
     required this.jobId,
     required this.salonId,
@@ -18,15 +14,8 @@ final class EmployeeModel {
     required this.contractNumber,
     required this.percentageOfSales,
     required this.stars,
-    required this.isDismiss,
     required this.userModel,
-    required this.jobModel,
-    required this.salonModel,
-    this.dismissDate,
   });
-
-  /// UUID of employee.
-  final int id;
 
   /// Residential address of employee.
   final String address;
@@ -52,25 +41,12 @@ final class EmployeeModel {
   /// Number of stars received by the employee.
   final int stars;
 
-  /// Indicates whether the employee is dismissed or not.
-  final bool isDismiss;
-
-  /// Date of dismissal (if applicable).
-  final DateTime? dismissDate;
-
   /// User associated with the employee.
-  final UserModel userModel;
-
-  /// Job place associated with the employee's special skill.
-  final JobModel jobModel;
-
-  /// Salon associated with the employee.
-  final SalonModel salonModel;
+  final UserModel$Create userModel;
 
   /// Returns [EmployeeModel] from [json].
-  factory EmployeeModel.fromJson(Map<String, dynamic> json) {
-    return EmployeeModel(
-      id: json['id'] as int,
+  factory EmployeeModel$Create.fromJson(Map<String, dynamic> json) {
+    return EmployeeModel$Create(
       address: json['address'] as String,
       jobId: json['job_id'] as int,
       salonId: json['salon_id'] as int,
@@ -79,21 +55,13 @@ final class EmployeeModel {
       contractNumber: json['contract_number'] as String,
       percentageOfSales: json['percentage_of_sales'] as double,
       stars: json['stars'] as int,
-      isDismiss: json['is_dismiss'] as bool,
-      dismissDate: json['dismiss_date'] != null
-          ? DateTime.parse(json['dismiss_date'] as String)
-          : null,
-      userModel: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      jobModel: JobModel.fromJson(
-        json['job'] as Map<String, dynamic>,
-      ),
-      salonModel: SalonModel.fromJson(json['salon'] as Map<String, dynamic>),
+      userModel:
+          UserModel$Create.fromJson(json['user'] as Map<String, dynamic>),
     );
   }
 
   /// Converts [EmployeeModel] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'id': id,
         'address': address,
         'job_place_id': jobId,
         'salon_id': salonId,
@@ -102,10 +70,6 @@ final class EmployeeModel {
         'contract_number': contractNumber,
         'percentage_of_sales': percentageOfSales,
         'stars': stars,
-        'is_dismiss': isDismiss,
-        'dismiss_date': dismissDate?.millisecondsSinceEpoch,
         'user': userModel.toJson(),
-        'job_place': jobModel.toJson(),
-        'salon': salonModel.toJson(),
       };
 }

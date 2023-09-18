@@ -63,7 +63,7 @@ class _StaffScreenState extends State<StaffScreen>
                   itemBuilder: (context, index) {
                     final employee = state.employeeStaff[index];
                     final user = state.employeeStaff[index].userModel;
-                    final jobPlace = state.employeeStaff[index].jobPlaceModel;
+                    final jobPlace = state.employeeStaff[index].jobModel;
 
                     return Container(
                       margin: const EdgeInsets.symmetric(vertical: 4 + 2),
@@ -146,7 +146,10 @@ class _StaffScreenState extends State<StaffScreen>
                     ),
                   ),
                 ),
-              )
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(height: MediaQuery.sizeOf(context).height / 8),
+              ),
             ] else
               SliverFillRemaining(
                 child: Center(

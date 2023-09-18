@@ -17,7 +17,7 @@ import '/src/feature/employee/bloc/employee_state.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';
 import '/src/feature/staff/bloc/staff_event.dart';
 import '/src/feature/staff/model/employee.dart';
-import '/src/feature/staff/model/job_place.dart';
+import '../../staff/model/job.dart';
 import '/src/feature/staff/model/salon.dart';
 import '/src/feature/staff/model/user.dart';
 
@@ -46,6 +46,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           EmployeeEvent.fetch(id: widget.employeeid),
         );
   }
+
+  late final phoneFocusNode = FocusNode();
 
   /// User information
   late final firstNameController = TextEditingController();
@@ -96,7 +98,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       employee: EmployeeModel(
                         id: employee.id,
                         address: addressController.text,
-                        jobPlaceId: 1,
+                        jobId: 1,
                         salonId: 1,
                         description: descriptonController.text,
                         dateOfEmployment: dateOfEmployment,
@@ -106,7 +108,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         isDismiss: employee.isDismiss,
                         userModel: UserModel(
                           id: employee.userModel.id,
-                          username: employee.userModel.username,
                           password: employee.userModel.password,
                           email: emailController.text,
                           firstName: firstNameController.text,
@@ -116,10 +117,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           isSuperuser: employee.userModel.isSuperuser,
                           isActive: employee.userModel.isActive,
                         ),
-                        jobPlaceModel: JobPlaceModel(
-                          id: employee.jobPlaceModel.id,
-                          name: employee.jobPlaceModel.name,
-                          oklad: employee.jobPlaceModel.oklad,
+                        jobModel: JobModel(
+                          id: employee.jobModel.id,
+                          name: employee.jobModel.name,
+                          oklad: employee.jobModel.oklad,
                         ),
                         salonModel: SalonModel(
                           id: employee.salonModel.id,
@@ -256,6 +257,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                             CustomTextField(
                               controller: phoneController,
                               label: 'Номер телефона',
+                              focusNode: phoneFocusNode,
+                              onChanged: _checkPhoneNumber,
                               inputFormatters: [RuPhoneInputFormatter()],
                               keyboardType: TextInputType.phone,
                               copyable: true,
@@ -311,6 +314,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         }
       },
     );
+  }
+
+  ///
+  void _checkPhoneNumber(String value) {
+    if ((value.length == 18 && value.startsWith('+')) ||
+        (value.length == 17 && value.startsWith('8'))) {
+      phoneFocusNode.unfocus();
+    }
   }
 
   /// Dismiss employee by [id].

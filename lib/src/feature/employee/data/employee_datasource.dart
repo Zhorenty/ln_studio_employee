@@ -1,3 +1,4 @@
+import 'package:ln_employee/src/feature/create_employee/model/employee_create.dart';
 import 'package:rest_client/rest_client.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
@@ -9,7 +10,7 @@ abstract interface class EmployeeDatasource {
   Future<EmployeeModel> fetchEmployee({required int id});
 
   ///
-  Future<void> createEmployee({required EmployeeModel employee});
+  Future<void> createEmployee({required EmployeeModel$Create employee});
 
   /// Edit employee by [id].
   Future<EmployeeModel> editEmployee({required EmployeeModel employee});
@@ -36,19 +37,25 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
   }
 
   @override
-  Future<void> createEmployee({required EmployeeModel employee}) async =>
+  Future<void> createEmployee({required EmployeeModel$Create employee}) async =>
       await restClient.post(
         '/api/employee/create',
         body: {
-          'first_name': employee.userModel.firstName,
-          'last_name': employee.userModel.lastName,
-          'phone': employee.userModel.phone,
-          'address': employee.address,
-          'description': employee.description,
-          'specializationId': employee.jobPlaceId,
-          'salon_id': employee.salonId,
-          'stars': employee.stars,
-          'percentage_of_sales': employee.percentageOfSales,
+          "address": employee.address,
+          "job_id": 1,
+          "salon_id": 1,
+          "description": employee.description,
+          "date_of_employment": employee.dateOfEmployment.format(),
+          "contract_number": employee.contractNumber,
+          "percentage_of_sales": employee.percentageOfSales,
+          "stars": employee.stars,
+          "user": {
+            "phone": employee.userModel.phone,
+            "first_name": employee.userModel.firstName,
+            "last_name": employee.userModel.lastName,
+            "email": employee.userModel.email,
+            "birth_date": employee.userModel.birthDate.format(),
+          }
         },
       );
 
@@ -58,7 +65,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
       '/api/employee/edit/${employee.id}',
       body: {
         'address': employee.address,
-        'job_place_id': employee.salonId,
+        'job_id': employee.salonId,
         'salon_id': employee.salonId,
         'description': employee.description,
         'date_of_employment': employee.dateOfEmployment.format(),

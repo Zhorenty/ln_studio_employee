@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:ln_employee/src/feature/create_employee/model/employee_create.dart';
 import 'package:ln_employee/src/feature/staff/model/employee.dart';
 
 import '/src/common/utils/pattern_match.dart';
@@ -12,7 +13,7 @@ sealed class EmployeeEvent extends _$EmployeeEventBase {
   const factory EmployeeEvent.fetch({required int id}) = EmployeeEvent$Fetch;
 
   /// Factory for creating employee.
-  const factory EmployeeEvent.create({required EmployeeModel employee}) =
+  const factory EmployeeEvent.create({required EmployeeModel$Create employee}) =
       EmployeeEvent$Create;
 
   /// Factory for editing current employee.
@@ -41,7 +42,7 @@ final class EmployeeEvent$Create extends EmployeeEvent {
   const EmployeeEvent$Create({required this.employee}) : super();
 
   ///
-  final EmployeeModel employee;
+  final EmployeeModel$Create employee;
 }
 
 /// [EmployeeEvent.edit] event.
