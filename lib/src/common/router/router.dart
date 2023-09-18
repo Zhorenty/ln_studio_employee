@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/feature/staff/widget/staff_screen.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
-import '/src/feature/employee/widget/employee_screen.dart';
+import '../../feature/edit_employee/widget/employee_screen.dart';
 import '/src/feature/settings/widget/settings_screen.dart';
 import '/src/feature/timetable/widget/timetable_screen.dart';
 

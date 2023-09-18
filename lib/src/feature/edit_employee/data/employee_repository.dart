@@ -1,7 +1,6 @@
 import 'package:ln_employee/src/feature/create_employee/model/employee_create.dart';
+import 'package:ln_employee/src/feature/edit_employee/data/employee_datasource.dart';
 import 'package:ln_employee/src/feature/staff/model/employee.dart';
-
-import '/src/feature/employee/data/employee_datasource.dart';
 
 /// Repository for employee data.
 abstract interface class EmployeeRepository {

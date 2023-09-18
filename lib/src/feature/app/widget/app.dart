@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
-import '/src/feature/employee/bloc/employee_bloc.dart';
+import '../../edit_employee/bloc/employee_bloc.dart';
 import '/src/feature/initialization/model/dependencies.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';

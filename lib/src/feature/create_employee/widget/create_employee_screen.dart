@@ -12,9 +12,11 @@ import '/src/common/widget/header.dart';
 import '/src/common/widget/star_rating.dart';
 import '/src/feature/create_employee/model/employee_create.dart';
 import '/src/feature/create_employee/model/user_create.dart';
-import '/src/feature/employee/bloc/employee_bloc.dart';
-import '/src/feature/employee/bloc/employee_event.dart';
-import '/src/feature/employee/bloc/employee_state.dart';
+import '../../edit_employee/bloc/employee_bloc.dart';
+import '../../edit_employee/bloc/employee_event.dart';
+import '../../edit_employee/bloc/employee_state.dart';
+import '/src/feature/staff/bloc/staff_bloc.dart';
+import '/src/feature/staff/bloc/staff_event.dart';
 
 class CreateEmployeeScreen extends StatefulWidget {
   const CreateEmployeeScreen({super.key});
@@ -37,13 +39,14 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
 
   /// Employee information
   late final contractNumberController = TextEditingController();
-
   late final starsController = TextEditingController();
-  // TODO(zhorenty): Make huge TextField.
   late final descriptionController = TextEditingController();
   late final emailController = TextEditingController();
-  // TODO(zhorenty): Make DropDownButton or something.
   late final salesController = TextEditingController();
+
+  int stars = 1;
+  DateTime dateOfEmployment = DateTime.now();
+  DateTime birthDate = DateTime.now();
 
   @override
   void initState() {
@@ -53,189 +56,193 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int stars = 3;
-    DateTime dateOfEmployment = DateTime.now();
-    DateTime birthDate = DateTime.now();
-
     return BlocBuilder<EmployeeBloc, EmployeeState>(
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: context.colorScheme.scrim,
-          // resizeToAvoidBottomInset: true,
-          body: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            height: MediaQuery.sizeOf(context).height / 1.189,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AnimatedButton(
-                      child: const Text('Отмена'),
-                      onPressed: () => context.pop(),
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AnimatedButton(
+                    child: const Text('Отмена'),
+                    onPressed: () => context.pop(),
+                  ),
+                  Text(
+                    'Новый сотрудник',
+                    style: context.textTheme.titleMedium?.copyWith(
+                      color: context.colorScheme.primary,
+                      fontFamily: FontFamily.geologica,
                     ),
-                    Text(
-                      'Новый сотрудник',
-                      style: context.textTheme.titleMedium?.copyWith(
-                        color: context.colorScheme.primary,
-                        fontFamily: FontFamily.geologica,
-                      ),
-                    ),
-                    AnimatedButton(
-                      child: const Text('Готово'),
-                      // Implement bloc here.
-                      onPressed: () {
-                        context.read<EmployeeBloc>().add(
-                              EmployeeEvent.create(
-                                employee: EmployeeModel$Create(
-                                  address: addressController.text,
-                                  jobId: 1,
-                                  salonId: 1,
-                                  description: descriptionController.text,
-                                  dateOfEmployment: dateOfEmployment,
-                                  contractNumber: contractNumberController.text,
-                                  percentageOfSales: double.parse(
-                                    salesController.text,
-                                  ),
-                                  stars: stars,
-                                  userModel: UserModel$Create(
-                                    phone: phoneController.text,
-                                    firstName: firstNameController.text,
-                                    lastName: lastNameController.text,
-                                    email: emailController.text,
-                                    birthDate: birthDate,
-                                  ),
+                  ),
+                  AnimatedButton(
+                    child: const Text('Готово'),
+                    onPressed: () {
+                      _create();
+                      _refresh();
+                      context.pop();
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 8),
+                          CircleAvatar(
+                            radius: 65,
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  color: context.colorScheme.onBackground,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(
+                                  Icons.photo_camera_rounded,
+                                  color: context.colorScheme.secondary,
                                 ),
                               ),
-                            );
-                        context.pop();
-                      },
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+                        ],
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const HeaderWidget(label: 'Рейтинг'),
+                              StarRating(
+                                initialRating: stars,
+                                onRatingChanged: (rating) => stars = rating,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          const HeaderWidget(label: 'Личная информация'),
+                          CustomTextField(
+                            dense: false,
+                            controller: firstNameController,
+                            focusNode: firstNameFocusNode,
+                            textInputAction: TextInputAction.next,
+                            label: 'Имя',
+                            keyboardType: TextInputType.name,
+                          ),
+                          CustomTextField(
+                            controller: lastNameController,
+                            label: 'Фамилия',
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.name,
+                          ),
+                          CustomTextField(
+                            controller: phoneController,
+                            focusNode: phoneFocusNode,
+                            label: 'Телефон',
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [RuPhoneInputFormatter()],
+                            onChanged: _checkPhoneNumber,
+                          ),
+                          CustomTextField(
+                            controller: addressController,
+                            textInputAction: TextInputAction.next,
+                            focusNode: addressFocusNode,
+                            label: 'Адрес проживания',
+                            keyboardType: TextInputType.streetAddress,
+                          ),
+                          CustomTextField(
+                            controller: emailController,
+                            label: 'Почта',
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          DatePickerButton(
+                            initialDate: birthDate,
+                            onDateSelected: (day) => birthDate = day,
+                          ),
+                          const SizedBox(height: 32),
+                          const HeaderWidget(label: 'Рабочая информация'),
+                          DatePickerButton(
+                            initialDate: dateOfEmployment,
+                            onDateSelected: (day) => dateOfEmployment = day,
+                          ),
+                          CustomTextField(
+                            controller: descriptionController,
+                            textInputAction: TextInputAction.next,
+                            dense: false,
+                            label: 'Описание сотрудника',
+                            keyboardType: TextInputType.multiline,
+                          ),
+                          CustomTextField(
+                            controller: salesController,
+                            focusNode: salesFocusNode,
+                            textInputAction: TextInputAction.done,
+                            label: 'Процент от продаж',
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            onChanged: _checkSales,
+                          ),
+                          const SizedBox(height: 16 + 8),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 8),
-                            CircleAvatar(
-                              radius: 65,
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    color: context.colorScheme.onBackground,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Icon(
-                                    Icons.photo_camera_rounded,
-                                    color: context.colorScheme.secondary,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 32),
-                          ],
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const HeaderWidget(label: 'Рейтинг'),
-                                StarRating(
-                                  initialRating: stars,
-                                  onRatingChanged: (rating) => stars = rating,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            const HeaderWidget(label: 'Личная информация'),
-                            CustomTextField(
-                              dense: false,
-                              controller: firstNameController,
-                              focusNode: firstNameFocusNode,
-                              textInputAction: TextInputAction.next,
-                              label: 'Имя',
-                              keyboardType: TextInputType.name,
-                            ),
-                            CustomTextField(
-                              controller: lastNameController,
-                              label: 'Фамилия',
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.name,
-                            ),
-                            CustomTextField(
-                              controller: phoneController,
-                              focusNode: phoneFocusNode,
-                              label: 'Телефон',
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.phone,
-                              inputFormatters: [RuPhoneInputFormatter()],
-                              onChanged: _checkPhoneNumber,
-                            ),
-                            CustomTextField(
-                              controller: emailController,
-                              label: 'Почта',
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.emailAddress,
-                            ),
-                            CustomTextField(
-                              controller: addressController,
-                              textInputAction: TextInputAction.next,
-                              focusNode: addressFocusNode,
-                              label: 'Адрес проживания',
-                              keyboardType: TextInputType.streetAddress,
-                            ),
-                            DatePickerButton(
-                              initialDate: birthDate,
-                              onDateSelected: (day) => birthDate = day,
-                            ),
-                            const SizedBox(height: 32),
-                            const HeaderWidget(label: 'Рабочая информация'),
-                            DatePickerButton(
-                              initialDate: dateOfEmployment,
-                              onDateSelected: (day) => dateOfEmployment = day,
-                            ),
-                            CustomTextField(
-                              controller: descriptionController,
-                              textInputAction: TextInputAction.next,
-                              dense: false,
-                              label: 'Описание сотрудника',
-                              keyboardType: TextInputType.multiline,
-                            ),
-                            CustomTextField(
-                              controller: salesController,
-                              focusNode: salesFocusNode,
-                              textInputAction: TextInputAction.done,
-                              label: 'Процент от продаж',
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                              ),
-                              onChanged: _checkSales,
-                            ),
-                            const SizedBox(height: 16 + 8),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
     );
+  }
+
+  ///
+  Future<void> _create() async {
+    context.read<EmployeeBloc>().add(
+          EmployeeEvent.create(
+            employee: EmployeeModel$Create(
+              address: addressController.text,
+
+              /// TODO(zhorenty): Fetch salons and jobs
+              jobId: 1,
+              salonId: 1,
+              description: descriptionController.text,
+              dateOfEmployment: dateOfEmployment,
+              contractNumber: contractNumberController.text,
+              percentageOfSales: double.parse(
+                salesController.text,
+              ),
+              stars: stars,
+              userModel: UserModel$Create(
+                phone: phoneController.text,
+                firstName: firstNameController.text,
+                lastName: lastNameController.text,
+                email: emailController.text,
+                birthDate: birthDate,
+              ),
+            ),
+          ),
+        );
+  }
+
+  ///
+  Future<void> _refresh() async {
+    final block = context.read<StaffBloc>().stream.first;
+    context.read<StaffBloc>().add(const StaffEvent.fetch());
+    await block;
   }
 
   ///

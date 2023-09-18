@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '/src/feature/employee/data/employee_datasource.dart';
-import '/src/feature/employee/data/employee_repository.dart';
+import '../../edit_employee/data/employee_datasource.dart';
+import '../../edit_employee/data/employee_repository.dart';
 import '/src/feature/initialization/model/initialization_progress.dart';
 import '/src/feature/staff/data/staff_datasource.dart';
 import '/src/feature/staff/data/staff_repository.dart';
