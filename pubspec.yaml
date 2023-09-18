@@ -61,7 +61,7 @@ dev_dependencies:
 
   # Lints
   flutter_lints: ^2.0.0
-  meta: ^1.10.0
+  meta: ^1.9.1
 
   # Splash & launcher icon
   flutter_launcher_icons: ^0.11.0

@@ -1,18 +1,25 @@
 import 'package:flutter/foundation.dart';
 
-import 'employee.dart';
 import 'timetable_item.dart';
 
 /// Timetable for an employee.
 @immutable
 final class EmployeeTimetable {
   const EmployeeTimetable({
-    required this.employee,
+    required this.id,
+    required this.firstName,
+    required this.lastName,
     required this.timetableItems,
   });
 
-  /// Employee's timetable.
-  final Employee employee;
+  /// Employee's ID
+  final int id;
+
+  /// Employee's first name
+  final String firstName;
+
+  /// Employee's last name
+  final String lastName;
 
   /// List of timetable items.
   final List<TimetableItem> timetableItems;
@@ -20,7 +27,9 @@ final class EmployeeTimetable {
   /// Returns [EmployeeTimetable] from [json].
   factory EmployeeTimetable.fromJson(Map<String, Object?> json) =>
       EmployeeTimetable(
-        employee: Employee.fromJson(json['employee'] as Map<String, dynamic>),
+        id: json['id'] as int,
+        firstName: json['first_name'] as String,
+        lastName: json['last_name'] as String,
         timetableItems: List.from(json['timetables'] as List)
             .map((e) => TimetableItem.fromJson(e))
             .toList(),

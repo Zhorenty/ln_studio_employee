@@ -1,8 +1,9 @@
+import 'package:ln_employee/src/feature/employee_all/data/staff_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/employee/data/employee_repository.dart';
-import '/src/feature/staff/data/staff_repository.dart';
+
 import '/src/feature/timetable/data/timetable_repository.dart';
 
 /// Dependencies container.

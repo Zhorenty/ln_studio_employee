@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/pattern_match.dart';
+import '/src/feature/employee/model/employee_create/employee_create.dart';
+import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 
 /// Employee events.
 @immutable
@@ -10,24 +12,13 @@ sealed class EmployeeEvent extends _$EmployeeEventBase {
   /// Factory for fetching employee by id.
   const factory EmployeeEvent.fetch({required int id}) = EmployeeEvent$Fetch;
 
-  /// Factory for filling timetable.
-  const factory EmployeeEvent.editEmployee({
-    /// Employee information
-    required int id,
-    required String description,
-    required String address,
-    required String contractNumber,
-    required double percentageOfSales,
-    required int stars,
-    required DateTime dateOfEmployment,
+  /// Factory for creating employee.
+  const factory EmployeeEvent.create({required Employee$Create employee}) =
+      EmployeeEvent$Create;
 
-    /// User information
-    required String email,
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required DateTime birthDate,
-  }) = EmployeeEvent$EditEmployee;
+  /// Factory for editing current employee.
+  const factory EmployeeEvent.edit({required Employee$Edit employee}) =
+      EmployeeEvent$Edit;
 
   /// Factory for dismissing employee by id.
   const factory EmployeeEvent.dismiss({required int id}) =
@@ -46,41 +37,20 @@ final class EmployeeEvent$Fetch extends EmployeeEvent {
   final int id;
 }
 
-/// [EmployeeEvent.editEmployee] event.
-final class EmployeeEvent$EditEmployee extends EmployeeEvent {
-  const EmployeeEvent$EditEmployee({
-    /// Employee information
-    required this.id,
-    required this.description,
-    required this.address,
-    required this.contractNumber,
-    required this.percentageOfSales,
-    required this.stars,
-    required this.dateOfEmployment,
+/// [EmployeeEvent.create] event.
+final class EmployeeEvent$Create extends EmployeeEvent {
+  const EmployeeEvent$Create({required this.employee}) : super();
 
-    /// User information
-    required this.email,
-    required this.firstName,
-    required this.lastName,
-    required this.phone,
-    required this.birthDate,
-  }) : super();
+  ///
+  final Employee$Create employee;
+}
 
-  /// Employee information
-  final int id;
-  final String description;
-  final String address;
-  final String contractNumber;
-  final double percentageOfSales;
-  final int stars;
-  final DateTime dateOfEmployment;
+/// [EmployeeEvent.edit] event.
+final class EmployeeEvent$Edit extends EmployeeEvent {
+  const EmployeeEvent$Edit({required this.employee}) : super();
 
-  /// User information
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String phone;
-  final DateTime birthDate;
+  ///
+  final Employee$Edit employee;
 }
 
 /// [EmployeeEvent.dismiss] event.
@@ -106,13 +76,15 @@ abstract base class _$EmployeeEventBase {
   /// Map over state union.
   R map<R>({
     required PatternMatch<R, EmployeeEvent$Fetch> fetch,
-    required PatternMatch<R, EmployeeEvent$EditEmployee> editEmployee,
+    required PatternMatch<R, EmployeeEvent$Create> create,
+    required PatternMatch<R, EmployeeEvent$Edit> edit,
     required PatternMatch<R, EmployeeEvent$Dismiss> dismiss,
     required PatternMatch<R, EmployeeEvent$Reinstatement> reinstatement,
   }) =>
       switch (this) {
         final EmployeeEvent$Fetch s => fetch(s),
-        final EmployeeEvent$EditEmployee s => editEmployee(s),
+        final EmployeeEvent$Create s => create(s),
+        final EmployeeEvent$Edit s => edit(s),
         final EmployeeEvent$Dismiss s => dismiss(s),
         final EmployeeEvent$Reinstatement s => reinstatement(s),
         _ => throw AssertionError(),
@@ -122,13 +94,15 @@ abstract base class _$EmployeeEventBase {
   R maybeMap<R>({
     required R Function() orElse,
     PatternMatch<R, EmployeeEvent$Fetch>? fetch,
-    PatternMatch<R, EmployeeEvent$EditEmployee>? editEmployee,
+    PatternMatch<R, EmployeeEvent$Create>? create,
+    PatternMatch<R, EmployeeEvent$Edit>? edit,
     PatternMatch<R, EmployeeEvent$Dismiss>? dismiss,
     PatternMatch<R, EmployeeEvent$Reinstatement>? reinstatement,
   }) =>
       map<R>(
         fetch: fetch ?? (_) => orElse(),
-        editEmployee: editEmployee ?? (_) => orElse(),
+        create: create ?? (_) => orElse(),
+        edit: edit ?? (_) => orElse(),
         dismiss: dismiss ?? (_) => orElse(),
         reinstatement: reinstatement ?? (_) => orElse(),
       );
@@ -136,13 +110,15 @@ abstract base class _$EmployeeEventBase {
   /// Map over state union or return null if no match.
   R? mapOrNull<R>({
     PatternMatch<R, EmployeeEvent$Fetch>? fetch,
-    PatternMatch<R, EmployeeEvent$EditEmployee>? editEmployee,
+    PatternMatch<R, EmployeeEvent$Create>? create,
+    PatternMatch<R, EmployeeEvent$Edit>? edit,
     PatternMatch<R, EmployeeEvent$Dismiss>? dismiss,
     PatternMatch<R, EmployeeEvent$Reinstatement>? reinstatement,
   }) =>
       map<R?>(
         fetch: fetch ?? (_) => null,
-        editEmployee: editEmployee ?? (_) => null,
+        create: create ?? (_) => null,
+        edit: edit ?? (_) => null,
         dismiss: dismiss ?? (_) => null,
         reinstatement: reinstatement ?? (_) => null,
       );
