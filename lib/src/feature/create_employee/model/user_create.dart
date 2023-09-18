@@ -4,8 +4,8 @@ import '/src/common/utils/extensions/date_time_extension.dart';
 
 ///
 @immutable
-final class UserModel$Create {
-  const UserModel$Create({
+final class UserModel$Editable {
+  const UserModel$Editable({
     required this.phone,
     required this.firstName,
     required this.lastName,
@@ -28,9 +28,9 @@ final class UserModel$Create {
   ///
   final DateTime birthDate;
 
-  /// Returns [UserModel$Create] from [json].
-  factory UserModel$Create.fromJson(Map<String, dynamic> json) {
-    return UserModel$Create(
+  /// Returns [UserModel$Editable] from [json].
+  factory UserModel$Editable.fromJson(Map<String, dynamic> json) {
+    return UserModel$Editable(
       phone: json['phone'] as String,
       email: json['email'] as String,
       firstName: json['first_name'] as String,
@@ -39,7 +39,7 @@ final class UserModel$Create {
     );
   }
 
-  /// Converts [UserModel$Create] into json.
+  /// Converts [UserModel$Editable] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'phone': phone,
         'email': email,

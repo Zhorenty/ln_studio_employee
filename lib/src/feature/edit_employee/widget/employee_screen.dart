@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/all_employee/bloc/staff_bloc.dart';
+import 'package:ln_employee/src/feature/all_employee/bloc/staff_event.dart';
+import 'package:ln_employee/src/feature/create_employee/model/employee_create.dart';
+import 'package:ln_employee/src/feature/create_employee/model/user_create.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -11,15 +15,9 @@ import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
 import '/src/common/widget/star_rating.dart';
-import '/src/feature/edit_employee/bloc/employee_bloc.dart';
-import '/src/feature/edit_employee/bloc/employee_event.dart';
-import '/src/feature/edit_employee/bloc/employee_state.dart';
-import '/src/feature/staff/bloc/staff_bloc.dart';
-import '/src/feature/staff/bloc/staff_event.dart';
-import '/src/feature/staff/model/employee.dart';
-import '../../staff/model/job.dart';
-import '/src/feature/staff/model/salon.dart';
-import '/src/feature/staff/model/user.dart';
+import '/src/feature/employee/bloc/employee_bloc.dart';
+import '/src/feature/employee/bloc/employee_event.dart';
+import '/src/feature/employee/bloc/employee_state.dart';
 
 import 'components/expanded_app_bar.dart';
 import 'skeleton_employee_screen.dart';
@@ -93,45 +91,13 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
 
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () => context.read<EmployeeBloc>().add(
-                    EmployeeEvent.edit(
-                      employee: EmployeeModel(
-                        id: employee.id,
-                        address: addressController.text,
-                        jobId: 1,
-                        salonId: 1,
-                        description: descriptonController.text,
-                        dateOfEmployment: dateOfEmployment,
-                        contractNumber: contractNumberController.text,
-                        percentageOfSales: double.parse(salesController.text),
-                        stars: stars,
-                        isDismiss: employee.isDismiss,
-                        userModel: UserModel(
-                          id: employee.userModel.id,
-                          password: employee.userModel.password,
-                          email: emailController.text,
-                          firstName: firstNameController.text,
-                          lastName: lastNameController.text,
-                          phone: phoneController.text,
-                          birthDate: birthDate,
-                          isSuperuser: employee.userModel.isSuperuser,
-                          isActive: employee.userModel.isActive,
-                        ),
-                        jobModel: JobModel(
-                          id: employee.jobModel.id,
-                          name: employee.jobModel.name,
-                          oklad: employee.jobModel.oklad,
-                        ),
-                        salonModel: SalonModel(
-                          id: employee.salonModel.id,
-                          address: employee.salonModel.address,
-                          phone: employee.salonModel.phone,
-                          email: employee.salonModel.email,
-                          description: employee.salonModel.description,
-                        ),
-                      ),
-                    ),
-                  ),
+              onPressed: () => _edit(
+                id: employee.id,
+                stars: stars,
+                isDismiss: employee.isDismiss,
+                dateOfEmployment: dateOfEmployment,
+                birthDate: birthDate,
+              ),
               label: Text(
                 'Сохранить изменения',
                 style: context.textTheme.bodyMedium!.copyWith(
@@ -322,6 +288,39 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         (value.length == 17 && value.startsWith('8'))) {
       phoneFocusNode.unfocus();
     }
+  }
+
+  /// Dismiss employee by [id].
+  Future<void> _edit({
+    required int id,
+    required DateTime dateOfEmployment,
+    required int stars,
+    required bool isDismiss,
+    required DateTime birthDate,
+  }) async {
+    context.read<EmployeeBloc>().add(
+          EmployeeEvent.edit(
+            employee: Employee$Editable(
+              id: id,
+              address: addressController.text,
+              jobId: 1,
+              salonId: 1,
+              description: descriptonController.text,
+              dateOfEmployment: dateOfEmployment,
+              contractNumber: contractNumberController.text,
+              percentageOfSales: double.parse(salesController.text),
+              stars: stars,
+              isDismiss: isDismiss,
+              userModel: UserModel$Editable(
+                email: emailController.text,
+                firstName: firstNameController.text,
+                lastName: lastNameController.text,
+                phone: phoneController.text,
+                birthDate: birthDate,
+              ),
+            ),
+          ),
+        );
   }
 
   /// Dismiss employee by [id].

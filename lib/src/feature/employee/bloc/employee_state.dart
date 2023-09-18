@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/pattern_match.dart';
-import '/src/feature/staff/model/employee.dart';
+import '/src/feature/employee/model/employee/employee.dart';
 
 /// Employee states.
 sealed class EmployeeState extends _$EmployeeStateBase {
@@ -9,17 +9,17 @@ sealed class EmployeeState extends _$EmployeeStateBase {
 
   /// Employee is idling.
   const factory EmployeeState.idle({
-    EmployeeModel? employee,
+    Employee? employee,
     String? error,
   }) = _EmployeeState$Idle;
 
   /// Employee is processing.
   const factory EmployeeState.processing({
-    EmployeeModel? employee,
+    Employee? employee,
     String? error,
   }) = _EmployeeState$Processing;
 
-  const factory EmployeeState.successful({EmployeeModel? employee}) =
+  const factory EmployeeState.successful({Employee? employee}) =
       _EmployeeState$Successful;
 }
 
@@ -44,7 +44,7 @@ abstract base class _$EmployeeStateBase {
   const _$EmployeeStateBase({this.employee, this.error});
 
   @nonVirtual
-  final EmployeeModel? employee;
+  final Employee? employee;
 
   @nonVirtual
   final String? error;
@@ -52,7 +52,7 @@ abstract base class _$EmployeeStateBase {
   /// Indicator whether has error.
   bool get hasError => error != null;
 
-  /// Indicator whether has [EmployeeModel] is not empty.
+  /// Indicator whether has [Employee] is not empty.
   bool get hasEmployee => employee != null;
 
   /// Indicator whether state is processing now.

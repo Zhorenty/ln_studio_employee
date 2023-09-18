@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/staff/widget/staff_screen.dart';
+import 'package:ln_employee/src/feature/all_employee/widget/staff_screen.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '../../feature/edit_employee/widget/employee_screen.dart';

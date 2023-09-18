@@ -2,18 +2,18 @@ import 'package:ln_employee/src/feature/create_employee/model/employee_create.da
 import 'package:rest_client/rest_client.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
-import '/src/feature/staff/model/employee.dart';
+import '../../employee/model/employee/employee.dart';
 
 /// Datasource for employee data.
-abstract interface class EmployeeDatasource {
+abstract interface class EmployeeDataProvider {
   /// Fetch employee by id.
-  Future<EmployeeModel> fetchEmployee({required int id});
+  Future<Employee> fetch({required int id});
 
   ///
-  Future<void> createEmployee({required EmployeeModel$Create employee});
+  Future<void> createEmployee({required Employee$Editable employee});
 
   /// Edit employee by [id].
-  Future<EmployeeModel> editEmployee({required EmployeeModel employee});
+  Future<Employee> editEmployee({required Employee$Editable employee});
 
   /// Dismiss employee by id.
   Future<void> dismissEmployee({required int id});
@@ -23,21 +23,21 @@ abstract interface class EmployeeDatasource {
 }
 
 /// Implementation of employee datasource.
-class EmployeeDatasourceImpl implements EmployeeDatasource {
-  EmployeeDatasourceImpl({required this.restClient});
+class EmployeeDataProviderImpl implements EmployeeDataProvider {
+  EmployeeDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
   final RestClient restClient;
 
   @override
-  Future<EmployeeModel> fetchEmployee({required int id}) async {
+  Future<Employee> fetch({required int id}) async {
     final response = await restClient.get('/api/employee/$id');
 
-    return EmployeeModel.fromJson(response);
+    return Employee.fromJson(response);
   }
 
   @override
-  Future<void> createEmployee({required EmployeeModel$Create employee}) async =>
+  Future<void> createEmployee({required Employee$Editable employee}) async =>
       await restClient.post(
         '/api/employee/create',
         body: {
@@ -60,7 +60,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
       );
 
   @override
-  Future<EmployeeModel> editEmployee({required EmployeeModel employee}) async {
+  Future<Employee> editEmployee({required Employee$Editable employee}) async {
     final result = await restClient.put(
       '/api/employee/edit/${employee.id}',
       body: {
@@ -82,7 +82,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
       },
     );
 
-    return EmployeeModel.fromJson(result);
+    return Employee.fromJson(result);
   }
 
   @override

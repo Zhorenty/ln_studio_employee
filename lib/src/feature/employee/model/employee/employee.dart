@@ -7,8 +7,8 @@ import 'user.dart';
 
 /// Represents an employee in a salon with its properties.
 @immutable
-final class EmployeeModel {
-  const EmployeeModel({
+final class Employee {
+  const Employee({
     required this.id,
     required this.address,
     required this.jobId,
@@ -67,9 +67,9 @@ final class EmployeeModel {
   /// Salon associated with the employee.
   final SalonModel salonModel;
 
-  /// Returns [EmployeeModel] from [json].
-  factory EmployeeModel.fromJson(Map<String, dynamic> json) {
-    return EmployeeModel(
+  /// Returns [Employee] from [json].
+  factory Employee.fromJson(Map<String, dynamic> json) {
+    return Employee(
       id: json['id'] as int,
       address: json['address'] as String,
       jobId: json['job_id'] as int,

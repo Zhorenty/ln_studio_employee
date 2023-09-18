@@ -4,8 +4,10 @@ import '/src/common/utils/extensions/date_time_extension.dart';
 import 'user_create.dart';
 
 @immutable
-final class EmployeeModel$Create {
-  const EmployeeModel$Create({
+final class Employee$Editable {
+  const Employee$Editable({
+    this.id,
+    this.isDismiss,
     required this.address,
     required this.jobId,
     required this.salonId,
@@ -16,6 +18,8 @@ final class EmployeeModel$Create {
     required this.stars,
     required this.userModel,
   });
+
+  final int? id;
 
   /// Residential address of employee.
   final String address;
@@ -41,12 +45,15 @@ final class EmployeeModel$Create {
   /// Number of stars received by the employee.
   final int stars;
 
-  /// User associated with the employee.
-  final UserModel$Create userModel;
+  final bool? isDismiss;
 
-  /// Returns [EmployeeModel] from [json].
-  factory EmployeeModel$Create.fromJson(Map<String, dynamic> json) {
-    return EmployeeModel$Create(
+  /// User associated with the employee.
+  final UserModel$Editable userModel;
+
+  /// Returns [Employee$Editable] from [json].
+  factory Employee$Editable.fromJson(Map<String, dynamic> json) {
+    return Employee$Editable(
+      id: json['id'] as int,
       address: json['address'] as String,
       jobId: json['job_id'] as int,
       salonId: json['salon_id'] as int,
@@ -55,13 +62,15 @@ final class EmployeeModel$Create {
       contractNumber: json['contract_number'] as String,
       percentageOfSales: json['percentage_of_sales'] as double,
       stars: json['stars'] as int,
+      isDismiss: json['is_dismiss'] as bool,
       userModel:
-          UserModel$Create.fromJson(json['user'] as Map<String, dynamic>),
+          UserModel$Editable.fromJson(json['user'] as Map<String, dynamic>),
     );
   }
 
-  /// Converts [EmployeeModel] into json.
+  /// Converts [Employee] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
         'address': address,
         'job_place_id': jobId,
         'salon_id': salonId,
@@ -70,6 +79,7 @@ final class EmployeeModel$Create {
         'contract_number': contractNumber,
         'percentage_of_sales': percentageOfSales,
         'stars': stars,
+        'is_dismiss': isDismiss,
         'user': userModel.toJson(),
       };
 }

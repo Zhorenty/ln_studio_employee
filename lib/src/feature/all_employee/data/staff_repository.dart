@@ -1,10 +1,11 @@
-import '/src/feature/staff/model/employee.dart';
+import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
+
 import 'staff_datasource.dart';
 
 /// Repository for staff data.
 abstract interface class StaffRepository {
   /// Get staff.
-  Future<List<EmployeeModel>> getStaff();
+  Future<List<Employee>> getStaff();
 }
 
 /// Implementation of the staff repository.
@@ -15,5 +16,5 @@ final class StaffRepositoryImpl implements StaffRepository {
   final StaffDatasource _dataSource;
 
   @override
-  Future<List<EmployeeModel>> getStaff() => _dataSource.fetchStaff();
+  Future<List<Employee>> getStaff() => _dataSource.fetchStaff();
 }

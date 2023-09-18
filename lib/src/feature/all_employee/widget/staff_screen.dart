@@ -2,19 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/widget/animated_button.dart';
-import 'package:ln_employee/src/common/widget/avatar_widget.dart';
-import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
-import 'package:ln_employee/src/feature/create_employee/widget/create_employee_screen.dart';
-import 'package:ln_employee/src/feature/staff/model/employee.dart';
+import 'package:ln_employee/src/feature/all_employee/bloc/staff_bloc.dart';
+import 'package:ln_employee/src/feature/all_employee/bloc/staff_event.dart';
+import 'package:ln_employee/src/feature/all_employee/bloc/staff_state.dart';
+import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/animated_button.dart';
+import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/custom_app_bar.dart';
+import '/src/common/widget/overlay/modal_popup.dart';
 import '/src/common/widget/star_rating.dart';
-import '/src/feature/staff/bloc/staff_bloc.dart';
-import '/src/feature/staff/bloc/staff_event.dart';
-import '/src/feature/staff/bloc/staff_state.dart';
+import '/src/feature/create_employee/widget/create_employee_screen.dart';
 
 /// {@template staff_screen}
 /// Staff screen.
@@ -165,7 +165,7 @@ class _EmployeeList extends StatelessWidget {
     this.isDismiss = false,
   });
 
-  final List<EmployeeModel> staff;
+  final List<Employee> staff;
 
   final bool isDismiss;
 

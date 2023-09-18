@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/feature/all_employee/data/staff_repository.dart';
 
-import '/src/feature/staff/data/staff_repository.dart';
 import 'staff_event.dart';
 import 'staff_state.dart';
 

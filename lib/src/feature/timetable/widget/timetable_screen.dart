@@ -50,7 +50,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                     _focusedDays.add(DateTime.now());
                   }
                   final employeeTimetable = state.employeeTimetable[index];
-                  final employee = employeeTimetable.employee;
+                  final employee = employeeTimetable;
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

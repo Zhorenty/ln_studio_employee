@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/feature/all_employee/bloc/staff_bloc.dart';
+import 'package:ln_employee/src/feature/all_employee/bloc/staff_event.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
-import '../../edit_employee/bloc/employee_bloc.dart';
+import '/src/feature/employee/bloc/employee_bloc.dart';
 import '/src/feature/initialization/model/dependencies.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
-import '/src/feature/staff/bloc/staff_bloc.dart';
-import '/src/feature/staff/bloc/staff_event.dart';
+
 import '/src/feature/timetable/bloc/timetable_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_event.dart';
 
