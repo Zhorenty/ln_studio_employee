@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/employee_all/bloc/staff_bloc.dart';
-import 'package:ln_employee/src/feature/employee_all/bloc/staff_event.dart';
-import 'package:ln_employee/src/feature/employee/model/employee_create/employee_create.dart';
-import 'package:ln_employee/src/feature/employee/model/employee_create/user_create.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -17,6 +13,10 @@ import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/bloc/employee_bloc.dart';
 import '/src/feature/employee/bloc/employee_event.dart';
 import '/src/feature/employee/bloc/employee_state.dart';
+import '/src/feature/employee/model/employee_create/employee_create.dart';
+import '/src/feature/employee/model/employee_create/user_create.dart';
+import '/src/feature/employee_all/bloc/staff_bloc.dart';
+import '/src/feature/employee_all/bloc/staff_event.dart';
 
 class CreateEmployeeScreen extends StatefulWidget {
   const CreateEmployeeScreen({super.key});
