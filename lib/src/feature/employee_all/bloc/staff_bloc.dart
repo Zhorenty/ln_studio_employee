@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/all_employee/data/staff_repository.dart';
+import 'package:ln_employee/src/feature/employee_all/data/staff_repository.dart';
 
 import 'staff_event.dart';
 import 'staff_state.dart';

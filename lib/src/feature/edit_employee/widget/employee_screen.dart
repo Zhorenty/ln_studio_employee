@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_bloc.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_event.dart';
-import 'package:ln_employee/src/feature/create_employee/model/employee_create.dart';
-import 'package:ln_employee/src/feature/create_employee/model/user_create.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_bloc.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_event.dart';
+import 'package:ln_employee/src/feature/employee/model/employee_edit/employee_edit.dart';
+import 'package:ln_employee/src/feature/employee/model/employee_edit/user_edit.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -300,7 +300,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   }) async {
     context.read<EmployeeBloc>().add(
           EmployeeEvent.edit(
-            employee: Employee$Editable(
+            employee: Employee$Edit(
               id: id,
               address: addressController.text,
               jobId: 1,
@@ -311,7 +311,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               percentageOfSales: double.parse(salesController.text),
               stars: stars,
               isDismiss: isDismiss,
-              userModel: UserModel$Editable(
+              userModel: UserModel$Edit(
                 email: emailController.text,
                 firstName: firstNameController.text,
                 lastName: lastNameController.text,

@@ -1,4 +1,4 @@
-import 'package:ln_employee/src/feature/all_employee/data/staff_repository.dart';
+import 'package:ln_employee/src/feature/employee_all/data/staff_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

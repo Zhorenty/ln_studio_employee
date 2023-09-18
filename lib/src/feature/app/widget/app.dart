@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_bloc.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_event.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_bloc.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_event.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';

@@ -1,6 +1,7 @@
-import 'package:ln_employee/src/feature/create_employee/model/employee_create.dart';
 import 'package:ln_employee/src/feature/employee/data/employee_data_provider.dart';
 import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
+import 'package:ln_employee/src/feature/employee/model/employee_create/employee_create.dart';
+import 'package:ln_employee/src/feature/employee/model/employee_edit/employee_edit.dart';
 
 /// Repository for employee data.
 abstract interface class EmployeeRepository {
@@ -8,10 +9,10 @@ abstract interface class EmployeeRepository {
   Future<Employee> get({required int id});
 
   /// Create employee.
-  Future<void> create({required Employee$Editable employee});
+  Future<void> create({required Employee$Create employee});
 
   /// Edit employee by id.
-  Future<Employee> edit({required Employee$Editable employee});
+  Future<Employee> edit({required Employee$Edit employee});
 
   /// Dismiss employee by id.
   Future<void> dismiss({required int id});
@@ -31,11 +32,11 @@ final class EmployeeRepositoryImpl implements EmployeeRepository {
   Future<Employee> get({required int id}) => _dataSource.fetch(id: id);
 
   @override
-  Future<void> create({required Employee$Editable employee}) =>
+  Future<void> create({required Employee$Create employee}) =>
       _dataSource.createEmployee(employee: employee);
 
   @override
-  Future<Employee> edit({required Employee$Editable employee}) =>
+  Future<Employee> edit({required Employee$Edit employee}) =>
       _dataSource.editEmployee(employee: employee);
 
   @override

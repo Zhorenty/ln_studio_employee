@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_bloc.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_event.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_state.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_bloc.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_event.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_state.dart';
 import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -158,6 +158,7 @@ class _StaffScreenState extends State<StaffScreen>
   }
 }
 
+// TODO(zhorenty): Refactor
 class _EmployeeList extends StatelessWidget {
   const _EmployeeList({
     required this.staff,
@@ -165,10 +166,13 @@ class _EmployeeList extends StatelessWidget {
     this.isDismiss = false,
   });
 
+  ///
   final List<Employee> staff;
 
+  ///
   final bool isDismiss;
 
+  ///
   final void Function()? refresh;
 
   @override

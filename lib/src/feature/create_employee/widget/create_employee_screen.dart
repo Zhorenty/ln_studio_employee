@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_bloc.dart';
-import 'package:ln_employee/src/feature/all_employee/bloc/staff_event.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_bloc.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_event.dart';
+import 'package:ln_employee/src/feature/employee/model/employee_create/employee_create.dart';
+import 'package:ln_employee/src/feature/employee/model/employee_create/user_create.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -12,8 +14,6 @@ import '/src/common/widget/custom_date_picker.dart';
 import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/star_rating.dart';
-import '/src/feature/create_employee/model/employee_create.dart';
-import '/src/feature/create_employee/model/user_create.dart';
 import '/src/feature/employee/bloc/employee_bloc.dart';
 import '/src/feature/employee/bloc/employee_event.dart';
 import '/src/feature/employee/bloc/employee_state.dart';
@@ -213,10 +213,9 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   Future<void> _create() async {
     context.read<EmployeeBloc>().add(
           EmployeeEvent.create(
-            employee: Employee$Editable(
+            employee: Employee$Create(
               address: addressController.text,
-
-              /// TODO(zhorenty): Fetch salons and jobs
+              // TODO(zhorenty): Fetch salons and jobs
               jobId: 1,
               salonId: 1,
               description: descriptionController.text,
@@ -226,7 +225,8 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                 salesController.text,
               ),
               stars: stars,
-              userModel: UserModel$Editable(
+              isDismiss: false,
+              userModel: UserModel$Create(
                 phone: phoneController.text,
                 firstName: firstNameController.text,
                 lastName: lastNameController.text,

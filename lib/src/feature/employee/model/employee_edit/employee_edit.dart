@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
-import 'user_create.dart';
+import 'user_edit.dart';
 
 @immutable
-final class Employee$Editable {
-  const Employee$Editable({
-    this.id,
-    this.isDismiss,
+final class Employee$Edit {
+  const Employee$Edit({
+    required this.id,
+    required this.isDismiss,
     required this.address,
     required this.jobId,
     required this.salonId,
@@ -19,7 +19,8 @@ final class Employee$Editable {
     required this.userModel,
   });
 
-  final int? id;
+  /// UUID of the employee.
+  final int id;
 
   /// Residential address of employee.
   final String address;
@@ -45,14 +46,15 @@ final class Employee$Editable {
   /// Number of stars received by the employee.
   final int stars;
 
-  final bool? isDismiss;
+  /// Indicator whether employee is dismissed.
+  final bool isDismiss;
 
   /// User associated with the employee.
-  final UserModel$Editable userModel;
+  final UserModel$Edit userModel;
 
-  /// Returns [Employee$Editable] from [json].
-  factory Employee$Editable.fromJson(Map<String, dynamic> json) {
-    return Employee$Editable(
+  /// Returns [Employee$Edit] from [json].
+  factory Employee$Edit.fromJson(Map<String, dynamic> json) {
+    return Employee$Edit(
       id: json['id'] as int,
       address: json['address'] as String,
       jobId: json['job_id'] as int,
@@ -63,8 +65,7 @@ final class Employee$Editable {
       percentageOfSales: json['percentage_of_sales'] as double,
       stars: json['stars'] as int,
       isDismiss: json['is_dismiss'] as bool,
-      userModel:
-          UserModel$Editable.fromJson(json['user'] as Map<String, dynamic>),
+      userModel: UserModel$Edit.fromJson(json['user'] as Map<String, dynamic>),
     );
   }
 

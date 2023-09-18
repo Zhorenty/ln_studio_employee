@@ -1,4 +1,5 @@
-import 'package:ln_employee/src/feature/create_employee/model/employee_create.dart';
+import 'package:ln_employee/src/feature/employee/model/employee_create/employee_create.dart';
+import 'package:ln_employee/src/feature/employee/model/employee_edit/employee_edit.dart';
 import 'package:rest_client/rest_client.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
@@ -10,10 +11,10 @@ abstract interface class EmployeeDataProvider {
   Future<Employee> fetch({required int id});
 
   ///
-  Future<void> createEmployee({required Employee$Editable employee});
+  Future<void> createEmployee({required Employee$Create employee});
 
   /// Edit employee by [id].
-  Future<Employee> editEmployee({required Employee$Editable employee});
+  Future<Employee> editEmployee({required Employee$Edit employee});
 
   /// Dismiss employee by id.
   Future<void> dismissEmployee({required int id});
@@ -37,7 +38,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   }
 
   @override
-  Future<void> createEmployee({required Employee$Editable employee}) async =>
+  Future<void> createEmployee({required Employee$Create employee}) async =>
       await restClient.post(
         '/api/employee/create',
         body: {
@@ -60,7 +61,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
       );
 
   @override
-  Future<Employee> editEmployee({required Employee$Editable employee}) async {
+  Future<Employee> editEmployee({required Employee$Edit employee}) async {
     final result = await restClient.put(
       '/api/employee/edit/${employee.id}',
       body: {
