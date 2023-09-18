@@ -14,7 +14,7 @@ import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/overlay/modal_popup.dart';
 import '/src/common/widget/star_rating.dart';
-import '/src/feature/create_employee/widget/create_employee_screen.dart';
+import '../../employee_create/widget/create_employee_screen.dart';
 
 /// {@template staff_screen}
 /// Staff screen.
