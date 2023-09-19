@@ -172,34 +172,25 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   controller: firstNameController,
                                   focusNode: firstNameFocusNode,
                                   textInputAction: TextInputAction.next,
-                                  label: 'Имя',
+                                  label: 'Имя*',
                                   keyboardType: TextInputType.name,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Поле не может быть пустым';
-                                    }
-                                    return null;
-                                  },
+                                  validator: _emptyValidator,
                                 ),
                                 CustomTextField(
                                   controller: lastNameController,
-                                  label: 'Фамилия',
+                                  label: 'Фамилия*',
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.name,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Поле не может быть пустым';
-                                    }
-                                    return null;
-                                  },
+                                  validator: _emptyValidator,
                                 ),
                                 CustomTextField(
                                   controller: phoneController,
                                   focusNode: phoneFocusNode,
-                                  label: 'Телефон',
+                                  label: 'Телефон*',
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.phone,
                                   inputFormatters: [RuPhoneInputFormatter()],
+                                  validator: _emptyValidator,
                                   onChanged: _checkPhoneNumber,
                                 ),
                                 CustomTextField(
@@ -208,12 +199,14 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   focusNode: addressFocusNode,
                                   label: 'Адрес проживания',
                                   keyboardType: TextInputType.streetAddress,
+                                  validator: _emptyValidator,
                                 ),
                                 CustomTextField(
                                   controller: emailController,
                                   label: 'Почта',
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.emailAddress,
+                                  validator: _emailValidator,
                                 ),
                                 DatePickerButton(
                                   initialDate: birthDate,
@@ -232,22 +225,25 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   dense: false,
                                   label: 'Описание сотрудника',
                                   keyboardType: TextInputType.multiline,
+                                  validator: _emptyValidator,
                                 ),
                                 CustomTextField(
                                   controller: contractNumberController,
                                   textInputAction: TextInputAction.next,
                                   label: 'Номер договора',
                                   keyboardType: TextInputType.streetAddress,
+                                  validator: _emptyValidator,
                                 ),
                                 CustomTextField(
                                   controller: salesController,
                                   focusNode: salesFocusNode,
                                   textInputAction: TextInputAction.done,
-                                  label: 'Процент от продаж',
+                                  label: 'Процент от продаж*',
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
                                     decimal: true,
                                   ),
+                                  validator: _emptyValidator,
                                   onChanged: _checkSales,
                                 ),
                               ],
@@ -296,7 +292,28 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
         );
   }
 
-  ///
+  /// Validate email address.
+  String? _emailValidator(String? value) {
+    final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    if (value!.isEmpty) {
+      return 'Обязательное поле';
+    } else if (!emailRegExp.hasMatch(value)) {
+      return 'Введите корректный e-mail';
+    } else {
+      return null;
+    }
+  }
+
+  /// Empty value validator.
+  String? _emptyValidator(String? value) {
+    if (value!.isEmpty) {
+      return 'Обязательное поле';
+    } else {
+      return null;
+    }
+  }
+
+  /// Refresh [StaffBloc].
   Future<void> _refresh() async {
     final block = context.read<StaffBloc>().stream.first;
     context.read<StaffBloc>().add(const StaffEvent.fetch());
