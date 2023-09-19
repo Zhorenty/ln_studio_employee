@@ -66,7 +66,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
       '/api/employee/edit/${employee.id}',
       body: {
         'address': employee.address,
-        'job_id': employee.salonId,
+        'job_id': employee.jobId,
         'salon_id': employee.salonId,
         'description': employee.description,
         'date_of_employment': employee.dateOfEmployment.format(),
