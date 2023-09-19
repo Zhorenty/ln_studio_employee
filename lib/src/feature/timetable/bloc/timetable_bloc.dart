@@ -60,8 +60,9 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
         salonId: event.salonId,
         dateAt: event.dateAt,
       );
-      // TODO(evklidus): Must be fetchBySalonId
-      add(const TimetableEvent.fetch());
+      final employeeTimetable =
+          await repository.getTimetablesBySalonId(event.salonId);
+      emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
       emit(TimetableState.idle(error: e.toString()));
       rethrow;

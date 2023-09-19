@@ -99,7 +99,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
                               _timetableBloc.add(
                                 TimetableEvent.fillTimetable(
                                   employeeId: employee.id,
-                                  salonId: 1,
+                                  salonId: BlocProvider.of<SalonBLoC>(context)
+                                      .state
+                                      .currentSalon!
+                                      .id,
                                   dateAt: selectedDay,
                                 ),
                               );
