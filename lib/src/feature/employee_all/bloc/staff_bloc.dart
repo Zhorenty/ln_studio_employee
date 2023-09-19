@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/src/common/utils/error_util.dart';
 import '/src/feature/employee_all/data/staff_repository.dart';
 import 'staff_event.dart';
 import 'staff_state.dart';
@@ -26,7 +27,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
       final staff = await repository.getStaff();
       emit(StaffState.loaded(staff: staff));
     } on Object catch (e) {
-      emit(StaffState.idle(error: e.toString()));
+      emit(StaffState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }

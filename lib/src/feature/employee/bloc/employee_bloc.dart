@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/src/common/utils/error_util.dart';
 import '/src/feature/employee/data/employee_repository.dart';
 import '/src/feature/employee/bloc/employee_event.dart';
 import '/src/feature/employee/bloc/employee_state.dart';
@@ -31,7 +32,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       final employee = await repository.get(id: event.id);
       emit(EmployeeState.idle(employee: employee));
     } on Object catch (e) {
-      emit(EmployeeState.idle(error: e.toString()));
+      emit(EmployeeState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }
@@ -46,7 +47,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       await repository.create(employee: event.employee);
       emit(EmployeeState.successful(employee: state.employee));
     } on Object catch (e) {
-      emit(EmployeeState.idle(error: e.toString()));
+      emit(EmployeeState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }
@@ -60,7 +61,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       final employee = await repository.edit(employee: event.employee);
       emit(EmployeeState.idle(employee: employee));
     } on Object catch (e) {
-      emit(EmployeeState.idle(error: e.toString()));
+      emit(EmployeeState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }
@@ -76,7 +77,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       add(EmployeeEvent.fetch(id: event.id));
       emit(EmployeeState.successful(employee: state.employee));
     } on Object catch (e) {
-      emit(EmployeeState.idle(error: e.toString()));
+      emit(EmployeeState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }
@@ -92,7 +93,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       add(EmployeeEvent.fetch(id: event.id));
       emit(EmployeeState.successful(employee: state.employee));
     } on Object catch (e) {
-      emit(EmployeeState.idle(error: e.toString()));
+      emit(EmployeeState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }
