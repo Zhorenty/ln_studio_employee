@@ -2,12 +2,12 @@ import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
 
+/// Represents a user model.
 @immutable
 final class UserModel {
   const UserModel({
     required this.id,
     this.photo,
-    required this.username,
     required this.password,
     required this.email,
     required this.firstName,
@@ -23,9 +23,6 @@ final class UserModel {
 
   /// User's photo as [String].
   final String? photo;
-
-  /// Username of the user.
-  final String username;
 
   /// Password of the user.
   final String password;
@@ -56,8 +53,6 @@ final class UserModel {
     return UserModel(
       id: json['id'] as int,
       photo: json['photo'] as String?,
-      // TODO: Убрать username
-      username: 'username',
       password: json['password'] as String,
       email: json['email'] as String,
       firstName: json['first_name'] as String,
@@ -73,7 +68,6 @@ final class UserModel {
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'photo': photo,
-        'username': username,
         'password': password,
         'email': email,
         'first_name': firstName,

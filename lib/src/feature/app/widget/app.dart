@@ -6,9 +6,9 @@ import 'package:ln_employee/src/feature/salon/bloc/salon_event.dart';
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
 import '/src/feature/employee/bloc/employee_bloc.dart';
+import '/src/feature/employee_all/bloc/staff_bloc.dart';
 import '/src/feature/initialization/model/dependencies.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
-import '/src/feature/staff/bloc/staff_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_bloc.dart';
 
 import 'app_context.dart';
@@ -30,17 +30,17 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => TimetableBloc(
-              timetableRepository: result.dependencies.timetableRepository,
+              repository: result.dependencies.timetableRepository,
             ),
           ),
           BlocProvider(
             create: (context) => StaffBloc(
-              staffRepository: result.dependencies.staffRepository,
+              repository: result.dependencies.staffRepository,
             ),
           ),
           BlocProvider(
             create: (context) => EmployeeBloc(
-              employeeRepository: result.dependencies.employeeRepository,
+              repository: result.dependencies.employeeRepository,
             ),
           ),
           BlocProvider(

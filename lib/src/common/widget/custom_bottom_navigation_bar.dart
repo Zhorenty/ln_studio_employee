@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,72 +16,75 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(context) {
     return Scaffold(
+      extendBody: true,
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: navigationShell.goBranch,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        backgroundColor: context.colorScheme.onBackground,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: AnimatedButton(
-              child: Icon(
-                Icons.receipt_outlined,
-                color: context.colorScheme.primary,
-              ),
-            ),
-            activeIcon: AnimatedButton(
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: context.colorScheme.primary,
-                child: Icon(
-                  Icons.receipt_rounded,
-                  color: context.colorScheme.onBackground,
+      bottomNavigationBar: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Opacity(
+            opacity: 0.95,
+            child: BottomNavigationBar(
+              currentIndex: navigationShell.currentIndex,
+              onTap: navigationShell.goBranch,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              backgroundColor: context.colorScheme.onBackground,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: const AnimatedButton(
+                    child: Icon(
+                      Icons.receipt_outlined,
+                      color: Color(0xFF828282),
+                      size: 28,
+                    ),
+                  ),
+                  activeIcon: AnimatedButton(
+                    child: Icon(
+                      Icons.receipt_rounded,
+                      color: context.colorScheme.primary,
+                      size: 28,
+                    ),
+                  ),
+                  label: '',
                 ),
-              ),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: AnimatedButton(
-              child: Icon(
-                Icons.people_alt_outlined,
-                color: context.colorScheme.primary,
-              ),
-            ),
-            activeIcon: AnimatedButton(
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: context.colorScheme.primary,
-                child: Icon(
-                  Icons.people_alt_rounded,
-                  color: context.colorScheme.onBackground,
+                BottomNavigationBarItem(
+                  icon: const AnimatedButton(
+                    child: Icon(
+                      Icons.people_alt_outlined,
+                      color: Color(0xFF828282),
+                      size: 28,
+                    ),
+                  ),
+                  activeIcon: AnimatedButton(
+                    child: Icon(
+                      Icons.people_alt_rounded,
+                      color: context.colorScheme.primary,
+                      size: 28,
+                    ),
+                  ),
+                  label: '',
                 ),
-              ),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: AnimatedButton(
-              child: Icon(
-                Icons.settings_rounded,
-                color: context.colorScheme.primary,
-              ),
-            ),
-            activeIcon: AnimatedButton(
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: context.colorScheme.primary,
-                child: Icon(
-                  Icons.settings,
-                  color: context.colorScheme.onBackground,
+                BottomNavigationBarItem(
+                  icon: const AnimatedButton(
+                    child: Icon(
+                      Icons.settings_outlined,
+                      color: Color(0xFF828282),
+                      size: 28,
+                    ),
+                  ),
+                  activeIcon: AnimatedButton(
+                    child: Icon(
+                      Icons.settings_rounded,
+                      color: context.colorScheme.primary,
+                      size: 28,
+                    ),
+                  ),
+                  label: '',
                 ),
-              ),
+              ],
             ),
-            label: '',
           ),
-        ],
+        ),
       ),
     );
   }

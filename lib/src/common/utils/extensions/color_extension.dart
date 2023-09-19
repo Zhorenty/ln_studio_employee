@@ -11,8 +11,9 @@ extension BrightnessColorExtension on Color {
     }
 
     final hsl = HSLColor.fromColor(this);
-    final hslLight =
-        hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
+    final hslLight = hsl.withLightness(
+      (hsl.lightness + amount).clamp(0.0, 1.0),
+    );
 
     return hslLight.toColor();
   }

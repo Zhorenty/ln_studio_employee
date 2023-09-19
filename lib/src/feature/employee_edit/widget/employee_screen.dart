@@ -8,17 +8,20 @@ import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
 import '/src/common/widget/custom_date_picker.dart';
+import '/src/common/widget/custom_text_field.dart';
+import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
 import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/bloc/employee_bloc.dart';
 import '/src/feature/employee/bloc/employee_event.dart';
 import '/src/feature/employee/bloc/employee_state.dart';
-import '/src/feature/employee/widget/skeleton_employee_screen.dart';
-import '/src/feature/staff/bloc/staff_bloc.dart';
-import '/src/feature/staff/bloc/staff_event.dart';
+import '/src/feature/employee/model/employee_edit/employee_edit.dart';
+import '/src/feature/employee/model/employee_edit/user_edit.dart';
+import '/src/feature/employee_all/bloc/staff_bloc.dart';
+import '/src/feature/employee_all/bloc/staff_event.dart';
 
-import 'components/custom_text_field.dart';
 import 'components/expanded_app_bar.dart';
+import 'skeleton_employee_screen.dart';
 
 /// {@template employee_screen}
 /// Employee screen.
@@ -42,6 +45,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           EmployeeEvent.fetch(id: widget.employeeid),
         );
   }
+
+  late final phoneFocusNode = FocusNode();
 
   /// User information
   late final firstNameController = TextEditingController();
@@ -87,27 +92,13 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
 
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () => context.read<EmployeeBloc>().add(
-                    EmployeeEvent.editEmployee(
-                      // Id of employee
-                      id: employee.id,
-
-                      // User information
-                      firstName: firstNameController.text,
-                      lastName: lastNameController.text,
-                      phone: phoneController.text,
-                      address: addressController.text,
-                      email: emailController.text,
-                      birthDate: birthDate,
-
-                      /// Employee information
-                      contractNumber: contractNumberController.text,
-                      stars: stars,
-                      description: descriptonController.text,
-                      percentageOfSales: double.parse(salesController.text),
-                      dateOfEmployment: dateOfEmployment,
-                    ),
-                  ),
+              onPressed: () => _edit(
+                id: employee.id,
+                stars: stars,
+                isDismiss: employee.isDismiss,
+                dateOfEmployment: dateOfEmployment,
+                birthDate: birthDate,
+              ),
               label: Text(
                 'Сохранить изменения',
                 style: context.textTheme.bodyMedium!.copyWith(
@@ -120,6 +111,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             body: CustomScrollView(
               slivers: [
                 ExpandedAppBar(
+                  label: '${user.firstName} ${user.lastName}',
                   title: Text(
                     '${user.firstName} ${user.lastName}',
                     style: context.textTheme.titleLarge!.copyWith(
@@ -149,7 +141,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         context.pop();
                         MessagePopup.success(
                           context,
-                          dissmised
+                          dissmised || state.isSuccessful
                               ? 'Вы вернули сотрудника на должность'
                               : 'Сотрудник успешно уволен',
                         );
@@ -161,7 +153,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                       ),
                     ),
                   ],
-                  onExit: () => _refreshStaff().then((_) => context.pop()),
+                  onExit: () {
+                    _refreshStaff();
+                    context.pop();
+                  },
                 ),
                 CupertinoSliverRefreshControl(
                   onRefresh: () => _fetch(employee.id),
@@ -181,7 +176,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const _Header(label: 'Рейтинг'),
+                                const HeaderWidget(
+                                  label: 'Рейтинг',
+                                  showUnderscore: false,
+                                ),
                                 StarRating(
                                   initialRating: employee.stars,
                                   onRatingChanged: (rating) => stars = rating,
@@ -200,7 +198,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const _Header(label: 'Статус сотрудника'),
+                                  const HeaderWidget(
+                                    label: 'Статус сотрудника',
+                                    showUnderscore: false,
+                                  ),
                                   dissmised
                                       ? const Text('Уволен')
                                       : const Text('Работает')
@@ -208,8 +209,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const _Header(label: 'Личная информация'),
-                            const _UnderscoreWidget(),
+                            const HeaderWidget(label: 'Личная информация'),
                             CustomTextField(
                               controller: firstNameController,
                               dense: false,
@@ -224,6 +224,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                             CustomTextField(
                               controller: phoneController,
                               label: 'Номер телефона',
+                              focusNode: phoneFocusNode,
+                              onChanged: _checkPhoneNumber,
                               inputFormatters: [RuPhoneInputFormatter()],
                               keyboardType: TextInputType.phone,
                               copyable: true,
@@ -244,8 +246,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               onDateSelected: (day) => birthDate = day,
                             ),
                             const SizedBox(height: 32),
-                            const _Header(label: 'Рабочая информация'),
-                            const _UnderscoreWidget(),
+                            const HeaderWidget(label: 'Рабочая информация'),
                             CustomTextField(
                               controller: contractNumberController,
                               label: 'Номер договора',
@@ -282,6 +283,47 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     );
   }
 
+  ///
+  void _checkPhoneNumber(String value) {
+    if ((value.length == 18 && value.startsWith('+')) ||
+        (value.length == 17 && value.startsWith('8'))) {
+      phoneFocusNode.unfocus();
+    }
+  }
+
+  /// Dismiss employee by [id].
+  Future<void> _edit({
+    required int id,
+    required DateTime dateOfEmployment,
+    required int stars,
+    required bool isDismiss,
+    required DateTime birthDate,
+  }) async {
+    context.read<EmployeeBloc>().add(
+          EmployeeEvent.edit(
+            employee: Employee$Edit(
+              id: id,
+              address: addressController.text,
+              jobId: 1,
+              salonId: 1,
+              description: descriptonController.text,
+              dateOfEmployment: dateOfEmployment,
+              contractNumber: contractNumberController.text,
+              percentageOfSales: double.parse(salesController.text),
+              stars: stars,
+              isDismiss: isDismiss,
+              userModel: UserModel$Edit(
+                email: emailController.text,
+                firstName: firstNameController.text,
+                lastName: lastNameController.text,
+                phone: phoneController.text,
+                birthDate: birthDate,
+              ),
+            ),
+          ),
+        );
+  }
+
   /// Dismiss employee by [id].
   Future<void> _dismiss(int id) async {
     context.read<EmployeeBloc>().add(EmployeeEvent.dismiss(id: id));
@@ -309,37 +351,4 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     }
     await block;
   }
-}
-
-/// Horizontal line.
-///
-/// Usually used for underscores.
-class _UnderscoreWidget extends StatelessWidget {
-  const _UnderscoreWidget();
-
-  @override
-  Widget build(BuildContext context) => Container(
-        height: 3,
-        width: 50,
-        decoration: BoxDecoration(
-          color: context.colorScheme.secondary,
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-}
-
-/// Header widget with provided [label].
-class _Header extends StatelessWidget {
-  const _Header({required this.label});
-
-  /// Label of this [_Header].
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Text(
-        label,
-        style: context.textTheme.bodyLarge!.copyWith(
-          fontFamily: FontFamily.geologica,
-        ),
-      );
 }

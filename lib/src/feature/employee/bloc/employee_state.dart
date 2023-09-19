@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/pattern_match.dart';
-import '/src/feature/staff/model/employee.dart';
+import '/src/feature/employee/model/employee/employee.dart';
 
 /// Employee states.
 sealed class EmployeeState extends _$EmployeeStateBase {
@@ -9,15 +9,18 @@ sealed class EmployeeState extends _$EmployeeStateBase {
 
   /// Employee is idling.
   const factory EmployeeState.idle({
-    EmployeeModel? employee,
+    Employee? employee,
     String? error,
   }) = _EmployeeState$Idle;
 
   /// Employee is processing.
   const factory EmployeeState.processing({
-    EmployeeModel? employee,
+    Employee? employee,
     String? error,
   }) = _EmployeeState$Processing;
+
+  const factory EmployeeState.successful({Employee? employee}) =
+      _EmployeeState$Successful;
 }
 
 /// [EmployeeState.idle] state matcher.
@@ -30,13 +33,18 @@ final class _EmployeeState$Processing extends EmployeeState {
   const _EmployeeState$Processing({super.employee, super.error}) : super._();
 }
 
+/// [EmployeeState.successful] state matcher.
+final class _EmployeeState$Successful extends EmployeeState {
+  const _EmployeeState$Successful({super.employee}) : super._();
+}
+
 /// Employee state base class.
 @immutable
 abstract base class _$EmployeeStateBase {
   const _$EmployeeStateBase({this.employee, this.error});
 
   @nonVirtual
-  final EmployeeModel? employee;
+  final Employee? employee;
 
   @nonVirtual
   final String? error;
@@ -44,7 +52,7 @@ abstract base class _$EmployeeStateBase {
   /// Indicator whether has error.
   bool get hasError => error != null;
 
-  /// Indicator whether has [EmployeeModel] is not empty.
+  /// Indicator whether has [Employee] is not empty.
   bool get hasEmployee => employee != null;
 
   /// Indicator whether state is processing now.
@@ -59,15 +67,22 @@ abstract base class _$EmployeeStateBase {
         orElse: () => false,
       );
 
+  /// Indicator whether state is succesful now.
+  bool get isSuccessful => maybeMap(
+      idle: (_) => false, orElse: () => false, successful: (_) => true);
+
   /// Map over state union.
   R map<R>({
     required PatternMatch<R, _EmployeeState$Idle> idle,
     required PatternMatch<R, _EmployeeState$Processing> processing,
+    required PatternMatch<R, _EmployeeState$Successful> successful,
   }) =>
       switch (this) {
         final _EmployeeState$Idle idleState => idle(idleState),
         final _EmployeeState$Processing processingState =>
           processing(processingState),
+        final _EmployeeState$Successful succesfulState =>
+          successful(succesfulState),
         _ => throw UnsupportedError('Unsupported state: $this'),
       };
 
@@ -76,10 +91,12 @@ abstract base class _$EmployeeStateBase {
     required R Function() orElse,
     PatternMatch<R, _EmployeeState$Idle>? idle,
     PatternMatch<R, _EmployeeState$Processing>? processing,
+    PatternMatch<R, _EmployeeState$Successful>? successful,
   }) =>
       map(
         idle: idle ?? (_) => orElse(),
         processing: processing ?? (_) => orElse(),
+        successful: successful ?? (_) => orElse(),
       );
 
   @override

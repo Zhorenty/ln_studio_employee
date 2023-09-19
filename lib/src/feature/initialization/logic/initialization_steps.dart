@@ -6,11 +6,11 @@ import 'package:ln_employee/src/feature/salon/data/salon_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '/src/feature/employee/data/employee_datasource.dart';
+import '/src/feature/employee/data/employee_data_provider.dart';
 import '/src/feature/employee/data/employee_repository.dart';
+import '/src/feature/employee_all/data/staff_datasource.dart';
+import '/src/feature/employee_all/data/staff_repository.dart';
 import '/src/feature/initialization/model/initialization_progress.dart';
-import '/src/feature/staff/data/staff_datasource.dart';
-import '/src/feature/staff/data/staff_repository.dart';
 import '/src/feature/timetable/data/timetable_datasource.dart';
 import '/src/feature/timetable/data/timetable_repository.dart';
 
@@ -44,7 +44,7 @@ mixin InitializationSteps {
       progress.dependencies.staffRepository = staffRepository;
     },
     'Employee repository': (progress) async {
-      final EmployeeDatasource employeeDatasource = EmployeeDatasourceImpl(
+      final EmployeeDataProvider employeeDatasource = EmployeeDataProviderImpl(
         restClient: progress.dependencies.restClient,
       );
       final employeeRepository = EmployeeRepositoryImpl(employeeDatasource);

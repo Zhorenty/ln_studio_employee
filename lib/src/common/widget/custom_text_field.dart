@@ -11,18 +11,25 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     this.controller,
+    this.focusNode,
+    this.textInputAction,
     this.label,
     this.errorText,
     this.inputFormatters,
     this.maxLength,
     this.validator,
     this.keyboardType,
+    this.onChanged,
     this.dense = true,
     this.copyable = false,
   });
 
   /// Controls the text being edited.
   final TextEditingController? controller;
+
+  final TextInputAction? textInputAction;
+
+  final FocusNode? focusNode;
 
   /// Optional text that describes this input field.
   final String? label;
@@ -45,6 +52,8 @@ class CustomTextField extends StatelessWidget {
   /// [List] of [TextInputFormatter] to apply to this text field.
   final List<TextInputFormatter>? inputFormatters;
 
+  final void Function(String)? onChanged;
+
   /// Callback that validates the input text.
   final String? Function(String?)? validator;
 
@@ -53,14 +62,17 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: dense ? 10 : 4),
       child: TextFormField(
+        focusNode: focusNode,
         validator: validator,
         maxLength: maxLength,
         controller: controller,
+        textInputAction: textInputAction,
         style: context.textTheme.bodyLarge!.copyWith(
           fontFamily: FontFamily.geologica,
         ),
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
+        onChanged: onChanged,
         decoration: InputDecoration(
           labelStyle: context.textTheme.bodyMedium!.copyWith(
             color: context.colorScheme.primary,

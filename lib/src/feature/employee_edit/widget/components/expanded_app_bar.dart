@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/animated_button.dart';
+import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/overlay/message_popup.dart';
 
 /// Custom-styled expanded [SliverAppBar].
@@ -12,9 +13,13 @@ class ExpandedAppBar extends StatelessWidget {
     required this.title,
     required this.leading,
     required this.trailing,
+    this.label,
     this.additionalTrailing = const <Widget>[],
     this.onExit,
   });
+
+  ///
+  final String? label;
 
   /// Primary widget displayed in the app bar under the [CircleAvatar].
   final Widget title;
@@ -39,10 +44,7 @@ class ExpandedAppBar extends StatelessWidget {
       toolbarHeight: 180,
       title: Column(
         children: [
-          CircleAvatar(
-            radius: 60,
-            backgroundColor: context.colorScheme.secondary,
-          ),
+          AvatarWidget(radius: 60, title: label),
           const SizedBox(height: 8),
           title,
         ],

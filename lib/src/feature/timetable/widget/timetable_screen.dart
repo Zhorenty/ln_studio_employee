@@ -27,6 +27,7 @@ class TimetableScreen extends StatefulWidget {
 class _TimetableScreenState extends State<TimetableScreen> {
   final List<DateTime> _focusedDays = [];
 
+  /// Timetable bloc.
   late final TimetableBloc _timetableBloc;
 
   @override
@@ -130,6 +131,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
     );
   }
 
+  /// Refresh timetables.
   Future<void> _refresh() async {
     final block = context.read<TimetableBloc>().stream.first;
     final salonBloc = context.read<SalonBLoC>();
