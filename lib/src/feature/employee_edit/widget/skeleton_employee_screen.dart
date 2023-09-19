@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/utils/extensions/color_extension.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/shimmer.dart';
 import 'components/expanded_app_bar.dart';
@@ -20,20 +21,20 @@ class SkeletonEmployeeScreen extends StatelessWidget {
             title: Shimmer(
               speed: 30,
               size: const Size(200, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              color: const Color(0xFF393939),
+              backgroundColor: context.colorScheme.background,
             ),
             leading: Shimmer(
               speed: 30,
               size: const Size(40, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              color: const Color(0xFF393939),
+              backgroundColor: context.colorScheme.background,
             ),
             trailing: Shimmer(
               speed: 30,
               size: const Size(40, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              color: const Color(0xFF393939),
+              backgroundColor: context.colorScheme.background,
             ),
           ),
           SliverList(
@@ -55,8 +56,8 @@ class SkeletonEmployeeScreen extends StatelessWidget {
                           const HeaderWidget(label: 'Рейтинг'),
                           Shimmer(
                             size: const Size(128, 25),
-                            color: context.colorScheme.primary,
-                            backgroundColor: const Color(0xFF525252),
+                            color: context.colorScheme.primary.darken(0.05),
+                            backgroundColor: context.colorScheme.background,
                           ),
                         ],
                       ),
@@ -83,11 +84,14 @@ class SkeletonEmployeeScreen extends StatelessWidget {
   }
 }
 
+/// Custom [Shimmer] for this skeleton.
 class _CustomShimmer extends StatelessWidget {
   const _CustomShimmer({required this.label, this.dense = false});
 
+  /// Indicator whether this [_CustomShimmer] should be densed.
   final bool dense;
 
+  /// Label of this [_CustomShimmer].
   final String label;
 
   @override
@@ -108,8 +112,8 @@ class _CustomShimmer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 64),
             child: Shimmer(
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              color: context.colorScheme.onBackground,
+              backgroundColor: const Color(0xFF393939),
               size: const Size(double.infinity, 24),
             ),
           ),

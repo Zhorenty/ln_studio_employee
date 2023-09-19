@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 /// Extension adding an ability to lighten or darken a color.
 extension BrightnessColorExtension on Color {
