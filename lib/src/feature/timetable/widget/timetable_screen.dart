@@ -44,7 +44,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
           CupertinoSliverRefreshControl(onRefresh: _refresh),
           if (state.hasTimetables)
             SliverPadding(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.only(
+                top: 8,
+                left: 8,
+                right: 8,
+                bottom: MediaQuery.sizeOf(context).height / 8,
+              ),
               sliver: SliverList.builder(
                 itemCount: state.employeeTimetable.length,
                 itemBuilder: (context, index) {
