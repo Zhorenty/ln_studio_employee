@@ -33,7 +33,7 @@ final class TimetableEvent$Fetch extends TimetableEvent {
 final class TimetableEvent$FetchBySalonId extends TimetableEvent {
   const TimetableEvent$FetchBySalonId(this.salonId);
 
-  ///
+  /// Current salon id.
   final int salonId;
 }
 

@@ -67,7 +67,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<EmployeeBloc, EmployeeState>(
       builder: (context, state) {
-        if (state.employee == null) {
+        if (state.employee != null) {
           return const SkeletonEmployeeScreen();
         } else {
           final employee = state.employee!;

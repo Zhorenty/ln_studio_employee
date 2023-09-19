@@ -2,19 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
-import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
-import 'package:ln_employee/src/feature/employee_create/widget/create_employee_screen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/custom_app_bar.dart';
+import '/src/common/widget/overlay/modal_popup.dart';
 import '/src/common/widget/star_rating.dart';
+import '/src/feature/employee/model/employee/employee.dart';
 import '/src/feature/employee_all/bloc/staff_bloc.dart';
 import '/src/feature/employee_all/bloc/staff_event.dart';
 import '/src/feature/employee_all/bloc/staff_state.dart';
+import '/src/feature/employee_create/widget/create_employee_screen.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
 
@@ -31,8 +31,10 @@ class StaffScreen extends StatefulWidget {
 
 class _StaffScreenState extends State<StaffScreen>
     with TickerProviderStateMixin {
+  /// Controller for an [ModalPopup.show] animation.
   late AnimationController controller;
 
+  /// Staff bloc maintaining [StaffScreen] state.
   late final StaffBloc staffBloc;
 
   @override
@@ -47,21 +49,6 @@ class _StaffScreenState extends State<StaffScreen>
   void dispose() {
     controller.dispose();
     super.dispose();
-  }
-
-  void _fetchSalonEmployees() {
-    final salonBloc = context.read<SalonBLoC>();
-    if (salonBloc.state.currentSalon != null) {
-      staffBloc.add(
-        StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
-      );
-    }
-  }
-
-  void initController() {
-    controller = BottomSheet.createAnimationController(this);
-    controller.duration = const Duration(milliseconds: 700);
-    controller.reverseDuration = const Duration(milliseconds: 350);
   }
 
   @override
@@ -85,7 +72,7 @@ class _StaffScreenState extends State<StaffScreen>
               if (state.hasStaff) ...[
                 SliverPadding(
                   padding: const EdgeInsets.all(8),
-                  sliver: EmployeeList(staff: state.staff, refresh: _refresh),
+                  sliver: _EmployeeList(staff: state.staff, refresh: _refresh),
                 ),
                 SliverToBoxAdapter(
                   child: GestureDetector(
@@ -138,7 +125,7 @@ class _StaffScreenState extends State<StaffScreen>
                     right: 8,
                     bottom: MediaQuery.sizeOf(context).height / 8,
                   ),
-                  sliver: EmployeeList(
+                  sliver: _EmployeeList(
                     isDismiss: true,
                     staff: state.staff,
                     refresh: _refresh,
@@ -176,6 +163,21 @@ class _StaffScreenState extends State<StaffScreen>
     );
   }
 
+  void initController() {
+    controller = BottomSheet.createAnimationController(this);
+    controller.duration = const Duration(milliseconds: 700);
+    controller.reverseDuration = const Duration(milliseconds: 350);
+  }
+
+  void _fetchSalonEmployees() {
+    final salonBloc = context.read<SalonBLoC>();
+    if (salonBloc.state.currentSalon != null) {
+      staffBloc.add(
+        StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
+      );
+    }
+  }
+
   Future<void> _refresh() async {
     final block = context.read<StaffBloc>().stream.first;
     _fetchSalonEmployees();
@@ -184,9 +186,8 @@ class _StaffScreenState extends State<StaffScreen>
 }
 
 // TODO(zhorenty): Refactor
-class EmployeeList extends StatelessWidget {
-  const EmployeeList({
-    super.key,
+class _EmployeeList extends StatelessWidget {
+  const _EmployeeList({
     required this.staff,
     this.refresh,
     this.isDismiss = false,

@@ -84,11 +84,14 @@ class SkeletonEmployeeScreen extends StatelessWidget {
   }
 }
 
+/// Custom [Shimmer] for this skeleton.
 class _CustomShimmer extends StatelessWidget {
   const _CustomShimmer({required this.label, this.dense = false});
 
+  /// Indicator whether this [_CustomShimmer] should be densed.
   final bool dense;
 
+  /// Label of this [_CustomShimmer].
   final String label;
 
   @override
@@ -109,8 +112,8 @@ class _CustomShimmer extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 64),
             child: Shimmer(
-              color: const Color(0xFF393939),
-              backgroundColor: context.colorScheme.background,
+              color: context.colorScheme.onBackground,
+              backgroundColor: const Color(0xFF393939),
               size: const Size(double.infinity, 24),
             ),
           ),

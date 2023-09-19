@@ -23,7 +23,7 @@ abstract interface class Dependencies {
   /// Employee  repository.
   abstract final EmployeeRepository employeeRepository;
 
-  /// Employee  repository.
+  /// Salon  repository.
   abstract final SalonRepository salonRepository;
 
   /// Freeze dependencies, so they cannot be modified.

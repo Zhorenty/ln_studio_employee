@@ -9,7 +9,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
   StaffBloc({required this.repository}) : super(const StaffState.idle()) {
     on<StaffEvent>(
       (event, emit) => event.map(
-        fetch: (event) => _fetchAllEmoloyees(event, emit),
+        fetch: (event) => _fetchAllEmployees(event, emit),
         fetchSalonEmployees: (event) => _fetchSalonEmployees(event, emit),
       ),
     );
@@ -19,7 +19,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
   final StaffRepository repository;
 
   /// Fetch staff from repository.
-  Future<void> _fetchAllEmoloyees(
+  Future<void> _fetchAllEmployees(
     StaffEvent$Fetch event,
     Emitter<StaffState> emit,
   ) async {

@@ -14,13 +14,13 @@ class SalonChoiceRow extends StatelessWidget {
     this.onChanged,
   });
 
-  ///
+  /// Salon with the provided attributes.
   final Salon salon;
 
-  ///
+  /// Salon that represents the currently selected salon.
   final Salon? currentSalon;
 
-  ///
+  /// Callback, called when the [Salon] selection changes.
   final void Function(Salon?)? onChanged;
 
   @override

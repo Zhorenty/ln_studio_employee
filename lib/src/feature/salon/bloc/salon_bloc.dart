@@ -64,6 +64,7 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
     }
   }
 
+  /// Returns current salon from repository.
   Future<void> getCurrentSalon(Emitter<SalonState> emit) async {
     try {
       emit(
@@ -96,7 +97,7 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
     }
   }
 
-  /// Save current event handler
+  /// Save current salon event handler
   Future<void> _saveCurrent(
       SalonEvent$SaveCurrent event, Emitter<SalonState> emit) async {
     try {

@@ -11,6 +11,7 @@ sealed class SalonEvent {
   const factory SalonEvent.saveCurrent(Salon salon) = SalonEvent$SaveCurrent;
 }
 
+/// Fetch all salons.
 class SalonEvent$FetchAll extends SalonEvent {
   const SalonEvent$FetchAll();
 }
@@ -18,5 +19,6 @@ class SalonEvent$FetchAll extends SalonEvent {
 class SalonEvent$SaveCurrent extends SalonEvent {
   const SalonEvent$SaveCurrent(this.salon);
 
+  /// Current salon.
   final Salon salon;
 }
