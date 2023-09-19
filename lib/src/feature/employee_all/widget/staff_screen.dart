@@ -2,19 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/animated_button.dart';
+import 'package:ln_employee/src/common/widget/avatar_widget.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_bloc.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_event.dart';
+import 'package:ln_employee/src/feature/employee_all/bloc/staff_state.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_state.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/common/widget/animated_button.dart';
-import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/custom_app_bar.dart';
-import '/src/common/widget/overlay/modal_popup.dart';
 import '/src/common/widget/star_rating.dart';
-import '/src/feature/employee/model/employee/employee.dart';
-import '/src/feature/employee_all/bloc/staff_bloc.dart';
-import '/src/feature/employee_all/bloc/staff_event.dart';
-import '/src/feature/employee_all/bloc/staff_state.dart';
-import '/src/feature/employee_create/widget/create_employee_screen.dart';
 
 /// {@template staff_screen}
 /// Staff screen.
@@ -27,214 +26,172 @@ class StaffScreen extends StatefulWidget {
   State<StaffScreen> createState() => _StaffScreenState();
 }
 
-class _StaffScreenState extends State<StaffScreen>
-    with TickerProviderStateMixin {
-  late AnimationController controller;
+class _StaffScreenState extends State<StaffScreen> {
+  late final StaffBloc staffBloc;
+
   @override
-  initState() {
+  void initState() {
     super.initState();
-    initController();
+    staffBloc = context.read<StaffBloc>();
+    _fetchSalonEmployees();
   }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void initController() {
-    controller = BottomSheet.createAnimationController(this);
-    controller.duration = const Duration(milliseconds: 700);
-    controller.reverseDuration = const Duration(milliseconds: 350);
+  void _fetchSalonEmployees() {
+    final salonBloc = context.read<SalonBLoC>();
+    if (salonBloc.state.currentSalon != null) {
+      staffBloc.add(
+        StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StaffBloc, StaffState>(
-      builder: (context, state) => Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            CustomSliverAppBar(title: context.stringOf().employees),
-            CupertinoSliverRefreshControl(onRefresh: _refresh),
-            if (state.hasStaff) ...[
-              SliverPadding(
-                padding: const EdgeInsets.all(8),
-                sliver: _EmployeeList(staff: state.staff, refresh: _refresh),
-              ),
-              SliverToBoxAdapter(
-                child: GestureDetector(
-                  onTap: () => ModalPopup.show(
-                    context: context,
-                    showDivider: false,
-                    transitionAnimationController: controller,
-                    child: const CreateEmployeeScreen(),
+    return BlocListener<SalonBLoC, SalonState>(
+      listener: (context, state) {},
+      listenWhen: (previous, current) {
+        if (previous.currentSalon?.id != current.currentSalon?.id) {
+          staffBloc.add(
+            StaffEvent.fetchSalonEmployees(current.currentSalon!.id),
+          );
+        }
+        return false;
+      },
+      child: BlocBuilder<StaffBloc, StaffState>(
+        builder: (context, state) => Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              CustomSliverAppBar(title: context.stringOf().employees),
+              CupertinoSliverRefreshControl(onRefresh: _refresh),
+              if (state.hasStaff) ...[
+                SliverPadding(
+                  padding: const EdgeInsets.all(8),
+                  sliver: SliverList.builder(
+                    itemCount: state.staff.length,
+                    itemBuilder: (context, index) {
+                      final employee = state.staff[index];
+                      final user = employee.userModel;
+                      final jobPlace = employee.jobModel;
+
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4 + 2),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.onBackground,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AvatarWidget(
+                              radius: 40,
+                              title: '${user.firstName} ${user.lastName}',
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 8 + 2),
+                                Text(
+                                  '${user.firstName} ${user.lastName}',
+                                  style:
+                                      context.textTheme.titleMedium?.copyWith(
+                                    fontFamily: FontFamily.geologica,
+                                  ),
+                                ),
+                                Text(
+                                  jobPlace.name,
+                                  style:
+                                      context.textTheme.labelMedium?.copyWith(
+                                    fontFamily: FontFamily.geologica,
+                                    color: context.colorScheme.primaryContainer,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                StarRating(
+                                  initialRating: employee.stars,
+                                )
+                              ],
+                            ),
+                            const SizedBox.shrink(),
+                            AnimatedButton(
+                              child: const Icon(Icons.edit, size: 20),
+                              onPressed: () {
+                                _refresh();
+                                context.go(
+                                  '/staff/employee',
+                                  extra: employee.id,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.sizeOf(context).width / 8,
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.primary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Text(
-                        context.stringOf().addEmployee,
-                        style: context.textTheme.titleMedium!.copyWith(
-                          color: context.colorScheme.background,
-                          fontFamily: FontFamily.geologica,
+                ),
+                SliverToBoxAdapter(
+                  child: GestureDetector(
+                    onTap: () => context.goNamed('/create_employee'),
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.sizeOf(context).width / 8,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          context.stringOf().addEmployee,
+                          style: context.textTheme.titleMedium!.copyWith(
+                            color: context.colorScheme.background,
+                            fontFamily: FontFamily.geologica,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
-                sliver: SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      const Divider(),
-                      Text(
-                        'Уволенные сотрудники',
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontFamily: FontFamily.geologica,
-                        ),
+                )
+              ] else
+                SliverFillRemaining(
+                  child: Center(
+                    child: Text(
+                      context.stringOf().noEmployees,
+                      style: context.textTheme.titleMedium!.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.primary,
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-              SliverPadding(
-                padding: EdgeInsets.only(
-                  left: 8,
-                  right: 8,
-                  bottom: MediaQuery.sizeOf(context).height / 8,
-                ),
-                sliver: _EmployeeList(
-                  isDismiss: true,
-                  staff: state.staff,
-                  refresh: _refresh,
-                ),
-              ),
-            ] else
-              SliverFillRemaining(
-                child: Center(
-                  child: Text(
-                    context.stringOf().noEmployees,
-                    style: context.textTheme.titleMedium!.copyWith(
+            ],
+          ),
+          floatingActionButton: !state.hasStaff
+              ? FloatingActionButton.extended(
+                  backgroundColor: context.colorScheme.primary,
+                  label: Text(
+                    context.stringOf().addEmployee,
+                    style: context.textTheme.bodySmall!.copyWith(
                       fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.primary,
+                      color: context.colorScheme.background,
                     ),
                   ),
-                ),
-              ),
-          ],
+                  onPressed: () {},
+                )
+              : const SizedBox.shrink(),
         ),
-        floatingActionButton: !state.hasStaff
-            ? FloatingActionButton.extended(
-                backgroundColor: context.colorScheme.primary,
-                label: Text(
-                  context.stringOf().addEmployee,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.background,
-                  ),
-                ),
-                onPressed: () {},
-              )
-            : const SizedBox.shrink(),
       ),
     );
   }
 
   Future<void> _refresh() async {
     final block = context.read<StaffBloc>().stream.first;
-    context.read<StaffBloc>().add(const StaffEvent.fetch());
+    _fetchSalonEmployees();
     await block;
-  }
-}
-
-// TODO(zhorenty): Refactor
-class _EmployeeList extends StatelessWidget {
-  const _EmployeeList({
-    required this.staff,
-    this.refresh,
-    this.isDismiss = false,
-  });
-
-  ///
-  final List<Employee> staff;
-
-  ///
-  final bool isDismiss;
-
-  ///
-  final void Function()? refresh;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverList.builder(
-      itemCount: staff.length,
-      itemBuilder: (context, index) {
-        final employee = staff[index];
-        final user = staff[index].userModel;
-        final jobPlace = staff[index].jobModel;
-
-        return employee.isDismiss == isDismiss
-            ? Container(
-                margin: const EdgeInsets.symmetric(vertical: 4 + 2),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: context.colorScheme.onBackground,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AvatarWidget(
-                      radius: 40,
-                      title: '${user.firstName} ${user.lastName}',
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 8 + 2),
-                        Text(
-                          '${user.firstName} ${user.lastName}',
-                          style: context.textTheme.titleMedium?.copyWith(
-                            fontFamily: FontFamily.geologica,
-                          ),
-                        ),
-                        Text(
-                          jobPlace.name,
-                          style: context.textTheme.labelMedium?.copyWith(
-                            fontFamily: FontFamily.geologica,
-                            color: context.colorScheme.primaryContainer,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        StarRating(initialRating: employee.stars)
-                      ],
-                    ),
-                    const SizedBox.shrink(),
-                    AnimatedButton(
-                      onPressed: () {
-                        refresh;
-                        context.go('/staff/employee', extra: employee.id);
-                      },
-                      child: const Icon(Icons.edit, size: 20),
-                    ),
-                  ],
-                ),
-              )
-            : const SizedBox.shrink();
-      },
-    );
   }
 }
