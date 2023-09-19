@@ -1,5 +1,6 @@
-import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
 import 'package:rest_client/rest_client.dart';
+
+import '/src/feature/employee/model/employee/employee.dart';
 
 /// Datasource for staff data.
 abstract interface class StaffDatasource {
@@ -21,7 +22,6 @@ class StaffDatasourceImpl implements StaffDatasource {
     final staff = List.from((response['data'] as List))
         .map((e) => Employee.fromJson(e))
         .toList();
-
     return staff;
   }
 }

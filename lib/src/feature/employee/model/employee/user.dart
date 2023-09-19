@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
 
+/// Represents a user model.
 @immutable
 final class UserModel {
   const UserModel({

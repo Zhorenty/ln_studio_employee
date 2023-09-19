@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/employee_all/widget/staff_screen.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
-import '../../feature/employee_edit/widget/employee_screen.dart';
+import '/src/feature/employee_all/widget/staff_screen.dart';
+import '/src/feature/employee_edit/widget/employee_screen.dart';
 import '/src/feature/settings/widget/settings_screen.dart';
 import '/src/feature/timetable/widget/timetable_screen.dart';
 

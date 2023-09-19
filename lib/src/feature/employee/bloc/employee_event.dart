@@ -31,7 +31,7 @@ sealed class EmployeeEvent extends _$EmployeeEventBase {
 
 /// [EmployeeEvent.fetch] event.
 final class EmployeeEvent$Fetch extends EmployeeEvent {
-  const EmployeeEvent$Fetch({required this.id}) : super();
+  const EmployeeEvent$Fetch({required this.id});
 
   /// Employee's id.
   final int id;
@@ -39,7 +39,7 @@ final class EmployeeEvent$Fetch extends EmployeeEvent {
 
 /// [EmployeeEvent.create] event.
 final class EmployeeEvent$Create extends EmployeeEvent {
-  const EmployeeEvent$Create({required this.employee}) : super();
+  const EmployeeEvent$Create({required this.employee});
 
   ///
   final Employee$Create employee;
@@ -47,7 +47,7 @@ final class EmployeeEvent$Create extends EmployeeEvent {
 
 /// [EmployeeEvent.edit] event.
 final class EmployeeEvent$Edit extends EmployeeEvent {
-  const EmployeeEvent$Edit({required this.employee}) : super();
+  const EmployeeEvent$Edit({required this.employee});
 
   ///
   final Employee$Edit employee;
@@ -55,7 +55,7 @@ final class EmployeeEvent$Edit extends EmployeeEvent {
 
 /// [EmployeeEvent.dismiss] event.
 final class EmployeeEvent$Dismiss extends EmployeeEvent {
-  const EmployeeEvent$Dismiss({required this.id}) : super();
+  const EmployeeEvent$Dismiss({required this.id});
 
   /// Employee's id.
   final int id;
@@ -63,7 +63,7 @@ final class EmployeeEvent$Dismiss extends EmployeeEvent {
 
 /// [EmployeeEvent.reinstatement] event.
 final class EmployeeEvent$Reinstatement extends EmployeeEvent {
-  const EmployeeEvent$Reinstatement({required this.id}) : super();
+  const EmployeeEvent$Reinstatement({required this.id});
 
   /// Employee's id.
   final int id;

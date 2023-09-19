@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '/src/common/utils/extensions/date_time_extension.dart';
 import 'user_edit.dart';
 
+/// Represents an employee in a salon with its create properties.
 @immutable
 final class Employee$Edit {
   const Employee$Edit({
@@ -69,7 +70,7 @@ final class Employee$Edit {
     );
   }
 
-  /// Converts [Employee] into json.
+  /// Converts [Employee$Edit] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'address': address,

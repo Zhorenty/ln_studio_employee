@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/employee_all/data/staff_repository.dart';
 
+import '/src/feature/employee_all/data/staff_repository.dart';
 import 'staff_event.dart';
 import 'staff_state.dart';
 
@@ -23,8 +23,8 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
     Emitter<StaffState> emit,
   ) async {
     try {
-      final employeeStaff = await repository.getStaff();
-      emit(StaffState.loaded(employeeStaff: employeeStaff));
+      final staff = await repository.getStaff();
+      emit(StaffState.loaded(staff: staff));
     } on Object catch (e) {
       emit(StaffState.idle(error: e.toString()));
       rethrow;

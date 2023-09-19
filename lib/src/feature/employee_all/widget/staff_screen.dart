@@ -2,10 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/employee_all/bloc/staff_bloc.dart';
-import 'package:ln_employee/src/feature/employee_all/bloc/staff_event.dart';
-import 'package:ln_employee/src/feature/employee_all/bloc/staff_state.dart';
-import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -14,7 +10,11 @@ import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/overlay/modal_popup.dart';
 import '/src/common/widget/star_rating.dart';
-import '../../employee_create/widget/create_employee_screen.dart';
+import '/src/feature/employee/model/employee/employee.dart';
+import '/src/feature/employee_all/bloc/staff_bloc.dart';
+import '/src/feature/employee_all/bloc/staff_event.dart';
+import '/src/feature/employee_all/bloc/staff_state.dart';
+import '/src/feature/employee_create/widget/create_employee_screen.dart';
 
 /// {@template staff_screen}
 /// Staff screen.
@@ -59,10 +59,7 @@ class _StaffScreenState extends State<StaffScreen>
             if (state.hasStaff) ...[
               SliverPadding(
                 padding: const EdgeInsets.all(8),
-                sliver: _EmployeeList(
-                  staff: state.employeeStaff,
-                  refresh: _refresh,
-                ),
+                sliver: _EmployeeList(staff: state.staff, refresh: _refresh),
               ),
               SliverToBoxAdapter(
                 child: GestureDetector(
@@ -110,15 +107,16 @@ class _StaffScreenState extends State<StaffScreen>
                 ),
               ),
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.only(
+                  left: 8,
+                  right: 8,
+                  bottom: MediaQuery.sizeOf(context).height / 8,
+                ),
                 sliver: _EmployeeList(
                   isDismiss: true,
-                  staff: state.employeeStaff,
+                  staff: state.staff,
                   refresh: _refresh,
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: SizedBox(height: MediaQuery.sizeOf(context).height / 8),
               ),
             ] else
               SliverFillRemaining(

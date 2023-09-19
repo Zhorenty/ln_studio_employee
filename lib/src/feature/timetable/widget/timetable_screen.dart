@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/common/widget/custom_app_bar.dart';
+
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/custom_app_bar.dart';
 import '/src/feature/timetable/bloc/timetable_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_event.dart';
 import '/src/feature/timetable/bloc/timetable_state.dart';
@@ -25,6 +26,7 @@ class TimetableScreen extends StatefulWidget {
 class _TimetableScreenState extends State<TimetableScreen> {
   final List<DateTime> _focusedDays = [];
 
+  /// Timetable bloc.
   late final TimetableBloc _timetableBloc;
 
   @override
@@ -118,6 +120,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
     );
   }
 
+  /// Refresh timetables.
   Future<void> _refresh() async {
     final block = context.read<TimetableBloc>().stream.first;
     context.read<TimetableBloc>().add(const TimetableEvent.fetch());

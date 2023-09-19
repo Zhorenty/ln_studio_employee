@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
 
-///
+/// Represents a user model with its create properties.
 @immutable
 final class UserModel$Create {
   const UserModel$Create({
@@ -13,19 +13,19 @@ final class UserModel$Create {
     required this.birthDate,
   });
 
-  ///
+  /// Phone number of user.
   final String phone;
 
-  ///
+  /// First name of user.
   final String firstName;
 
-  ///
+  /// Last name of user.
   final String lastName;
 
-  ///
+  /// Email of user.
   final String email;
 
-  ///
+  /// Birth date of user.
   final DateTime birthDate;
 
   /// Returns [UserModel$Create] from [json].
