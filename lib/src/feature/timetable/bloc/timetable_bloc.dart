@@ -26,7 +26,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     Emitter<TimetableState> emit,
   ) async {
     try {
-      final employeeTimetable = await repository.getEmployeesTimetables();
+      final employeeTimetable = await repository.getTimetables();
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
       emit(TimetableState.idle(error: e.toString()));
@@ -41,7 +41,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
   ) async {
     try {
       final employeeTimetable =
-          await repository.getEmployeesTimetablesBySalonId(event.salonId);
+          await repository.getTimetablesBySalonId(event.salonId);
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
       emit(TimetableState.idle(error: e.toString()));
@@ -60,6 +60,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
         salonId: event.salonId,
         dateAt: event.dateAt,
       );
+      // TODO(evklidus): Must be fetchBySalonId
       add(const TimetableEvent.fetch());
     } on Object catch (e) {
       emit(TimetableState.idle(error: e.toString()));

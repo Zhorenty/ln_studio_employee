@@ -4,10 +4,10 @@ import 'timetable_datasource.dart';
 /// Repository for timetables data.
 abstract interface class TimetableRepository {
   /// Get timetables.
-  Future<List<EmployeeTimetable>> getEmployeesTimetables();
+  Future<List<EmployeeTimetable>> getTimetables();
 
   /// Get timetables by salon id.
-  Future<List<EmployeeTimetable>> getEmployeesTimetablesBySalonId(int salonId);
+  Future<List<EmployeeTimetable>> getTimetablesBySalonId(int salonId);
 
   /// Fill time block items.
   Future<void> fillTimetable({
@@ -25,13 +25,12 @@ final class TimetableRepositoryImpl implements TimetableRepository {
   final TimetableDatasource _dataSource;
 
   @override
-  Future<List<EmployeeTimetable>> getEmployeesTimetables() =>
-      _dataSource.fetchEmployeesTimetables();
+  Future<List<EmployeeTimetable>> getTimetables() =>
+      _dataSource.fetchTimetables();
 
   @override
-  Future<List<EmployeeTimetable>> getEmployeesTimetablesBySalonId(
-          int salonId) =>
-      _dataSource.fetchEmployeesTimetablesBySalonId(salonId);
+  Future<List<EmployeeTimetable>> getTimetablesBySalonId(int salonId) =>
+      _dataSource.fetchTimetablesBySalonId(salonId);
 
   @override
   Future<void> fillTimetable({

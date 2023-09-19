@@ -7,8 +7,9 @@ import '/src/common/utils/pattern_match.dart';
 sealed class StaffEvent extends _$StaffEventBase {
   const StaffEvent();
 
+  /// TODO: Implement fetch all
+  ///
   /// Factory for fetching staff.
-  @Deprecated('Временно не используется')
   const factory StaffEvent.fetch() = StaffEvent$Fetch;
 
   /// Factory for fetching staff.
@@ -25,6 +26,7 @@ final class StaffEvent$Fetch extends StaffEvent {
 final class StaffEvent$FetchSalonEmployees extends StaffEvent {
   const StaffEvent$FetchSalonEmployees(this.salonId) : super();
 
+  ///
   final int salonId;
 }
 

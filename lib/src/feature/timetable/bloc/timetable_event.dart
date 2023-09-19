@@ -7,8 +7,9 @@ import '/src/common/utils/pattern_match.dart';
 sealed class TimetableEvent extends _$TimetableEventBase {
   const TimetableEvent();
 
+  /// TODO: Implement fetch by all salons
+  ///
   /// Factory for Timetable fetching.
-  @Deprecated('Пока не нужен')
   const factory TimetableEvent.fetch() = TimetableEvent$Fetch;
 
   /// Factory for Timetable fetching.
@@ -32,6 +33,7 @@ final class TimetableEvent$Fetch extends TimetableEvent {
 final class TimetableEvent$FetchBySalonId extends TimetableEvent {
   const TimetableEvent$FetchBySalonId(this.salonId);
 
+  ///
   final int salonId;
 }
 

@@ -6,10 +6,10 @@ import '/src/feature/timetable/model/employee_timetable.dart';
 /// Datasource for timetables data.
 abstract interface class TimetableDatasource {
   /// Fetch timetables.
-  Future<List<EmployeeTimetable>> fetchEmployeesTimetables();
+  Future<List<EmployeeTimetable>> fetchTimetables();
 
   /// Fetch timetables.
-  Future<List<EmployeeTimetable>> fetchEmployeesTimetablesBySalonId(
+  Future<List<EmployeeTimetable>> fetchTimetablesBySalonId(
     int salonId,
   );
 
@@ -30,28 +30,28 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   final RestClient _restClient;
 
   @override
-  Future<List<EmployeeTimetable>> fetchEmployeesTimetables() async {
+  Future<List<EmployeeTimetable>> fetchTimetables() async {
     final response = await _restClient.get('/api/timetable/all');
 
-    final employeesTimetables = List.from((response['data'] as List))
+    final timetables = List.from((response['data'] as List))
         .map((e) => EmployeeTimetable.fromJson(e))
         .toList();
 
-    return employeesTimetables;
+    return timetables;
   }
 
   @override
-  Future<List<EmployeeTimetable>> fetchEmployeesTimetablesBySalonId(
+  Future<List<EmployeeTimetable>> fetchTimetablesBySalonId(
     int salonId,
   ) async {
     final response =
         await _restClient.get('/api/timetable/by_salon_id/$salonId');
 
-    final employeesTimetables = List.from((response['data'] as List))
+    final timetables = List.from((response['data'] as List))
         .map((e) => EmployeeTimetable.fromJson(e))
         .toList();
 
-    return employeesTimetables;
+    return timetables;
   }
 
   @override
