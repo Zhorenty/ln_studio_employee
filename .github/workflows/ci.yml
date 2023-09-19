@@ -29,6 +29,7 @@ jobs:
       - name: 📦 Install Dependencies
         run: |
           flutter pub global activate very_good_cli
+          cd packages/rest_client && flutter pub get
           flutter pub global activate intl_utils
           flutter pub global run intl_utils:generate
           
