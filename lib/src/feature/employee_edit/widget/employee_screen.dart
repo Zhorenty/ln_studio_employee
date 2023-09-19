@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -19,6 +18,7 @@ import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 import '/src/feature/employee/model/employee_edit/user_edit.dart';
 import '/src/feature/employee_all/bloc/staff_bloc.dart';
 import '/src/feature/employee_all/bloc/staff_event.dart';
+import '/src/feature/salon/bloc/salon_bloc.dart';
 
 import 'components/expanded_app_bar.dart';
 import 'skeleton_employee_screen.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/utils/extensions/color_extension.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/utils/extensions/color_extension.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/shimmer.dart';
 import 'components/expanded_app_bar.dart';

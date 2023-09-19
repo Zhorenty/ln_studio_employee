@@ -41,9 +41,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   }
 
   @override
-  Future<List<EmployeeTimetable>> fetchTimetablesBySalonId(
-    int salonId,
-  ) async {
+  Future<List<EmployeeTimetable>> fetchTimetablesBySalonId(int salonId) async {
     final response =
         await _restClient.get('/api/timetable/by_salon_id/$salonId');
 

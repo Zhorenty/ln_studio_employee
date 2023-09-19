@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '/src/feature/salon/models/salon.dart';
 
 /// {@template salon_choice_row}

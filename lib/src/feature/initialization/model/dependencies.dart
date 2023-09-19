@@ -1,4 +1,4 @@
-import 'package:ln_employee/src/feature/salon/data/salon_repository.dart';
+import '/src/feature/salon/data/salon_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

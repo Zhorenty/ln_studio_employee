@@ -6,6 +6,7 @@ final class TimetableItem {
   const TimetableItem({
     required this.id,
     required this.dateAt,
+    required this.salonId,
     this.salary,
     this.onWork = false,
   });
@@ -15,6 +16,9 @@ final class TimetableItem {
 
   /// Date when the employee should go to work.
   final DateTime dateAt;
+
+  ///
+  final int salonId;
 
   /// Employee's salary.
   final int? salary;
@@ -26,6 +30,7 @@ final class TimetableItem {
   factory TimetableItem.fromJson(Map<String, Object?> json) => TimetableItem(
         id: json['id'] as int,
         dateAt: DateTime.parse(json['date_at'] as String),
+        salonId: json['salon_id'] as int,
         salary: json['salary'] as int?,
         onWork: json['on_work'] as bool,
       );
