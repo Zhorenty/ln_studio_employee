@@ -11,6 +11,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     on<TimetableEvent>(
       (event, emit) => event.map(
         fetch: (event) => _fetch(event, emit),
+        fetchBySalonId: (event) => _fetchBySalonId(event, emit),
         fillTimetable: (event) => _fillTimetable(event, emit),
       ),
     );
@@ -27,6 +28,21 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     try {
       final employeeTimetable =
           await timetableRepository.getEmployeesTimetables();
+      emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
+    } on Object catch (e) {
+      emit(TimetableState.idle(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  /// Fetch timetables from repository.
+  Future<void> _fetchBySalonId(
+    TimetableEvent$FetchBySalonId event,
+    Emitter<TimetableState> emit,
+  ) async {
+    try {
+      final employeeTimetable = await timetableRepository
+          .getEmployeesTimetablesBySalonId(event.salonId);
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
       emit(TimetableState.idle(error: e.toString()));

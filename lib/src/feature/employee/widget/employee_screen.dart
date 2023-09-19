@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -299,7 +300,13 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   /// Refresh all employee's.
   Future<void> _refreshStaff() async {
     final block = context.read<StaffBloc>().stream.first;
-    context.read<StaffBloc>().add(const StaffEvent.fetch());
+    final salonBloc = context.read<SalonBLoC>();
+    final staffBloc = context.read<StaffBloc>();
+    if (salonBloc.state.currentSalon != null) {
+      staffBloc.add(
+        StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
+      );
+    }
     await block;
   }
 }

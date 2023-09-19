@@ -6,6 +6,9 @@ abstract interface class TimetableRepository {
   /// Get timetables.
   Future<List<EmployeeTimetable>> getEmployeesTimetables();
 
+  /// Get timetables by salon id.
+  Future<List<EmployeeTimetable>> getEmployeesTimetablesBySalonId(int salonId);
+
   /// Fill time block items.
   Future<void> fillTimetable({
     required int employeeId,
@@ -24,6 +27,11 @@ final class TimetableRepositoryImpl implements TimetableRepository {
   @override
   Future<List<EmployeeTimetable>> getEmployeesTimetables() =>
       _dataSource.fetchEmployeesTimetables();
+
+  @override
+  Future<List<EmployeeTimetable>> getEmployeesTimetablesBySalonId(
+          int salonId) =>
+      _dataSource.fetchEmployeesTimetablesBySalonId(salonId);
 
   @override
   Future<void> fillTimetable({

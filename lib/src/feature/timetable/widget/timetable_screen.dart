@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/custom_app_bar.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_state.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -35,92 +37,107 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TimetableBloc, TimetableState>(
-      builder: (context, state) => CustomScrollView(
-        slivers: [
-          CustomSliverAppBar(title: context.stringOf().workShedule),
-          CupertinoSliverRefreshControl(onRefresh: _refresh),
-          if (state.hasTimetables)
-            SliverPadding(
-              padding: const EdgeInsets.all(8),
-              sliver: SliverList.builder(
-                itemCount: state.employeeTimetable.length,
-                itemBuilder: (context, index) {
-                  if (index >= _focusedDays.length) {
-                    _focusedDays.add(DateTime.now());
-                  }
-                  final employeeTimetable = state.employeeTimetable[index];
-                  final employee = employeeTimetable.employee;
+    return BlocListener<SalonBLoC, SalonState>(
+      listener: (context, state) {},
+      listenWhen: (previous, current) {
+        if (previous.currentSalon?.id != current.currentSalon?.id) {
+          _timetableBloc
+              .add(TimetableEvent.fetchBySalonId(current.currentSalon!.id));
+        }
+        return false;
+      },
+      child: BlocBuilder<TimetableBloc, TimetableState>(
+        builder: (context, state) => CustomScrollView(
+          slivers: [
+            CustomSliverAppBar(title: context.stringOf().workShedule),
+            CupertinoSliverRefreshControl(onRefresh: _refresh),
+            if (state.hasTimetables)
+              SliverPadding(
+                padding: const EdgeInsets.all(8),
+                sliver: SliverList.builder(
+                  itemCount: state.employeeTimetable.length,
+                  itemBuilder: (context, index) {
+                    if (index >= _focusedDays.length) {
+                      _focusedDays.add(DateTime.now());
+                    }
+                    final employeeTimetable = state.employeeTimetable[index];
+                    final employee = employeeTimetable;
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4),
-                        child: Text(
-                          '${employee.firstName} ${employee.lastName}',
-                          style: context.textTheme.headlineSmall!.copyWith(
-                            fontFamily: FontFamily.geologica,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Text(
+                            '${employee.firstName} ${employee.lastName}',
+                            style: context.textTheme.headlineSmall!.copyWith(
+                              fontFamily: FontFamily.geologica,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: context.colorScheme.onBackground,
-                        ),
-                        child: _CustomTableCalendar(
-                          focusedDay: _focusedDays[index],
-                          selectedDayPredicate: (day) {
-                            return employeeTimetable.timetableItems.any(
-                              (timetable) =>
-                                  timetable.dateAt.year == day.year &&
-                                  timetable.dateAt.month == day.month &&
-                                  timetable.dateAt.day == day.day,
-                            );
-                          },
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: context.colorScheme.onBackground,
+                          ),
+                          child: _CustomTableCalendar(
+                            focusedDay: _focusedDays[index],
+                            selectedDayPredicate: (day) {
+                              return employeeTimetable.timetableItems.any(
+                                (timetable) =>
+                                    timetable.dateAt.year == day.year &&
+                                    timetable.dateAt.month == day.month &&
+                                    timetable.dateAt.day == day.day,
+                              );
+                            },
 
-                          /// TODO: Implement EditScheduleScreen.
-                          onDaySelected: (selectedDay, focusedDay) {
-                            _focusedDays[index] = selectedDay;
+                            /// TODO: Implement EditScheduleScreen.
+                            onDaySelected: (selectedDay, focusedDay) {
+                              _focusedDays[index] = selectedDay;
 
-                            _timetableBloc.add(
-                              TimetableEvent.fillTimetable(
-                                employeeId: employee.id,
-                                salonId: 1,
-                                dateAt: selectedDay,
-                              ),
-                            );
-                          },
+                              _timetableBloc.add(
+                                TimetableEvent.fillTimetable(
+                                  employeeId: employee.id,
+                                  salonId: 1,
+                                  dateAt: selectedDay,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      const Divider()
-                    ],
-                  );
-                },
-              ),
-            )
-          else
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Center(
-                child: Text(
-                  context.stringOf().noEmployees,
-                  style: context.textTheme.titleMedium!.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.primary,
+                        const Divider()
+                      ],
+                    );
+                  },
+                ),
+              )
+            else
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(
+                  child: Text(
+                    context.stringOf().noEmployees,
+                    style: context.textTheme.titleMedium!.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.primary,
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Future<void> _refresh() async {
     final block = context.read<TimetableBloc>().stream.first;
-    context.read<TimetableBloc>().add(const TimetableEvent.fetch());
+    final salonBloc = context.read<SalonBLoC>();
+    if (salonBloc.state.currentSalon != null) {
+      _timetableBloc.add(
+        TimetableEvent.fetchBySalonId(salonBloc.state.currentSalon!.id),
+      );
+    }
     await block;
   }
 }

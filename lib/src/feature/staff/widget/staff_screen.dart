@@ -27,18 +27,16 @@ class StaffScreen extends StatefulWidget {
 
 class _StaffScreenState extends State<StaffScreen> {
   late final StaffBloc staffBloc;
-  late final SalonBLoC salonBloc;
 
   @override
   void initState() {
     super.initState();
     staffBloc = context.read<StaffBloc>();
-    salonBloc = context.read<SalonBLoC>();
     _fetchSalonEmployees();
   }
 
   void _fetchSalonEmployees() {
-    // TODO: Исправить, вызывается даже когда открываю список салонов
+    final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {
       staffBloc.add(
         StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
@@ -48,133 +46,135 @@ class _StaffScreenState extends State<StaffScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SalonBLoC, SalonState>(
-      listener: (context, state) => _fetchSalonEmployees(),
-      builder: (context, salonState) {
-        return BlocBuilder<StaffBloc, StaffState>(
-          builder: (context, state) => Scaffold(
-            body: CustomScrollView(
-              slivers: [
-                CustomSliverAppBar(title: context.stringOf().employees),
-                CupertinoSliverRefreshControl(onRefresh: _refresh),
-                if (state.hasStaff) ...[
-                  SliverPadding(
-                    padding: const EdgeInsets.all(8),
-                    sliver: SliverList.builder(
-                      itemCount: state.employeeStaff.length,
-                      itemBuilder: (context, index) => Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4 + 2),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: context.colorScheme.onBackground,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 45,
-                              backgroundColor: context.colorScheme.secondary,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 8 + 2),
-                                Text(
-                                  '${state.employeeStaff[index].userModel.firstName}'
-                                  ' ${state.employeeStaff[index].userModel.lastName}',
-                                  style:
-                                      context.textTheme.titleMedium?.copyWith(
-                                    fontFamily: FontFamily.geologica,
-                                  ),
+    return BlocListener<SalonBLoC, SalonState>(
+      listener: (context, state) {},
+      listenWhen: (previous, current) {
+        if (previous.currentSalon?.id != current.currentSalon?.id) {
+          staffBloc
+              .add(StaffEvent.fetchSalonEmployees(current.currentSalon!.id));
+        }
+        return false;
+      },
+      child: BlocBuilder<StaffBloc, StaffState>(
+        builder: (context, state) => Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              CustomSliverAppBar(title: context.stringOf().employees),
+              CupertinoSliverRefreshControl(onRefresh: _refresh),
+              if (state.hasStaff) ...[
+                SliverPadding(
+                  padding: const EdgeInsets.all(8),
+                  sliver: SliverList.builder(
+                    itemCount: state.employeeStaff.length,
+                    itemBuilder: (context, index) => Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4 + 2),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.onBackground,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 45,
+                            backgroundColor: context.colorScheme.secondary,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 8 + 2),
+                              Text(
+                                '${state.employeeStaff[index].userModel.firstName}'
+                                ' ${state.employeeStaff[index].userModel.lastName}',
+                                style: context.textTheme.titleMedium?.copyWith(
+                                  fontFamily: FontFamily.geologica,
                                 ),
-                                Text(
-                                  state.employeeStaff[index].jobPlaceModel.name,
-                                  style:
-                                      context.textTheme.labelMedium?.copyWith(
-                                    fontFamily: FontFamily.geologica,
-                                    color: context.colorScheme.primaryContainer,
-                                  ),
+                              ),
+                              Text(
+                                state.employeeStaff[index].jobPlaceModel.name,
+                                style: context.textTheme.labelMedium?.copyWith(
+                                  fontFamily: FontFamily.geologica,
+                                  color: context.colorScheme.primaryContainer,
                                 ),
-                                const SizedBox(height: 4),
-                                StarRating(
-                                  initialRating:
-                                      state.employeeStaff[index].stars,
-                                )
-                              ],
-                            ),
-                            const SizedBox.shrink(),
-                            AnimatedButton(
-                              child: const Icon(Icons.edit, size: 20),
-                              onPressed: () {
-                                _refresh();
-                                context.go(
-                                  '/staff/employee',
-                                  extra: state.employeeStaff[index].id,
-                                );
-                              },
-                            ),
-                          ],
-                        ),
+                              ),
+                              const SizedBox(height: 4),
+                              StarRating(
+                                initialRating: state.employeeStaff[index].stars,
+                              )
+                            ],
+                          ),
+                          const SizedBox.shrink(),
+                          AnimatedButton(
+                            child: const Icon(Icons.edit, size: 20),
+                            onPressed: () {
+                              _refresh();
+                              context.go(
+                                '/staff/employee',
+                                extra: state.employeeStaff[index].id,
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  SliverToBoxAdapter(
-                    child: GestureDetector(
-                      onTap: () => context.goNamed('/create_employee'),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.sizeOf(context).width / 8,
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: context.colorScheme.primary,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Text(
-                            context.stringOf().addEmployee,
-                            style: context.textTheme.titleMedium!.copyWith(
-                              color: context.colorScheme.background,
-                              fontFamily: FontFamily.geologica,
-                            ),
+                ),
+                SliverToBoxAdapter(
+                  child: GestureDetector(
+                    onTap: () => context.goNamed('/create_employee'),
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.sizeOf(context).width / 8,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: context.colorScheme.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          context.stringOf().addEmployee,
+                          style: context.textTheme.titleMedium!.copyWith(
+                            color: context.colorScheme.background,
+                            fontFamily: FontFamily.geologica,
                           ),
                         ),
                       ),
                     ),
-                  )
-                ] else
-                  SliverFillRemaining(
-                    child: Center(
-                      child: Text(
-                        context.stringOf().noEmployees,
-                        style: context.textTheme.titleMedium!.copyWith(
-                          fontFamily: FontFamily.geologica,
-                          color: context.colorScheme.primary,
-                        ),
+                  ),
+                )
+              ] else
+                SliverFillRemaining(
+                  child: Center(
+                    child: Text(
+                      context.stringOf().noEmployees,
+                      style: context.textTheme.titleMedium!.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.primary,
                       ),
                     ),
                   ),
-              ],
-            ),
-            floatingActionButton: !state.hasStaff
-                ? FloatingActionButton.extended(
-                    backgroundColor: context.colorScheme.primary,
-                    label: Text(
-                      context.stringOf().addEmployee,
-                      style: context.textTheme.bodySmall!.copyWith(
-                        fontFamily: FontFamily.geologica,
-                        color: context.colorScheme.background,
-                      ),
-                    ),
-                    onPressed: () {},
-                  )
-                : const SizedBox.shrink(),
+                ),
+            ],
           ),
-        );
-      },
+          floatingActionButton: !state.hasStaff
+              ? FloatingActionButton.extended(
+                  backgroundColor: context.colorScheme.primary,
+                  label: Text(
+                    context.stringOf().addEmployee,
+                    style: context.textTheme.bodySmall!.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.background,
+                    ),
+                  ),
+                  onPressed: () {},
+                )
+              : const SizedBox.shrink(),
+        ),
+      ),
     );
   }
 

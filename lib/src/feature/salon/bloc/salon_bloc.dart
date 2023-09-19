@@ -64,6 +64,38 @@ class SalonBLoC extends Bloc<SalonEvent, SalonState> {
     }
   }
 
+  Future<void> getCurrentSalon(Emitter<SalonState> emit) async {
+    try {
+      emit(
+        SalonState.processing(
+          data: state.data,
+          currentSalon: state.currentSalon,
+        ),
+      );
+      final salons = await _repository.fetchSalons();
+      final currentSalonIdFromDB = await _repository.getCurrentSalonId();
+      // TODO(evklidus): Попробовать инкапсулировать логику в репозитории
+      if (currentSalonIdFromDB == null) {
+        await _repository.saveCurrentSalonId(salons.first.id);
+      }
+
+      final currentSalon = currentSalonIdFromDB != null
+          ? salons.firstWhere((salon) => salon.id == currentSalonIdFromDB)
+          : salons.first;
+
+      emit(SalonState.successful(data: salons, currentSalon: currentSalon));
+    } on Object catch (err, _) {
+      emit(
+        SalonState.error(data: state.data, currentSalon: state.currentSalon),
+      );
+      rethrow;
+    } finally {
+      emit(
+        SalonState.idle(data: state.data, currentSalon: state.currentSalon),
+      );
+    }
+  }
+
   /// Save current event handler
   Future<void> _saveCurrent(
       SalonEvent$SaveCurrent event, Emitter<SalonState> emit) async {

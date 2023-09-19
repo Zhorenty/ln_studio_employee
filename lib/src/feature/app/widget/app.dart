@@ -10,7 +10,6 @@ import '/src/feature/initialization/model/dependencies.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/staff/bloc/staff_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_bloc.dart';
-import '/src/feature/timetable/bloc/timetable_event.dart';
 
 import 'app_context.dart';
 
@@ -32,7 +31,7 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => TimetableBloc(
               timetableRepository: result.dependencies.timetableRepository,
-            )..add(const TimetableEvent.fetch()),
+            ),
           ),
           BlocProvider(
             create: (context) => StaffBloc(
