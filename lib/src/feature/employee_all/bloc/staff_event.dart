@@ -23,7 +23,6 @@ abstract base class _$StaffEventBase {
   /// Map over state union.
   R map<R>({
     required PatternMatch<R, StaffEvent$Fetch> fetch,
-    deleteStaffItems,
   }) =>
       switch (this) {
         final StaffEvent$Fetch s => fetch(s),

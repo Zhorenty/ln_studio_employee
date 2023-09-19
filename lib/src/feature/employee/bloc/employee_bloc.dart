@@ -21,7 +21,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   /// Repository for employee data
   final EmployeeRepository repository;
 
-  /// Edit employee from repository.
+  /// Fetch employee from repository.
   Future<void> _fetch(
     EmployeeEvent$Fetch event,
     Emitter<EmployeeState> emit,
@@ -36,7 +36,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     }
   }
 
-  /// Fetch event handler
+  /// Create employee from repository.
   Future<void> _create(
     EmployeeEvent$Create event,
     Emitter<EmployeeState> emit,

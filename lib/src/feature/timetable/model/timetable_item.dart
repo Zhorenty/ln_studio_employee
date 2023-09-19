@@ -29,7 +29,4 @@ final class TimetableItem {
         salary: json['salary'] as int?,
         onWork: json['on_work'] as bool,
       );
-
-  @override
-  String toString() => 'Employee(dateAt: $dateAt)';
 }
