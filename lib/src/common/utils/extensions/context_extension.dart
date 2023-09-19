@@ -4,8 +4,7 @@ import '/src/common/localization/app_localization.dart';
 
 extension BuildContextX on BuildContext {
   /// Returns localized string from [AppLocalization].
-  GeneratedLocalization stringOf() =>
-      AppLocalization.stringOf<GeneratedLocalization>(this);
+  Localization stringOf() => Localization.of(this);
 
   /// Returns [ColorScheme] from [BuildContext]
   ColorScheme get colorScheme => Theme.of(this).colorScheme;

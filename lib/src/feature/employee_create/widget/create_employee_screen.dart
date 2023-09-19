@@ -26,23 +26,24 @@ class CreateEmployeeScreen extends StatefulWidget {
 }
 
 class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   late final FocusNode firstNameFocusNode = FocusNode();
   late final FocusNode phoneFocusNode = FocusNode();
   late final FocusNode addressFocusNode = FocusNode();
   late final FocusNode salesFocusNode = FocusNode();
 
   /// User information
-  late final firstNameController = TextEditingController();
-  late final lastNameController = TextEditingController();
-  late final phoneController = TextEditingController();
-  late final addressController = TextEditingController();
+  late final TextEditingController firstNameController;
+  late final TextEditingController lastNameController;
+  late final TextEditingController phoneController;
+  late final TextEditingController addressController;
+  late final TextEditingController emailController;
 
   /// Employee information
-  late final contractNumberController = TextEditingController();
-  late final starsController = TextEditingController();
-  late final descriptionController = TextEditingController();
-  late final emailController = TextEditingController();
-  late final salesController = TextEditingController();
+  late final TextEditingController contractNumberController;
+  late final TextEditingController descriptionController;
+  late final TextEditingController salesController;
 
   int stars = 1;
   DateTime dateOfEmployment = DateTime.now();
@@ -51,7 +52,34 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   @override
   void initState() {
     super.initState();
+
+    /// User information.
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
+    phoneController = TextEditingController();
+    addressController = TextEditingController();
+    emailController = TextEditingController();
+
+    /// Employee information.
+    contractNumberController = TextEditingController();
+    descriptionController = TextEditingController();
+    salesController = TextEditingController();
+
+    /// Request focus on first name field.
     firstNameFocusNode.requestFocus();
+  }
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    emailController.dispose();
+    contractNumberController.dispose();
+    descriptionController.dispose();
+    salesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -79,9 +107,11 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                   AnimatedButton(
                     child: const Text('Готово'),
                     onPressed: () {
-                      _create();
-                      _refresh();
-                      context.pop();
+                      if (_formKey.currentState!.validate()) {
+                        _create();
+                        _refresh();
+                        context.pop();
+                      }
                     },
                   ),
                 ],
@@ -132,68 +162,96 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                           ),
                           const SizedBox(height: 16),
                           const HeaderWidget(label: 'Личная информация'),
-                          CustomTextField(
-                            dense: false,
-                            controller: firstNameController,
-                            focusNode: firstNameFocusNode,
-                            textInputAction: TextInputAction.next,
-                            label: 'Имя',
-                            keyboardType: TextInputType.name,
-                          ),
-                          CustomTextField(
-                            controller: lastNameController,
-                            label: 'Фамилия',
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.name,
-                          ),
-                          CustomTextField(
-                            controller: phoneController,
-                            focusNode: phoneFocusNode,
-                            label: 'Телефон',
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [RuPhoneInputFormatter()],
-                            onChanged: _checkPhoneNumber,
-                          ),
-                          CustomTextField(
-                            controller: addressController,
-                            textInputAction: TextInputAction.next,
-                            focusNode: addressFocusNode,
-                            label: 'Адрес проживания',
-                            keyboardType: TextInputType.streetAddress,
-                          ),
-                          CustomTextField(
-                            controller: emailController,
-                            label: 'Почта',
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-                          DatePickerButton(
-                            initialDate: birthDate,
-                            onDateSelected: (day) => birthDate = day,
-                          ),
-                          const SizedBox(height: 32),
-                          const HeaderWidget(label: 'Рабочая информация'),
-                          DatePickerButton(
-                            initialDate: dateOfEmployment,
-                            onDateSelected: (day) => dateOfEmployment = day,
-                          ),
-                          CustomTextField(
-                            controller: descriptionController,
-                            textInputAction: TextInputAction.next,
-                            dense: false,
-                            label: 'Описание сотрудника',
-                            keyboardType: TextInputType.multiline,
-                          ),
-                          CustomTextField(
-                            controller: salesController,
-                            focusNode: salesFocusNode,
-                            textInputAction: TextInputAction.done,
-                            label: 'Процент от продаж',
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomTextField(
+                                  dense: false,
+                                  controller: firstNameController,
+                                  focusNode: firstNameFocusNode,
+                                  textInputAction: TextInputAction.next,
+                                  label: 'Имя',
+                                  keyboardType: TextInputType.name,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Поле не может быть пустым';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                CustomTextField(
+                                  controller: lastNameController,
+                                  label: 'Фамилия',
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.name,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Поле не может быть пустым';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                CustomTextField(
+                                  controller: phoneController,
+                                  focusNode: phoneFocusNode,
+                                  label: 'Телефон',
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.phone,
+                                  inputFormatters: [RuPhoneInputFormatter()],
+                                  onChanged: _checkPhoneNumber,
+                                ),
+                                CustomTextField(
+                                  controller: addressController,
+                                  textInputAction: TextInputAction.next,
+                                  focusNode: addressFocusNode,
+                                  label: 'Адрес проживания',
+                                  keyboardType: TextInputType.streetAddress,
+                                ),
+                                CustomTextField(
+                                  controller: emailController,
+                                  label: 'Почта',
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.emailAddress,
+                                ),
+                                DatePickerButton(
+                                  initialDate: birthDate,
+                                  onDateSelected: (day) => birthDate = day,
+                                ),
+                                const SizedBox(height: 32),
+                                const HeaderWidget(label: 'Рабочая информация'),
+                                DatePickerButton(
+                                  initialDate: dateOfEmployment,
+                                  onDateSelected: (day) =>
+                                      dateOfEmployment = day,
+                                ),
+                                CustomTextField(
+                                  controller: descriptionController,
+                                  textInputAction: TextInputAction.next,
+                                  dense: false,
+                                  label: 'Описание сотрудника',
+                                  keyboardType: TextInputType.multiline,
+                                ),
+                                CustomTextField(
+                                  controller: contractNumberController,
+                                  textInputAction: TextInputAction.next,
+                                  label: 'Номер договора',
+                                  keyboardType: TextInputType.streetAddress,
+                                ),
+                                CustomTextField(
+                                  controller: salesController,
+                                  focusNode: salesFocusNode,
+                                  textInputAction: TextInputAction.done,
+                                  label: 'Процент от продаж',
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                                  onChanged: _checkSales,
+                                ),
+                              ],
                             ),
-                            onChanged: _checkSales,
                           ),
                           const SizedBox(height: 16 + 8),
                         ],

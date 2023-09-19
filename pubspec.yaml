@@ -42,6 +42,7 @@ dependencies:
   bloc_concurrency: 0.2.2
   path: ^1.8.2
   path_provider: ^2.0.12
+  intl_utils: 2.8.4
 
   # Local packages
   rest_client:
@@ -110,3 +111,10 @@ flutter:
 flutter_gen:
   output: lib/src/common/assets/generated
   line_length: 80
+
+flutter_intl:
+  enabled: true
+  class_name: GeneratedLocalization
+  main_locale: ru
+  arb_dir: lib/src/common/localization/translations
+  output_dir: lib/src/common/localization/generated

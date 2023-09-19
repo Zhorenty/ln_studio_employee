@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 /// {@template shimmer}
-/// A widget that creates a shimmering effect similar
+/// Widget that creates a shimmering effect similar
 /// to a moving highlight or reflection.
 /// This is commonly used as a placeholder or loading indicator.
 /// {@endtemplate}

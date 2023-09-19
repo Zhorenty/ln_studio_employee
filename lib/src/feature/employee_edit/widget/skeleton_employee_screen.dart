@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -17,23 +18,24 @@ class SkeletonEmployeeScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         slivers: [
           ExpandedAppBar(
-            title: Shimmer(
+            onExit: () => context.pop(),
+            title: const Shimmer(
               speed: 30,
-              size: const Size(200, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              size: Size(200, 28),
+              color: Color(0xFF121212),
+              backgroundColor: Color(0xFF454545),
             ),
-            leading: Shimmer(
+            leading: const Shimmer(
               speed: 30,
-              size: const Size(40, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              size: Size(40, 28),
+              color: Color(0xFF121212),
+              backgroundColor: Color(0xFF454545),
             ),
-            trailing: Shimmer(
+            trailing: const Shimmer(
               speed: 30,
-              size: const Size(40, 28),
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
+              size: Size(40, 28),
+              color: Color(0xFF121212),
+              backgroundColor: Color(0xFF454545),
             ),
           ),
           SliverList(
@@ -46,31 +48,30 @@ class SkeletonEmployeeScreen extends StatelessWidget {
                     color: context.colorScheme.onBackground,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const HeaderWidget(label: 'Рейтинг'),
+                          HeaderWidget(label: 'Рейтинг'),
                           Shimmer(
-                            size: const Size(128, 25),
-                            color: context.colorScheme.primary,
-                            backgroundColor: const Color(0xFF525252),
+                            size: Size(128, 25),
+                            color: Color.fromARGB(255, 20, 20, 18),
+                            backgroundColor: Color(0xFF525252),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16 + 8),
-                      const HeaderWidget(label: 'Личная информация'),
-                      const _CustomShimmer(label: 'Имя', dense: true),
-                      const _CustomShimmer(label: 'Фамилия'),
-                      const _CustomShimmer(label: 'Номер телефона'),
-                      const _CustomShimmer(label: 'Домашний адрес'),
-                      const _CustomShimmer(label: 'Электронная почта'),
-                      const HeaderWidget(label: 'Рабочая информация'),
-                      const _CustomShimmer(
-                          label: 'Номер договора', dense: true),
-                      const _CustomShimmer(label: 'Описание сотрудника'),
+                      SizedBox(height: 16 + 8),
+                      HeaderWidget(label: 'Личная информация'),
+                      _CustomShimmer(label: 'Имя', dense: true),
+                      _CustomShimmer(label: 'Фамилия'),
+                      _CustomShimmer(label: 'Номер телефона'),
+                      _CustomShimmer(label: 'Домашний адрес'),
+                      _CustomShimmer(label: 'Электронная почта'),
+                      HeaderWidget(label: 'Рабочая информация'),
+                      _CustomShimmer(label: 'Номер договора', dense: true),
+                      _CustomShimmer(label: 'Описание сотрудника'),
                     ],
                   ),
                 )
@@ -105,12 +106,12 @@ class _CustomShimmer extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 64),
+          const Padding(
+            padding: EdgeInsets.only(right: 64),
             child: Shimmer(
-              color: const Color(0xFF525252),
-              backgroundColor: context.colorScheme.primaryContainer,
-              size: const Size(double.infinity, 24),
+              color: Color(0xFF121212),
+              backgroundColor: Color(0xFF454545),
+              size: Size(double.infinity, 24),
             ),
           ),
           const Divider(color: Color(0xFFA8A6A6))

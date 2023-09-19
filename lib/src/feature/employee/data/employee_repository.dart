@@ -25,25 +25,24 @@ abstract interface class EmployeeRepository {
 final class EmployeeRepositoryImpl implements EmployeeRepository {
   EmployeeRepositoryImpl(this._dataSource);
 
-  /// Timetable data source.
+  /// Employee data provider.
   final EmployeeDataProvider _dataSource;
 
   @override
-  Future<Employee> get({required int id}) => _dataSource.fetch(id: id);
+  Future<Employee> get({required int id}) => _dataSource.fetchEmployee(id);
 
   @override
   Future<void> create({required Employee$Create employee}) =>
-      _dataSource.createEmployee(employee: employee);
+      _dataSource.createEmployee(employee);
 
   @override
   Future<Employee> edit({required Employee$Edit employee}) =>
-      _dataSource.editEmployee(employee: employee);
+      _dataSource.editEmployee(employee);
 
   @override
-  Future<void> dismiss({required int id}) =>
-      _dataSource.dismissEmployee(id: id);
+  Future<void> dismiss({required int id}) => _dataSource.dismissEmployee(id);
 
   @override
   Future<void> reinstatement({required int id}) =>
-      _dataSource.reinstatementEmployee(id: id);
+      _dataSource.reinstatementEmployee(id);
 }
