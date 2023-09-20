@@ -91,7 +91,21 @@ class _StaffScreenState extends State<StaffScreen>
               if (state.hasStaff) ...[
                 SliverPadding(
                   padding: const EdgeInsets.all(8),
-                  sliver: _EmployeeList(staff: state.staff, refresh: _refresh),
+                  sliver: SliverList.builder(
+                    itemCount: state.staff.length,
+                    itemBuilder: (context, index) {
+                      final employee = state.staff[index];
+
+                      if (employee.isDismiss == false) {
+                        return EmployeeCard(
+                          employee: employee,
+                          refresh: _refresh,
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
                 ),
                 SliverPadding(
                   padding: EdgeInsets.only(
@@ -177,42 +191,11 @@ class _StaffScreenState extends State<StaffScreen>
   }
 }
 
-// TODO(zhorenty): Refactor
-class _EmployeeList extends StatelessWidget {
-  const _EmployeeList({
-    required this.staff,
-    this.refresh,
-  });
-
-  ///
-  final List<Employee> staff;
-
-  ///
-  final void Function()? refresh;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverList.builder(
-      itemCount: staff.length,
-      itemBuilder: (context, index) {
-        final employee = staff[index];
-
-        if (employee.isDismiss == false) {
-          return EmployeeCard(
-            employee: employee,
-            refresh: () => refresh,
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-      },
-    );
-  }
-}
-
+///
 class EmployeeCard extends StatelessWidget {
   const EmployeeCard({super.key, required this.employee, this.refresh});
 
+  ///
   final Employee employee;
 
   ///
