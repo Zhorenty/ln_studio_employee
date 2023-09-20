@@ -116,26 +116,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           salesController.text = employee.percentageOfSales.toString();
 
           return Scaffold(
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _edit(
-                    id: employee.id,
-                    stars: stars,
-                    isDismiss: employee.isDismiss,
-                    dateOfEmployment: dateOfEmployment,
-                    birthDate: birthDate,
-                  );
-                }
-              },
-              label: Text(
-                'Сохранить изменения',
-                style: context.textTheme.bodyMedium!.copyWith(
-                  color: context.colorScheme.onBackground,
-                ),
-              ),
-              backgroundColor: context.colorScheme.primary,
-            ),
             backgroundColor: context.colorScheme.background,
             body: CustomScrollView(
               slivers: [
@@ -279,6 +259,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 validator: _emailValidator,
                               ),
                               DatePickerButton(
+                                label: 'День рождения',
                                 initialDate: birthDate,
                                 onDateSelected: (day) => birthDate = day,
                               ),
@@ -305,8 +286,45 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 validator: _emptyValidator,
                               ),
                               DatePickerButton(
+                                dense: true,
+                                label: 'Дата принятия на работу',
                                 initialDate: dateOfEmployment,
                                 onDateSelected: (day) => dateOfEmployment = day,
+                              ),
+                              const SizedBox(height: 16),
+                              Center(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _edit(
+                                        id: employee.id,
+                                        stars: stars,
+                                        isDismiss: employee.isDismiss,
+                                        dateOfEmployment: dateOfEmployment,
+                                        birthDate: birthDate,
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    backgroundColor:
+                                        context.colorScheme.primary,
+                                  ),
+                                  child: Text(
+                                    'Сохранить изменения',
+                                    style:
+                                        context.textTheme.bodyLarge?.copyWith(
+                                      color: context.colorScheme.onBackground,
+                                      fontFamily: FontFamily.geologica,
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(height: 16),
                             ],

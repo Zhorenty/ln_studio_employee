@@ -98,7 +98,7 @@ final class Employee {
         'job_place_id': jobId,
         'salon_id': salonId,
         'description': description,
-        'date_of_employment': dateOfEmployment.format(),
+        'date_of_employment': dateOfEmployment.jsonFormat(),
         'contract_number': contractNumber,
         'percentage_of_sales': percentageOfSales,
         'stars': stars,
