@@ -55,4 +55,12 @@ final class Salon {
         'email': email,
         'description': description,
       };
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Salon && runtimeType == other.runtimeType && id == other.id;
 }

@@ -206,24 +206,22 @@ class EmployeeCard extends StatelessWidget {
     final user = employee.userModel;
     final jobPlace = employee.jobModel;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4 + 2),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: context.colorScheme.onBackground,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AvatarWidget(
             radius: 40,
             title: '${user.firstName} ${user.lastName}',
           ),
+          const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 8 + 2),
               Text(
                 '${user.firstName} ${user.lastName}',
                 style: context.textTheme.titleMedium?.copyWith(
@@ -241,13 +239,22 @@ class EmployeeCard extends StatelessWidget {
               StarRating(initialRating: employee.stars)
             ],
           ),
-          const SizedBox.shrink(),
+          const Spacer(),
           AnimatedButton(
-            onPressed: () {
-              refresh;
-              context.go('/staff/employee', extra: employee.id);
-            },
-            child: const Icon(Icons.edit, size: 20),
+            onPressed: () => context.go('/staff/employee', extra: employee.id),
+            child: Container(
+              decoration: ShapeDecoration(
+                shape: const CircleBorder(),
+                color: context.colorScheme.primary,
+              ),
+              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
+              child: Icon(
+                Icons.edit,
+                size: 18,
+                color: context.colorScheme.onBackground,
+              ),
+            ),
           ),
         ],
       ),

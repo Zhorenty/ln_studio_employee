@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/shimmer.dart';
@@ -15,8 +16,13 @@ import 'salon_choice_row.dart';
 /// {@endtemplate}
 class SalonChoiceScreen extends StatefulWidget {
   /// {@macro salon_choice_screen}
-  const SalonChoiceScreen({super.key, this.onChanged});
+  const SalonChoiceScreen({
+    super.key,
+    required this.currentSalon,
+    this.onChanged,
+  });
 
+  final Salon? currentSalon;
   final void Function(Salon?)? onChanged;
 
   @override
@@ -35,12 +41,7 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocConsumer<SalonBLoC, SalonState>(
-        listener: (context, state) {
-          if (state.currentSalon == null && salonBloc.state.hasData) {
-            salonBloc.add(SalonEvent.saveCurrent(salonBloc.state.data!.first));
-          }
-        },
+  Widget build(BuildContext context) => BlocBuilder<SalonBLoC, SalonState>(
         builder: (context, state) {
           return salonBloc.state.hasData
               ? Padding(
@@ -56,8 +57,17 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                       ...salonBloc.state.data!.map(
                         (salon) => SalonChoiceRow(
                           salon: salon,
-                          currentSalon: state.currentSalon,
-                          onChanged: widget.onChanged,
+                          currentSalon: widget.currentSalon,
+                          onChanged: (salon) {
+                            if (widget.onChanged == null) {
+                              salonBloc.add(SalonEvent.saveCurrent(salon!));
+                            } else {
+                              setState(() {
+                                widget.onChanged!(salon);
+                              });
+                            }
+                            context.pop();
+                          },
                         ),
                       ),
                     ],

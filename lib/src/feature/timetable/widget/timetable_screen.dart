@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -68,7 +69,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
             if (state.hasTimetables)
               SliverPadding(
                 padding: const EdgeInsets.all(8),
-                sliver: SliverList.builder(
+                sliver: SliverList.separated(
                   itemCount: state.employeeTimetable.length,
                   itemBuilder: (context, index) {
                     if (index >= _focusedDays.length) {
@@ -79,19 +80,43 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: Text(
-                            '${employee.firstName} ${employee.lastName}',
-                            style: context.textTheme.headlineSmall!.copyWith(
-                              fontFamily: FontFamily.geologica,
+                        Container(
+                          clipBehavior: Clip.hardEdge,
+                          padding: const EdgeInsets.only(left: 12, top: 8),
+                          decoration: ShapeDecoration(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
                             ),
+                            color: context.colorScheme.onBackground,
+                          ),
+                          child: Row(
+                            children: [
+                              AvatarWidget(
+                                title:
+                                    '${employee.firstName} ${employee.lastName}',
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                '${employee.firstName} ${employee.lastName}',
+                                style:
+                                    context.textTheme.headlineSmall!.copyWith(
+                                  fontFamily: FontFamily.geologica,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            ),
                             color: context.colorScheme.onBackground,
                           ),
                           child: _CustomTableCalendar(
@@ -122,10 +147,11 @@ class _TimetableScreenState extends State<TimetableScreen> {
                             },
                           ),
                         ),
-                        const Divider(),
                       ],
                     );
                   },
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 20),
                 ),
               )
             else

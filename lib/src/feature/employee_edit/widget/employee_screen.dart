@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/widget/field_button.dart';
+import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
+import 'package:ln_employee/src/feature/salon/models/salon.dart';
+import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -103,6 +106,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           int stars = employee.stars;
           DateTime birthDate = user.birthDate;
           DateTime dateOfEmployment = employee.dateOfEmployment;
+          Salon employeeSalon = employee.salon;
 
           /// User information
           firstNameController.text = user.firstName;
@@ -266,10 +270,27 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               ),
                               const SizedBox(height: 32),
                               const HeaderWidget(label: 'Рабочая информация'),
-                              const FieldButton(
-                                dense: false,
-                                label: 'Выбора салона',
-                                title: 'asdfsadfs',
+                              StatefulBuilder(
+                                builder: (context, setState) {
+                                  return FieldButton(
+                                    dense: false,
+                                    label: 'Выбора салона',
+                                    title: employeeSalon.name,
+                                    onTap: () => ModalPopup.show(
+                                      context: context,
+                                      child: SalonChoiceScreen(
+                                        currentSalon: employeeSalon,
+                                        onChanged: (salon) {
+                                          setState(() {
+                                            if (salon != null) {
+                                              employeeSalon = salon;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                               CustomTextField(
                                 controller: contractNumberController,
@@ -308,6 +329,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                         isDismiss: employee.isDismiss,
                                         dateOfEmployment: dateOfEmployment,
                                         birthDate: birthDate,
+                                        employeeSalonId: employeeSalon.id,
                                       );
                                     }
                                   },
@@ -355,6 +377,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     required int stars,
     required bool isDismiss,
     required DateTime birthDate,
+    required int employeeSalonId,
   }) async {
     context.read<EmployeeBloc>().add(
           EmployeeEvent.edit(
@@ -362,7 +385,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               id: id,
               address: addressController.text,
               jobId: 1,
-              salonId: 2,
+              salonId: employeeSalonId,
               description: descriptionController.text,
               dateOfEmployment: dateOfEmployment,
               contractNumber: contractNumberController.text,
