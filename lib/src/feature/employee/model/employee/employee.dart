@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:ln_employee/src/feature/salon/models/salon.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
 import 'job.dart';
-import 'salon.dart';
 import 'user.dart';
 
 /// Represents an employee in a salon with its properties.
@@ -65,7 +65,7 @@ final class Employee {
   final JobModel jobModel;
 
   /// Salon associated with the employee.
-  final SalonModel salonModel;
+  final Salon salonModel;
 
   /// Returns [Employee] from [json].
   factory Employee.fromJson(Map<String, dynamic> json) {
@@ -87,7 +87,7 @@ final class Employee {
       jobModel: JobModel.fromJson(
         json['job'] as Map<String, dynamic>,
       ),
-      salonModel: SalonModel.fromJson(json['salon'] as Map<String, dynamic>),
+      salonModel: Salon.fromJson(json['salon'] as Map<String, dynamic>),
     );
   }
 

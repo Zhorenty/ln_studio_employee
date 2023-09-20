@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/widget/field_button.dart';
+import 'package:ln_employee/src/feature/specialization/widget/specialization_list.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -266,6 +267,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               ),
                               const SizedBox(height: 32),
                               const HeaderWidget(label: 'Рабочая информация'),
+                              const SpecializationWrap(),
                               const FieldButton(
                                 dense: false,
                                 label: 'Выбора салона',
