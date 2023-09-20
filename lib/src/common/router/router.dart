@@ -40,7 +40,7 @@ final router = GoRouter(
                     final id = state.extra as int;
                     return CustomTransitionPage<void>(
                       key: state.pageKey,
-                      child: EmployeeScreen(employeeid: id),
+                      child: EmployeeScreen(employeeId: id),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         const begin = Offset(0.0, 1.0);

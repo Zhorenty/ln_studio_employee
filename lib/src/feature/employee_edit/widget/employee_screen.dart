@@ -27,46 +27,70 @@ import 'skeleton_employee_screen.dart';
 /// {@endtemplate}
 class EmployeeScreen extends StatefulWidget {
   /// {@macro employee_screen}
-  const EmployeeScreen({super.key, required this.employeeid});
+  const EmployeeScreen({super.key, required this.employeeId});
 
   /// Employee id.
-  final int employeeid;
+  final int employeeId;
 
   @override
   State<EmployeeScreen> createState() => _EmployeeScreenState();
 }
 
 class _EmployeeScreenState extends State<EmployeeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<EmployeeBloc>().add(
-          EmployeeEvent.fetch(id: widget.employeeid),
-        );
-  }
+  final _formKey = GlobalKey<FormState>();
 
   late final phoneFocusNode = FocusNode();
 
   /// User information
-  late final firstNameController = TextEditingController();
-  late final lastNameController = TextEditingController();
-  late final phoneController = TextEditingController();
-  late final addressController = TextEditingController();
+  late final TextEditingController firstNameController;
+  late final TextEditingController lastNameController;
+  late final TextEditingController phoneController;
+  late final TextEditingController addressController;
+  late final TextEditingController emailController;
 
   /// Employee information
-  late final contractNumberController = TextEditingController();
-  late final starsController = TextEditingController();
-  // TODO(zhorenty): Make huge TextField.
-  late final descriptonController = TextEditingController();
-  late final emailController = TextEditingController();
-  // TODO(zhorenty): Make DropDownButton or something.
-  late final salesController = TextEditingController();
+  late final TextEditingController contractNumberController;
+  late final TextEditingController descriptionController;
+  late final TextEditingController salesController;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<EmployeeBloc>().add(
+          EmployeeEvent.fetch(id: widget.employeeId),
+        );
+
+    /// User information.
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
+    phoneController = TextEditingController();
+    addressController = TextEditingController();
+    emailController = TextEditingController();
+
+    /// Employee information.
+    contractNumberController = TextEditingController();
+    descriptionController = TextEditingController();
+    salesController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    emailController.dispose();
+    contractNumberController.dispose();
+    descriptionController.dispose();
+    salesController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EmployeeBloc, EmployeeState>(
       builder: (context, state) {
-        if (state.isProcessing || state.employee == null) {
+        if (state.employee == null) {
           return const SkeletonEmployeeScreen();
         } else {
           final employee = state.employee!;
@@ -86,18 +110,22 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
 
           /// Employee information
           contractNumberController.text = employee.contractNumber;
-          descriptonController.text = employee.description;
+          descriptionController.text = employee.description;
           salesController.text = employee.percentageOfSales.toString();
 
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () => _edit(
-                id: employee.id,
-                stars: stars,
-                isDismiss: employee.isDismiss,
-                dateOfEmployment: dateOfEmployment,
-                birthDate: birthDate,
-              ),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _edit(
+                    id: employee.id,
+                    stars: stars,
+                    isDismiss: employee.isDismiss,
+                    dateOfEmployment: dateOfEmployment,
+                    birthDate: birthDate,
+                  );
+                }
+              },
               label: Text(
                 'Сохранить изменения',
                 style: context.textTheme.bodyMedium!.copyWith(
@@ -169,106 +197,118 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                           color: context.colorScheme.onBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const HeaderWidget(
-                                  label: 'Рейтинг',
-                                  showUnderscore: false,
-                                ),
-                                StarRating(
-                                  initialRating: employee.stars,
-                                  onRatingChanged: (rating) => stars = rating,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            DefaultTextStyle(
-                              style: context.textTheme.bodyLarge!.copyWith(
-                                fontFamily: FontFamily.geologica,
-                                color: dissmised
-                                    ? const Color(0xFFF45636)
-                                    : context.colorScheme.primary,
-                              ),
-                              child: Row(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   const HeaderWidget(
-                                    label: 'Статус сотрудника',
+                                    label: 'Рейтинг',
                                     showUnderscore: false,
                                   ),
-                                  dissmised
-                                      ? const Text('Уволен')
-                                      : const Text('Работает')
+                                  StarRating(
+                                    initialRating: employee.stars,
+                                    onRatingChanged: (rating) => stars = rating,
+                                  ),
                                 ],
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            const HeaderWidget(label: 'Личная информация'),
-                            CustomTextField(
-                              controller: firstNameController,
-                              dense: false,
-                              label: 'Имя',
-                              keyboardType: TextInputType.name,
-                            ),
-                            CustomTextField(
-                              controller: lastNameController,
-                              label: 'Фамилия',
-                              keyboardType: TextInputType.name,
-                            ),
-                            CustomTextField(
-                              controller: phoneController,
-                              label: 'Номер телефона',
-                              focusNode: phoneFocusNode,
-                              onChanged: _checkPhoneNumber,
-                              inputFormatters: [RuPhoneInputFormatter()],
-                              keyboardType: TextInputType.phone,
-                              copyable: true,
-                            ),
-                            CustomTextField(
-                              controller: addressController,
-                              label: 'Домашний адрес',
-                              keyboardType: TextInputType.streetAddress,
-                            ),
-                            CustomTextField(
-                              controller: emailController,
-                              label: 'Электронная почта',
-                              copyable: true,
-                              keyboardType: TextInputType.emailAddress,
-                            ),
-                            DatePickerButton(
-                              initialDate: birthDate,
-                              onDateSelected: (day) => birthDate = day,
-                            ),
-                            const SizedBox(height: 32),
-                            const HeaderWidget(label: 'Рабочая информация'),
-                            CustomTextField(
-                              controller: contractNumberController,
-                              label: 'Номер договора',
-                            ),
-                            CustomTextField(
-                              controller: descriptonController,
-                              label: 'Описание сотрудника',
-                              keyboardType: TextInputType.multiline,
-                            ),
-                            CustomTextField(
-                              controller: salesController,
-                              label: 'Процент от продаж',
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
+                              const SizedBox(height: 16),
+                              DefaultTextStyle(
+                                style: context.textTheme.bodyLarge!.copyWith(
+                                  fontFamily: FontFamily.geologica,
+                                  color: dissmised
+                                      ? const Color(0xFFF45636)
+                                      : context.colorScheme.primary,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const HeaderWidget(
+                                      label: 'Статус сотрудника',
+                                      showUnderscore: false,
+                                    ),
+                                    dissmised
+                                        ? const Text('Уволен')
+                                        : const Text('Работает')
+                                  ],
+                                ),
                               ),
-                            ),
-                            DatePickerButton(
-                              initialDate: dateOfEmployment,
-                              onDateSelected: (day) => dateOfEmployment = day,
-                            ),
-                            const SizedBox(height: 16),
-                          ],
+                              const SizedBox(height: 16),
+                              const HeaderWidget(label: 'Личная информация'),
+                              CustomTextField(
+                                controller: firstNameController,
+                                dense: false,
+                                label: 'Имя',
+                                keyboardType: TextInputType.name,
+                                validator: _emptyValidator,
+                              ),
+                              CustomTextField(
+                                controller: lastNameController,
+                                label: 'Фамилия',
+                                keyboardType: TextInputType.name,
+                                validator: _emptyValidator,
+                              ),
+                              CustomTextField(
+                                controller: phoneController,
+                                label: 'Номер телефона',
+                                focusNode: phoneFocusNode,
+                                onChanged: _checkPhoneNumber,
+                                inputFormatters: [RuPhoneInputFormatter()],
+                                keyboardType: TextInputType.phone,
+                                validator: _emptyValidator,
+                                copyable: true,
+                              ),
+                              CustomTextField(
+                                controller: addressController,
+                                label: 'Домашний адрес',
+                                keyboardType: TextInputType.streetAddress,
+                                validator: _emptyValidator,
+                              ),
+                              CustomTextField(
+                                controller: emailController,
+                                label: 'Электронная почта',
+                                copyable: true,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: _emailValidator,
+                              ),
+                              DatePickerButton(
+                                initialDate: birthDate,
+                                onDateSelected: (day) => birthDate = day,
+                              ),
+                              const SizedBox(height: 32),
+                              const HeaderWidget(label: 'Рабочая информация'),
+                              CustomTextField(
+                                controller: contractNumberController,
+                                label: 'Номер договора',
+                                validator: _emptyValidator,
+                              ),
+                              CustomTextField(
+                                controller: descriptionController,
+                                label: 'Описание сотрудника',
+                                keyboardType: TextInputType.multiline,
+                                validator: _emptyValidator,
+                              ),
+                              CustomTextField(
+                                controller: salesController,
+                                label: 'Процент от продаж',
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                  decimal: true,
+                                ),
+                                validator: _emptyValidator,
+                              ),
+                              DatePickerButton(
+                                initialDate: dateOfEmployment,
+                                onDateSelected: (day) => dateOfEmployment = day,
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -280,14 +320,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         }
       },
     );
-  }
-
-  ///
-  void _checkPhoneNumber(String value) {
-    if ((value.length == 18 && value.startsWith('+')) ||
-        (value.length == 17 && value.startsWith('8'))) {
-      phoneFocusNode.unfocus();
-    }
   }
 
   /// Dismiss employee by [id].
@@ -305,7 +337,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               address: addressController.text,
               jobId: 1,
               salonId: 1,
-              description: descriptonController.text,
+              description: descriptionController.text,
               dateOfEmployment: dateOfEmployment,
               contractNumber: contractNumberController.text,
               percentageOfSales: double.parse(salesController.text),
@@ -321,6 +353,35 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             ),
           ),
         );
+  }
+
+  /// Phone number FocusNode condition.
+  void _checkPhoneNumber(String value) {
+    if ((value.length == 18 && value.startsWith('+')) ||
+        (value.length == 17 && value.startsWith('8'))) {
+      phoneFocusNode.unfocus();
+    }
+  }
+
+  /// Empty value validator.
+  String? _emptyValidator(String? value) {
+    if (value!.isEmpty) {
+      return 'Обязательное поле';
+    } else {
+      return null;
+    }
+  }
+
+  /// Validate email address.
+  String? _emailValidator(String? value) {
+    final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    if (value!.isEmpty) {
+      return 'Обязательное поле';
+    } else if (!emailRegExp.hasMatch(value)) {
+      return 'Введите корректный e-mail';
+    } else {
+      return null;
+    }
   }
 
   /// Dismiss employee by [id].
