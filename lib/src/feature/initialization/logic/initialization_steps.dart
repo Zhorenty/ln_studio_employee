@@ -12,6 +12,8 @@ import '/src/feature/employee_all/data/staff_repository.dart';
 import '/src/feature/initialization/model/initialization_progress.dart';
 import '/src/feature/timetable/data/timetable_datasource.dart';
 import '/src/feature/timetable/data/timetable_repository.dart';
+import '/src/feature/salon/data/salon_data_provider.dart';
+import '/src/feature/salon/data/salon_repository.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 
@@ -48,6 +50,14 @@ mixin InitializationSteps {
       );
       final employeeRepository = EmployeeRepositoryImpl(employeeDatasource);
       progress.dependencies.employeeRepository = employeeRepository;
-    }
+    },
+    'Salon repository': (progress) async {
+      final SalonDataProvider salonDataProvider = SalonDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+        prefs: progress.dependencies.sharedPreferences,
+      );
+      final salonRepository = SalonRepositoryImpl(salonDataProvider);
+      progress.dependencies.salonRepository = salonRepository;
+    },
   };
 }

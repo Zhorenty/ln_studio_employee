@@ -84,11 +84,14 @@ class SkeletonEmployeeScreen extends StatelessWidget {
   }
 }
 
+/// Custom [Shimmer] for this skeleton.
 class _CustomShimmer extends StatelessWidget {
   const _CustomShimmer({required this.label, this.dense = false});
 
+  /// Indicator whether this [_CustomShimmer] should be densed.
   final bool dense;
 
+  /// Label of this [_CustomShimmer].
   final String label;
 
   @override

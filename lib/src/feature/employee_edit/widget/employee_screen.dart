@@ -18,6 +18,7 @@ import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 import '/src/feature/employee/model/employee_edit/user_edit.dart';
 import '/src/feature/employee_all/bloc/staff_bloc.dart';
 import '/src/feature/employee_all/bloc/staff_event.dart';
+import '/src/feature/salon/bloc/salon_bloc.dart';
 
 import 'components/expanded_app_bar.dart';
 import 'skeleton_employee_screen.dart';
@@ -402,7 +403,13 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   /// Refresh all employee's.
   Future<void> _refreshStaff() async {
     final block = context.read<StaffBloc>().stream.first;
-    context.read<StaffBloc>().add(const StaffEvent.fetch());
+    final salonBloc = context.read<SalonBLoC>();
+    final staffBloc = context.read<StaffBloc>();
+    if (salonBloc.state.currentSalon != null) {
+      staffBloc.add(
+        StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
+      );
+    }
     await block;
   }
 }

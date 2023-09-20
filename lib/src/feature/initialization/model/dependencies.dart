@@ -1,3 +1,4 @@
+import '/src/feature/salon/data/salon_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,6 +22,9 @@ abstract interface class Dependencies {
 
   /// Employee  repository.
   abstract final EmployeeRepository employeeRepository;
+
+  /// Salon  repository.
+  abstract final SalonRepository salonRepository;
 
   /// Freeze dependencies, so they cannot be modified.
   Dependencies freeze();
@@ -48,12 +52,16 @@ final class Dependencies$Mutable implements Dependencies {
   late EmployeeRepository employeeRepository;
 
   @override
+  late SalonRepository salonRepository;
+
+  @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
         timetableRepository: timetableRepository,
         staffRepository: staffRepository,
         employeeRepository: employeeRepository,
+        salonRepository: salonRepository,
       );
 }
 
@@ -67,6 +75,7 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.timetableRepository,
     required this.staffRepository,
     required this.employeeRepository,
+    required this.salonRepository,
   });
 
   @override
@@ -83,6 +92,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final EmployeeRepository employeeRepository;
+
+  @override
+  final SalonRepository salonRepository;
 
   @override
   Dependencies freeze() => this;
