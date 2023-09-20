@@ -51,7 +51,19 @@ class _TimetableScreenState extends State<TimetableScreen> {
       child: BlocBuilder<TimetableBloc, TimetableState>(
         builder: (context, state) => CustomScrollView(
           slivers: [
-            CustomSliverAppBar(title: context.stringOf().workShedule),
+            CustomSliverAppBar(
+              title: context.stringOf().workShedule,
+              actions: [
+                IconButton(
+                  // TODO: Implement notifications screen.
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.notifications,
+                    color: context.colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
             CupertinoSliverRefreshControl(onRefresh: _refresh),
             if (state.hasTimetables)
               SliverPadding(
