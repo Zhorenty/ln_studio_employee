@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/shimmer.dart';
 import '/src/common/widget/overlay/modal_popup.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
@@ -12,33 +11,32 @@ import '/src/feature/salon/widget/salon_choice_screen.dart';
 
 /// Custom-styled [SliverAppBar].
 class CustomSliverAppBar extends StatelessWidget {
-  const CustomSliverAppBar({super.key, required this.title});
+  const CustomSliverAppBar({
+    super.key,
+    this.title,
+    this.actions = const <Widget>[],
+  });
 
-  /// Primary widget displayed in the app bar.
-  final String title;
+  /// Primary widget displayed in the [CustomSliverAppBar].
+  final String? title;
+
+  /// List of Widgets to display in a row after the [title] widget.
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       centerTitle: false,
-      title: Text(
-        title,
-        style: context.textTheme.titleLarge!.copyWith(
-          color: context.colorScheme.primary,
-          fontFamily: FontFamily.geologica,
-        ),
-      ),
-      actions: [
-        AnimatedButton(
-          padding: const EdgeInsets.only(right: 8),
-          child: Icon(
-            Icons.notifications_rounded,
-            color: context.colorScheme.primary,
-          ),
-          // TODO(zhorenty): Implement NotificationsScreen.
-          onPressed: () {},
-        ),
-      ],
+      title: title != null
+          ? Text(
+              title!,
+              style: context.textTheme.titleLarge!.copyWith(
+                color: context.colorScheme.primary,
+                fontFamily: FontFamily.geologica,
+              ),
+            )
+          : null,
+      actions: actions,
       floating: true,
       pinned: true,
       bottom: PreferredSize(

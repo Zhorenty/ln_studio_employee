@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '/src/common/utils/error_util.dart';
 import '/src/feature/timetable/data/timetable_repository.dart';
 import 'timetable_event.dart';
 import 'timetable_state.dart';
@@ -44,7 +45,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
           await repository.getTimetablesBySalonId(event.salonId);
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
-      emit(TimetableState.idle(error: e.toString()));
+      emit(TimetableState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }
@@ -64,7 +65,7 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
           await repository.getTimetablesBySalonId(event.salonId);
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
-      emit(TimetableState.idle(error: e.toString()));
+      emit(TimetableState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }

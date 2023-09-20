@@ -21,8 +21,8 @@ class _AppContextState extends State<AppContext> {
     final router = AppRouterScope.of(context);
     return MaterialApp.router(
       routerConfig: router,
-      supportedLocales: AppLocalization.supportedLocales,
-      localizationsDelegates: AppLocalization.localizationsDelegates,
+      localizationsDelegates: Localization.localizationDelegates,
+      supportedLocales: Localization.supportedLocales,
       themeMode: ThemeMode.dark,
       theme: $lightThemeData,
       darkTheme: $darkThemeData,

@@ -8,19 +8,19 @@ import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 /// Datasource for employee data.
 abstract interface class EmployeeDataProvider {
   /// Fetch employee by id.
-  Future<Employee> fetch({required int id});
+  Future<Employee> fetchEmployee(int id);
 
   /// Create new employee.
-  Future<void> createEmployee({required Employee$Create employee});
+  Future<void> createEmployee(Employee$Create employee);
 
   /// Edit employee.
-  Future<Employee> editEmployee({required Employee$Edit employee});
+  Future<Employee> editEmployee(Employee$Edit employee);
 
   /// Dismiss employee by id.
-  Future<void> dismissEmployee({required int id});
+  Future<void> dismissEmployee(int id);
 
   /// Reinstatement employee by id.
-  Future<void> reinstatementEmployee({required int id});
+  Future<void> reinstatementEmployee(int id);
 }
 
 /// Implementation of employee datasource.
@@ -31,13 +31,13 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   final RestClient restClient;
 
   @override
-  Future<Employee> fetch({required int id}) async {
+  Future<Employee> fetchEmployee(int id) async {
     final response = await restClient.get('/api/employee/$id');
     return Employee.fromJson(response);
   }
 
   @override
-  Future<void> createEmployee({required Employee$Create employee}) async =>
+  Future<void> createEmployee(Employee$Create employee) async =>
       await restClient.post(
         '/api/employee/create',
         body: {
@@ -60,7 +60,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
       );
 
   @override
-  Future<Employee> editEmployee({required Employee$Edit employee}) async {
+  Future<Employee> editEmployee(Employee$Edit employee) async {
     final result = await restClient.put(
       '/api/employee/edit/${employee.id}',
       body: {
@@ -85,10 +85,10 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   }
 
   @override
-  Future<void> dismissEmployee({required int id}) async =>
+  Future<void> dismissEmployee(int id) async =>
       await restClient.patch('/api/employee/dismiss/$id');
 
   @override
-  Future<void> reinstatementEmployee({required int id}) async =>
+  Future<void> reinstatementEmployee(int id) async =>
       await restClient.patch('/api/employee/reinstatement/$id');
 }

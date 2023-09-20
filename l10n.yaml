@@ -1,3 +1,4 @@
+# Deprecated, must be deleted.
 arb-dir: lib/src/common/localization/translations
 template-arb-file: intl_ru.arb
 output-localization-file: generated_localizations.dart
