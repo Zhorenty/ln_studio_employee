@@ -84,6 +84,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     contractNumberController.dispose();
     descriptionController.dispose();
     salesController.dispose();
+    phoneFocusNode.dispose();
     super.dispose();
   }
 

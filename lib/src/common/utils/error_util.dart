@@ -2,7 +2,9 @@ import '/src/common/exception/employee_exception.dart';
 import '/src/common/exception/error_code.dart';
 import '/src/common/localization/app_localization.dart';
 
+/// Utility class for handling and formatting errors.
 sealed class ErrorUtil {
+  /// Formats an `EmployeeException` error message based on its type.
   static String formatError(Object error) => switch (error) {
         final EmployeeException e => _localizeEmployeeException(e),
         final Exception e => _localizeError(
@@ -15,9 +17,8 @@ sealed class ErrorUtil {
           ),
       };
 
-  static String _localizeEmployeeException(
-    EmployeeException exception,
-  ) =>
+  /// Formats an `EmployeeException` error message based on its type.
+  static String _localizeEmployeeException(EmployeeException exception) =>
       switch (exception) {
         final EmployeeException$PhoneExists _ => _localizeError(
             'Phone exists',
@@ -29,6 +30,7 @@ sealed class ErrorUtil {
           ),
       };
 
+  /// Localizes an error message using the provided `localize` function.
   static String _localizeError(
     String fallback,
     String Function(Localization l) localize,
@@ -40,6 +42,7 @@ sealed class ErrorUtil {
     }
   }
 
+  /// `Never` returns as it always throws an exception.
   static Never throwEmployeeException(ErrorCode code, String message) =>
       throw switch (code) {
         ErrorCode.phoneExists => const EmployeeException$PhoneExists(),

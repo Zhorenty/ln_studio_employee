@@ -26,7 +26,7 @@ class _AppContextState extends State<AppContext> {
       themeMode: ThemeMode.dark,
       theme: $lightThemeData,
       darkTheme: $darkThemeData,
-      locale: const Locale('ru'),
+      locale: const Locale('ru', 'RU'),
     );
   }
 }

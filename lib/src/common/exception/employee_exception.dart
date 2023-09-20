@@ -7,10 +7,7 @@ import 'error_code.dart';
 @immutable
 @exception
 sealed class EmployeeException implements Exception {
-  const EmployeeException({
-    required this.message,
-    required this.code,
-  });
+  const EmployeeException({required this.message, required this.code});
 
   /// Error message.
   final String message;

@@ -17,9 +17,10 @@ class CustomSliverAppBar extends StatelessWidget {
     this.actions = const <Widget>[],
   });
 
-  /// Primary widget displayed in the app bar.
+  /// Primary widget displayed in the [CustomSliverAppBar].
   final String? title;
 
+  /// List of Widgets to display in a row after the [title] widget.
   final List<Widget>? actions;
 
   @override
