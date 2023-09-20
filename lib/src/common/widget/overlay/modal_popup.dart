@@ -70,11 +70,13 @@ abstract class ModalPopup {
                   ),
                   const SizedBox(height: 12),
                 ],
-                Padding(
-                  padding: mobilePadding,
-                  child: ConstrainedBox(
-                    constraints: mobileConstraints,
-                    child: child,
+                Flexible(
+                  child: Padding(
+                    padding: mobilePadding,
+                    child: ConstrainedBox(
+                      constraints: mobileConstraints,
+                      child: child,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),

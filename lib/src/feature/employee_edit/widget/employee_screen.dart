@@ -337,7 +337,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               id: id,
               address: addressController.text,
               jobId: 1,
-              salonId: 1,
+              salonId: 2,
               description: descriptionController.text,
               dateOfEmployment: dateOfEmployment,
               contractNumber: contractNumberController.text,

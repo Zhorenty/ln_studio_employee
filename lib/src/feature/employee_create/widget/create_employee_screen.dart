@@ -89,6 +89,7 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
