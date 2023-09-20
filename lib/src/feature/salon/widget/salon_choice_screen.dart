@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/shimmer.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_event.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
+import '/src/feature/salon/models/salon.dart';
 
 import 'salon_choice_row.dart';
 
@@ -15,7 +15,9 @@ import 'salon_choice_row.dart';
 /// {@endtemplate}
 class SalonChoiceScreen extends StatefulWidget {
   /// {@macro salon_choice_screen}
-  const SalonChoiceScreen({super.key});
+  const SalonChoiceScreen({super.key, this.onChanged});
+
+  final void Function(Salon?)? onChanged;
 
   @override
   State<SalonChoiceScreen> createState() => _SalonChoiceScreenState();
@@ -55,10 +57,7 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                         (salon) => SalonChoiceRow(
                           salon: salon,
                           currentSalon: state.currentSalon,
-                          onChanged: (salon) {
-                            salonBloc.add(SalonEvent.saveCurrent(salon!));
-                            context.pop();
-                          },
+                          onChanged: widget.onChanged,
                         ),
                       ),
                     ],
