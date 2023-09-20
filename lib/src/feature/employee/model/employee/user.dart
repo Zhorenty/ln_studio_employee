@@ -73,7 +73,7 @@ final class UserModel {
         'first_name': firstName,
         'last_name': lastName,
         'phone': phone,
-        'birth_date': birthDate.format(),
+        'birth_date': birthDate.jsonFormat(),
         'is_superuser': isSuperuser,
         'is_active': isActive,
       };

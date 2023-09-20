@@ -45,7 +45,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
           "job_id": employee.jobId,
           "salon_id": employee.salonId,
           "description": employee.description,
-          "date_of_employment": employee.dateOfEmployment.format(),
+          "date_of_employment": employee.dateOfEmployment.jsonFormat(),
           "contract_number": employee.contractNumber,
           "percentage_of_sales": employee.percentageOfSales,
           "stars": employee.stars,
@@ -54,7 +54,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
             "first_name": employee.userModel.firstName,
             "last_name": employee.userModel.lastName,
             "email": employee.userModel.email,
-            "birth_date": employee.userModel.birthDate.format(),
+            "birth_date": employee.userModel.birthDate.jsonFormat(),
           }
         },
       );
@@ -68,7 +68,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
         'job_id': employee.jobId,
         'salon_id': employee.salonId,
         'description': employee.description,
-        'date_of_employment': employee.dateOfEmployment.format(),
+        'date_of_employment': employee.dateOfEmployment.jsonFormat(),
         'contract_number': employee.contractNumber,
         'percentage_of_sales': employee.percentageOfSales,
         'stars': employee.stars,
@@ -77,7 +77,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
           'first_name': employee.userModel.firstName,
           'last_name': employee.userModel.lastName,
           'phone': employee.userModel.phone,
-          'birth_date': employee.userModel.birthDate.format(),
+          'birth_date': employee.userModel.birthDate.jsonFormat(),
         },
       },
     );

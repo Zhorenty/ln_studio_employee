@@ -7,7 +7,6 @@ import 'user_create.dart';
 @immutable
 final class Employee$Create {
   const Employee$Create({
-    required this.isDismiss,
     required this.address,
     required this.jobId,
     required this.salonId,
@@ -43,9 +42,6 @@ final class Employee$Create {
   /// Number of stars received by the employee.
   final int stars;
 
-  /// Indicator whether employee is dismissed.
-  final bool isDismiss;
-
   /// User associated with the employee.
   final UserModel$Create userModel;
 
@@ -60,7 +56,6 @@ final class Employee$Create {
       contractNumber: json['contract_number'] as String,
       percentageOfSales: json['percentage_of_sales'] as double,
       stars: json['stars'] as int,
-      isDismiss: json['is_dismiss'] as bool,
       userModel: UserModel$Create.fromJson(
         json['user'] as Map<String, dynamic>,
       ),
@@ -73,11 +68,10 @@ final class Employee$Create {
         'job_place_id': jobId,
         'salon_id': salonId,
         'description': description,
-        'date_of_employment': dateOfEmployment.format(),
+        'date_of_employment': dateOfEmployment.jsonFormat(),
         'contract_number': contractNumber,
         'percentage_of_sales': percentageOfSales,
         'stars': stars,
-        'is_dismiss': isDismiss,
         'user': userModel.toJson(),
       };
 }

@@ -45,6 +45,6 @@ final class UserModel$Edit {
         'email': email,
         'first_name': firstName,
         'last_name': lastName,
-        'birth_date': birthDate.format(),
+        'birth_date': birthDate.jsonFormat(),
       };
 }

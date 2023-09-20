@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_event.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -25,6 +27,8 @@ class CustomSliverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final salonBloc = context.read<SalonBLoC>();
+
     return SliverAppBar(
       centerTitle: false,
       title: title != null
@@ -48,7 +52,13 @@ class CustomSliverAppBar extends StatelessWidget {
               label: state.currentSalon != null
                   ? Text(state.currentSalon!.name)
                   : Shimmer(backgroundColor: context.colorScheme.onBackground),
-              child: const SalonChoiceScreen(),
+              // TODO(zhorenty): Move widget deeper.
+              child: SalonChoiceScreen(
+                onChanged: (salon) {
+                  salonBloc.add(SalonEvent.saveCurrent(salon!));
+                  context.pop();
+                },
+              ),
             ),
           ),
         ),

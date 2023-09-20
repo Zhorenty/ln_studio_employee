@@ -214,12 +214,14 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   validator: _emailValidator,
                                 ),
                                 DatePickerButton(
+                                  label: 'День рождения',
                                   initialDate: birthDate,
                                   onDateSelected: (day) => birthDate = day,
                                 ),
                                 const SizedBox(height: 32),
                                 const HeaderWidget(label: 'Рабочая информация'),
                                 DatePickerButton(
+                                  label: 'Дата принятия на работу',
                                   initialDate: dateOfEmployment,
                                   onDateSelected: (day) =>
                                       dateOfEmployment = day,
@@ -280,11 +282,8 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
               description: descriptionController.text,
               dateOfEmployment: dateOfEmployment,
               contractNumber: contractNumberController.text,
-              percentageOfSales: double.parse(
-                salesController.text,
-              ),
+              percentageOfSales: double.parse(salesController.text),
               stars: stars,
-              isDismiss: false,
               userModel: UserModel$Create(
                 phone: phoneController.text,
                 firstName: firstNameController.text,

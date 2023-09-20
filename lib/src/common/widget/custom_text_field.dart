@@ -60,7 +60,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: dense ? 10 : 4),
+      padding: EdgeInsets.only(top: dense ? 4 + 2 : 2),
       child: TextFormField(
         focusNode: focusNode,
         validator: validator,
@@ -90,7 +90,7 @@ class CustomTextField extends StatelessWidget {
           isDense: true,
           suffixIcon: copyable && controller?.text != null
               ? AnimatedButton(
-                  padding: const EdgeInsets.only(top: 8 + 2, left: 8),
+                  padding: const EdgeInsets.only(top: 8 + 2, left: 8 + 4),
                   child: Icon(
                     Icons.copy,
                     color: context.colorScheme.primary,

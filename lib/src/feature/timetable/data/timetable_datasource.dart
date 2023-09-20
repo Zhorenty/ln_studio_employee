@@ -64,7 +64,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
         body: {
           'employee_id': employeeId,
           'salon_id': salonId,
-          'date_at': dateAt.format(),
+          'date_at': dateAt.jsonFormat(),
         },
       );
 }
