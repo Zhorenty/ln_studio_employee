@@ -46,6 +46,7 @@ class _FieldButtonState extends State<FieldButton> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
                   widget.title,

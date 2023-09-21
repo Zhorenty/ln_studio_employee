@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:ln_employee/src/feature/salon/models/salon.dart';
+import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
-import 'job.dart';
 import 'user.dart';
 
 /// Represents an employee in a salon with its properties.
@@ -62,7 +62,7 @@ final class Employee {
   final UserModel userModel;
 
   /// Job place associated with the employee's special skill.
-  final JobModel jobModel;
+  final Specialization jobModel;
 
   /// Salon associated with the employee.
   final Salon salon;
@@ -84,7 +84,7 @@ final class Employee {
           ? DateTime.parse(json['dismiss_date'] as String)
           : null,
       userModel: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      jobModel: JobModel.fromJson(
+      jobModel: Specialization.fromJson(
         json['job'] as Map<String, dynamic>,
       ),
       salon: Salon.fromJson(json['salon'] as Map<String, dynamic>),

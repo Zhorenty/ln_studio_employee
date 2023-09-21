@@ -9,8 +9,6 @@ import '/src/feature/salon/bloc/salon_event.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
 import '/src/feature/salon/models/salon.dart';
 
-import 'salon_choice_row.dart';
-
 /// {@template salon_choice_screen}
 /// SalonChoiceScreen widget.
 /// {@endtemplate}
@@ -58,7 +56,7 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                         style: context.textTheme.bodyLarge,
                       ),
                       ...salonBloc.state.data!.map(
-                        (salon) => SalonChoiceRow(
+                        (salon) => _SalonChoiceRow(
                           salon: salon,
                           currentSalon: widget.currentSalon,
                           onChanged: (salon) {
@@ -76,5 +74,38 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                 )
               : const Shimmer();
         },
+      );
+}
+
+/// {@template salon_choice_row}
+/// _SalonChoiceRow widget.
+/// {@endtemplate}
+class _SalonChoiceRow extends StatelessWidget {
+  /// {@macro salon_choice_row}
+  const _SalonChoiceRow({
+    required this.salon,
+    this.currentSalon,
+    this.onChanged,
+  });
+
+  /// Salon with the provided attributes.
+  final Salon salon;
+
+  /// Salon that represents the currently selected salon.
+  final Salon? currentSalon;
+
+  /// Callback, called when the [Salon] selection changes.
+  final void Function(Salon?)? onChanged;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: Radio<Salon>(
+          value: salon,
+          groupValue: currentSalon,
+          onChanged: onChanged,
+        ),
+        title: Text(salon.name),
+        onTap: () => onChanged?.call(salon),
       );
 }

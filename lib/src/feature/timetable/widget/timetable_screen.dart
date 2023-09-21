@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/avatar_widget.dart';
+import 'package:ln_employee/src/common/widget/pop_up_button.dart';
+import 'package:ln_employee/src/common/widget/shimmer.dart';
+import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -64,6 +67,16 @@ class _TimetableScreenState extends State<TimetableScreen> {
                   ),
                 ),
               ],
+              bottomChild: BlocBuilder<SalonBLoC, SalonState>(
+                builder: (context, state) => PopupButton(
+                  label: state.currentSalon != null
+                      ? Text(state.currentSalon!.name)
+                      : Shimmer(
+                          backgroundColor: context.colorScheme.onBackground,
+                        ),
+                  child: SalonChoiceScreen(currentSalon: state.currentSalon),
+                ),
+              ),
             ),
             CupertinoSliverRefreshControl(onRefresh: _refresh),
             if (state.hasTimetables)

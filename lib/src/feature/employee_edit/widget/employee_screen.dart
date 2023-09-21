@@ -6,6 +6,7 @@ import 'package:ln_employee/src/common/widget/field_button.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/salon/models/salon.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
+import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 import 'package:ln_employee/src/feature/specialization/widget/specialization_list.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -108,6 +109,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           DateTime birthDate = user.birthDate;
           DateTime dateOfEmployment = employee.dateOfEmployment;
           Salon employeeSalon = employee.salon;
+          Specialization employeeSpecialization = employee.jobModel;
 
           /// User information
           firstNameController.text = user.firstName;
@@ -275,7 +277,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 builder: (context, setState) {
                                   return FieldButton(
                                     dense: false,
-                                    label: 'Выбор салона',
+                                    label: 'Салон',
                                     title: employeeSalon.name,
                                     onTap: () => ModalPopup.show(
                                       context: context,
@@ -293,7 +295,30 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                   );
                                 },
                               ),
-                              const SpecializationWrap(),
+                              StatefulBuilder(
+                                builder: (context, setState) {
+                                  return FieldButton(
+                                    dense: false,
+                                    label: 'Специализация',
+                                    title: employeeSpecialization.name,
+                                    onTap: () => ModalPopup.show(
+                                      context: context,
+                                      child: SpecializationChoiceScreen(
+                                        currentSpecialization:
+                                            employeeSpecialization,
+                                        onChanged: (specialization) {
+                                          setState(() {
+                                            if (specialization != null) {
+                                              employeeSpecialization =
+                                                  specialization;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                               CustomTextField(
                                 controller: contractNumberController,
                                 label: 'Номер договора',
@@ -327,18 +352,21 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                     if (_formKey.currentState!.validate()) {
                                       _edit(
                                         id: employee.id,
+                                        employeeSalonId: employeeSalon.id,
+                                        specializationId:
+                                            employeeSpecialization.id,
                                         stars: stars,
                                         isDismiss: employee.isDismiss,
                                         dateOfEmployment: dateOfEmployment,
                                         birthDate: birthDate,
-                                        employeeSalonId: employeeSalon.id,
                                       );
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
+                                    padding: EdgeInsets.symmetric(
                                       vertical: 12,
-                                      horizontal: 12,
+                                      horizontal:
+                                          MediaQuery.sizeOf(context).width / 8,
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -380,13 +408,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     required bool isDismiss,
     required DateTime birthDate,
     required int employeeSalonId,
+    required int specializationId,
   }) async {
     context.read<EmployeeBloc>().add(
           EmployeeEvent.edit(
             employee: Employee$Edit(
               id: id,
               address: addressController.text,
-              jobId: 1,
+              jobId: specializationId,
               salonId: employeeSalonId,
               description: descriptionController.text,
               dateOfEmployment: dateOfEmployment,
