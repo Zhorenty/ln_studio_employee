@@ -136,15 +136,13 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     ),
                   ),
                   leading: Text(
-                    // TODO(zhorenty): Fetch from repository.
-                    '24',
+                    employee.clients.toString(),
                     style: context.textTheme.titleLarge!.copyWith(
                       fontFamily: FontFamily.geologica,
                     ),
                   ),
                   trailing: Text(
-                    // TODO(zhorenty): Fetch from repository.
-                    '126',
+                    employee.workedDays.toString(),
                     style: context.textTheme.titleLarge!.copyWith(
                       fontFamily: FontFamily.geologica,
                     ),

@@ -10,6 +10,8 @@ import 'user.dart';
 final class Employee {
   const Employee({
     required this.id,
+    this.workedDays,
+    this.clients,
     required this.address,
     required this.jobId,
     required this.salonId,
@@ -27,6 +29,10 @@ final class Employee {
 
   /// UUID of employee.
   final int id;
+
+  final int? workedDays;
+
+  final int? clients;
 
   /// Residential address of employee.
   final String address;
@@ -71,6 +77,8 @@ final class Employee {
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
       id: json['id'] as int,
+      workedDays: json['worked_days'] as int?,
+      clients: json['clients'] as int?,
       address: json['address'] as String,
       jobId: json['job_id'] as int,
       salonId: json['salon_id'] as int,
@@ -91,7 +99,7 @@ final class Employee {
     );
   }
 
-  /// Converts [EmployeeModel] into json.
+  /// Converts [Employee] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'address': address,
