@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/specialization/data/specialization_data_provider.dart';
+import 'package:ln_employee/src/feature/specialization/data/specialization_repository.dart';
 
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,33 +33,42 @@ mixin InitializationSteps {
       progress.dependencies.restClient = restClient;
     },
     'Timetable repository': (progress) async {
-      final TimetableDatasource timetableDatasource = TimetableDatasourceImpl(
+      final timetableDatasource = TimetableDatasourceImpl(
         restClient: progress.dependencies.restClient,
       );
       final timetableRepository = TimetableRepositoryImpl(timetableDatasource);
       progress.dependencies.timetableRepository = timetableRepository;
     },
     'Staff repository': (progress) async {
-      final StaffDatasource staffDatasource = StaffDatasourceImpl(
+      final staffDatasource = StaffDatasourceImpl(
         restClient: progress.dependencies.restClient,
       );
       final staffRepository = StaffRepositoryImpl(staffDatasource);
       progress.dependencies.staffRepository = staffRepository;
     },
     'Employee repository': (progress) async {
-      final EmployeeDataProvider employeeDatasource = EmployeeDataProviderImpl(
+      final employeeDatasource = EmployeeDataProviderImpl(
         restClient: progress.dependencies.restClient,
       );
       final employeeRepository = EmployeeRepositoryImpl(employeeDatasource);
       progress.dependencies.employeeRepository = employeeRepository;
     },
     'Salon repository': (progress) async {
-      final SalonDataProvider salonDataProvider = SalonDataProviderImpl(
+      final salonDataProvider = SalonDataProviderImpl(
         restClient: progress.dependencies.restClient,
         prefs: progress.dependencies.sharedPreferences,
       );
       final salonRepository = SalonRepositoryImpl(salonDataProvider);
       progress.dependencies.salonRepository = salonRepository;
+    },
+    'Specialization repository': (progress) async {
+      final specializationDataProvider = SpecializationDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final specializationRepository = SpecializationRepositoryImpl(
+        specializationDataProvider,
+      );
+      progress.dependencies.specializationRepository = specializationRepository;
     },
   };
 }

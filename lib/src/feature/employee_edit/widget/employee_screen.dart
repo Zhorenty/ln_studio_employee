@@ -6,6 +6,7 @@ import 'package:ln_employee/src/common/widget/field_button.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/salon/models/salon.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
+import 'package:ln_employee/src/feature/specialization/widget/specialization_list.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -292,6 +293,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                   );
                                 },
                               ),
+                              const SpecializationWrap(),
                               CustomTextField(
                                 controller: contractNumberController,
                                 label: 'Номер договора',
