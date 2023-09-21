@@ -22,7 +22,10 @@ class SalonChoiceScreen extends StatefulWidget {
     this.onChanged,
   });
 
+  ///
   final Salon? currentSalon;
+
+  ///
   final void Function(Salon?)? onChanged;
 
   @override
@@ -62,9 +65,7 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
                             if (widget.onChanged == null) {
                               salonBloc.add(SalonEvent.saveCurrent(salon!));
                             } else {
-                              setState(() {
-                                widget.onChanged!(salon);
-                              });
+                              setState(() => widget.onChanged!(salon));
                             }
                             context.pop();
                           },

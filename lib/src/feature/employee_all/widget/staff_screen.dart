@@ -221,11 +221,17 @@ class EmployeeCard extends StatelessWidget {
           const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                '${user.firstName} ${user.lastName}',
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontFamily: FontFamily.geologica,
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width / 1.9,
+                child: Text(
+                  '${user.firstName} ${user.lastName}',
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Text(
@@ -239,7 +245,6 @@ class EmployeeCard extends StatelessWidget {
               StarRating(initialRating: employee.stars)
             ],
           ),
-          const Spacer(),
           AnimatedButton(
             onPressed: () => context.go('/staff/employee', extra: employee.id),
             child: Container(

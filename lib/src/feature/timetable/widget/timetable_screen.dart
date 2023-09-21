@@ -68,7 +68,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
             CupertinoSliverRefreshControl(onRefresh: _refresh),
             if (state.hasTimetables)
               SliverPadding(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.only(
+                  left: 8,
+                  right: 8,
+                  top: 8,
+                  bottom: MediaQuery.sizeOf(context).height / 8,
+                ),
                 sliver: SliverList.separated(
                   itemCount: state.employeeTimetable.length,
                   itemBuilder: (context, index) {
@@ -84,7 +89,11 @@ class _TimetableScreenState extends State<TimetableScreen> {
                       children: [
                         Container(
                           clipBehavior: Clip.hardEdge,
-                          padding: const EdgeInsets.only(left: 12, top: 8),
+                          padding: const EdgeInsets.only(
+                            left: 12,
+                            top: 8,
+                            right: 12,
+                          ),
                           decoration: ShapeDecoration(
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
@@ -101,11 +110,15 @@ class _TimetableScreenState extends State<TimetableScreen> {
                                     '${employee.firstName} ${employee.lastName}',
                               ),
                               const SizedBox(width: 10),
-                              Text(
-                                '${employee.firstName} ${employee.lastName}',
-                                style:
-                                    context.textTheme.headlineSmall!.copyWith(
-                                  fontFamily: FontFamily.geologica,
+                              Flexible(
+                                child: Text(
+                                  '${employee.firstName} ${employee.lastName}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style:
+                                      context.textTheme.headlineSmall!.copyWith(
+                                    fontFamily: FontFamily.geologica,
+                                  ),
                                 ),
                               ),
                             ],
@@ -150,8 +163,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                       ],
                     );
                   },
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 20),
+                  separatorBuilder: (context, index) => const Divider(),
                 ),
               )
             else

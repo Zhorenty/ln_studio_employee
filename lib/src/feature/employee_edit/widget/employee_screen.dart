@@ -274,7 +274,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 builder: (context, setState) {
                                   return FieldButton(
                                     dense: false,
-                                    label: 'Выбора салона',
+                                    label: 'Выбор салона',
                                     title: employeeSalon.name,
                                     onTap: () => ModalPopup.show(
                                       context: context,
