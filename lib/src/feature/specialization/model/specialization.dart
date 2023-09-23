@@ -33,4 +33,14 @@ final class Specialization {
         'name': name,
         'oklad': oklad,
       };
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Specialization &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
 }

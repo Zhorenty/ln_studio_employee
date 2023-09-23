@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/common/widget/overlay/modal_popup.dart';
-import '/src/feature/salon/widget/salon_choice_screen.dart';
 
 class FieldButton extends StatefulWidget {
   const FieldButton({
@@ -11,6 +9,7 @@ class FieldButton extends StatefulWidget {
     required this.dense,
     required this.label,
     required this.title,
+    required this.onTap,
   });
 
   final bool dense;
@@ -21,6 +20,8 @@ class FieldButton extends StatefulWidget {
   /// Label of this [FieldButton].
   final String title;
 
+  final void Function()? onTap;
+
   @override
   State<FieldButton> createState() => _FieldButtonState();
 }
@@ -29,10 +30,7 @@ class _FieldButtonState extends State<FieldButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => ModalPopup.show(
-        context: context,
-        child: const SalonChoiceScreen(),
-      ),
+      onTap: widget.onTap,
       child: Padding(
         padding: EdgeInsets.only(top: widget.dense ? 12 : 4),
         child: Column(
@@ -48,6 +46,7 @@ class _FieldButtonState extends State<FieldButton> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
                   widget.title,

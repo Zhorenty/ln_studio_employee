@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:ln_employee/src/feature/salon/models/salon.dart';
+import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
-import 'job.dart';
 import 'user.dart';
 
 /// Represents an employee in a salon with its properties.
@@ -10,6 +10,8 @@ import 'user.dart';
 final class Employee {
   const Employee({
     required this.id,
+    this.workedDays,
+    this.clients,
     required this.address,
     required this.jobId,
     required this.salonId,
@@ -21,12 +23,16 @@ final class Employee {
     required this.isDismiss,
     required this.userModel,
     required this.jobModel,
-    required this.salonModel,
+    required this.salon,
     this.dismissDate,
   });
 
   /// UUID of employee.
   final int id;
+
+  final int? workedDays;
+
+  final int? clients;
 
   /// Residential address of employee.
   final String address;
@@ -62,15 +68,17 @@ final class Employee {
   final UserModel userModel;
 
   /// Job place associated with the employee's special skill.
-  final JobModel jobModel;
+  final Specialization jobModel;
 
   /// Salon associated with the employee.
-  final Salon salonModel;
+  final Salon salon;
 
   /// Returns [Employee] from [json].
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
       id: json['id'] as int,
+      workedDays: json['worked_days'] as int?,
+      clients: json['clients'] as int?,
       address: json['address'] as String,
       jobId: json['job_id'] as int,
       salonId: json['salon_id'] as int,
@@ -84,14 +92,14 @@ final class Employee {
           ? DateTime.parse(json['dismiss_date'] as String)
           : null,
       userModel: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      jobModel: JobModel.fromJson(
+      jobModel: Specialization.fromJson(
         json['job'] as Map<String, dynamic>,
       ),
-      salonModel: Salon.fromJson(json['salon'] as Map<String, dynamic>),
+      salon: Salon.fromJson(json['salon'] as Map<String, dynamic>),
     );
   }
 
-  /// Converts [EmployeeModel] into json.
+  /// Converts [Employee] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
         'address': address,
@@ -106,6 +114,6 @@ final class Employee {
         'dismiss_date': dismissDate?.millisecondsSinceEpoch,
         'user': userModel.toJson(),
         'job_place': jobModel.toJson(),
-        'salon': salonModel.toJson(),
+        'salon': salon.toJson(),
       };
 }

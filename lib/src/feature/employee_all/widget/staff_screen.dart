@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/pop_up_button.dart';
+import 'package:ln_employee/src/common/widget/shimmer.dart';
+import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -86,6 +89,16 @@ class _StaffScreenState extends State<StaffScreen>
                     },
                   ),
                 ],
+                bottomChild: BlocBuilder<SalonBLoC, SalonState>(
+                  builder: (context, state) => PopupButton(
+                    label: state.currentSalon != null
+                        ? Text(state.currentSalon!.name)
+                        : Shimmer(
+                            backgroundColor: context.colorScheme.onBackground,
+                          ),
+                    child: SalonChoiceScreen(currentSalon: state.currentSalon),
+                  ),
+                ),
               ),
               CupertinoSliverRefreshControl(onRefresh: _refresh),
               if (state.hasStaff) ...[
@@ -206,28 +219,32 @@ class EmployeeCard extends StatelessWidget {
     final user = employee.userModel;
     final jobPlace = employee.jobModel;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4 + 2),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: context.colorScheme.onBackground,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AvatarWidget(
             radius: 40,
             title: '${user.firstName} ${user.lastName}',
           ),
+          const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 8 + 2),
-              Text(
-                '${user.firstName} ${user.lastName}',
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontFamily: FontFamily.geologica,
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width / 1.9,
+                child: Text(
+                  '${user.firstName} ${user.lastName}',
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Text(
@@ -241,13 +258,21 @@ class EmployeeCard extends StatelessWidget {
               StarRating(initialRating: employee.stars)
             ],
           ),
-          const SizedBox.shrink(),
           AnimatedButton(
-            onPressed: () {
-              refresh;
-              context.go('/staff/employee', extra: employee.id);
-            },
-            child: const Icon(Icons.edit, size: 20),
+            onPressed: () => context.go('/staff/employee', extra: employee.id),
+            child: Container(
+              decoration: ShapeDecoration(
+                shape: const CircleBorder(),
+                color: context.colorScheme.primary,
+              ),
+              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
+              child: Icon(
+                Icons.edit,
+                size: 18,
+                color: context.colorScheme.onBackground,
+              ),
+            ),
           ),
         ],
       ),

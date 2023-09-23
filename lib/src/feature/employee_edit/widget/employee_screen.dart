@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/widget/field_button.dart';
+import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
+import 'package:ln_employee/src/feature/salon/models/salon.dart';
+import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
+import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 import 'package:ln_employee/src/feature/specialization/widget/specialization_list.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -104,6 +108,8 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           int stars = employee.stars;
           DateTime birthDate = user.birthDate;
           DateTime dateOfEmployment = employee.dateOfEmployment;
+          Salon employeeSalon = employee.salon;
+          Specialization employeeSpecialization = employee.jobModel;
 
           /// User information
           firstNameController.text = user.firstName;
@@ -130,15 +136,13 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                     ),
                   ),
                   leading: Text(
-                    // TODO(zhorenty): Fetch from repository.
-                    '24',
+                    employee.clients.toString(),
                     style: context.textTheme.titleLarge!.copyWith(
                       fontFamily: FontFamily.geologica,
                     ),
                   ),
                   trailing: Text(
-                    // TODO(zhorenty): Fetch from repository.
-                    '126',
+                    employee.workedDays.toString(),
                     style: context.textTheme.titleLarge!.copyWith(
                       fontFamily: FontFamily.geologica,
                     ),
@@ -267,11 +271,51 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               ),
                               const SizedBox(height: 32),
                               const HeaderWidget(label: 'Рабочая информация'),
-                              const SpecializationWrap(),
-                              const FieldButton(
-                                dense: false,
-                                label: 'Выбора салона',
-                                title: 'asdfsadfs',
+                              StatefulBuilder(
+                                builder: (context, setState) {
+                                  return FieldButton(
+                                    dense: false,
+                                    label: 'Салон',
+                                    title: employeeSalon.name,
+                                    onTap: () => ModalPopup.show(
+                                      context: context,
+                                      child: SalonChoiceScreen(
+                                        currentSalon: employeeSalon,
+                                        onChanged: (salon) {
+                                          setState(() {
+                                            if (salon != null) {
+                                              employeeSalon = salon;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              StatefulBuilder(
+                                builder: (context, setState) {
+                                  return FieldButton(
+                                    dense: false,
+                                    label: 'Специализация',
+                                    title: employeeSpecialization.name,
+                                    onTap: () => ModalPopup.show(
+                                      context: context,
+                                      child: SpecializationChoiceScreen(
+                                        currentSpecialization:
+                                            employeeSpecialization,
+                                        onChanged: (specialization) {
+                                          setState(() {
+                                            if (specialization != null) {
+                                              employeeSpecialization =
+                                                  specialization;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                               CustomTextField(
                                 controller: contractNumberController,
@@ -306,6 +350,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                     if (_formKey.currentState!.validate()) {
                                       _edit(
                                         id: employee.id,
+                                        employeeSalonId: employeeSalon.id,
+                                        specializationId:
+                                            employeeSpecialization.id,
                                         stars: stars,
                                         isDismiss: employee.isDismiss,
                                         dateOfEmployment: dateOfEmployment,
@@ -314,9 +361,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
+                                    padding: EdgeInsets.symmetric(
                                       vertical: 12,
-                                      horizontal: 12,
+                                      horizontal:
+                                          MediaQuery.sizeOf(context).width / 8,
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -357,14 +405,16 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     required int stars,
     required bool isDismiss,
     required DateTime birthDate,
+    required int employeeSalonId,
+    required int specializationId,
   }) async {
     context.read<EmployeeBloc>().add(
           EmployeeEvent.edit(
             employee: Employee$Edit(
               id: id,
               address: addressController.text,
-              jobId: 1,
-              salonId: 2,
+              jobId: specializationId,
+              salonId: employeeSalonId,
               description: descriptionController.text,
               dateOfEmployment: dateOfEmployment,
               contractNumber: contractNumberController.text,

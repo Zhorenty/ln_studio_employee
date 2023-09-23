@@ -68,7 +68,7 @@ class DatePickerButtonState extends State<DatePickerButton> {
                 ),
                 const Padding(
                   padding: EdgeInsets.only(right: 4 + 2, bottom: 8),
-                  child: Icon(Icons.arrow_forward_ios, size: 20),
+                  child: Icon(Icons.calendar_month, size: 20),
                 )
               ],
             ),

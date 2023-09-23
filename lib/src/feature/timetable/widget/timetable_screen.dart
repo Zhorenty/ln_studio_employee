@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/common/widget/avatar_widget.dart';
+import 'package:ln_employee/src/common/widget/pop_up_button.dart';
+import 'package:ln_employee/src/common/widget/shimmer.dart';
+import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -63,12 +67,27 @@ class _TimetableScreenState extends State<TimetableScreen> {
                   ),
                 ),
               ],
+              bottomChild: BlocBuilder<SalonBLoC, SalonState>(
+                builder: (context, state) => PopupButton(
+                  label: state.currentSalon != null
+                      ? Text(state.currentSalon!.name)
+                      : Shimmer(
+                          backgroundColor: context.colorScheme.onBackground,
+                        ),
+                  child: SalonChoiceScreen(currentSalon: state.currentSalon),
+                ),
+              ),
             ),
             CupertinoSliverRefreshControl(onRefresh: _refresh),
             if (state.hasTimetables)
               SliverPadding(
-                padding: const EdgeInsets.all(8),
-                sliver: SliverList.builder(
+                padding: EdgeInsets.only(
+                  left: 8,
+                  right: 8,
+                  top: 8,
+                  bottom: MediaQuery.sizeOf(context).height / 8,
+                ),
+                sliver: SliverList.separated(
                   itemCount: state.employeeTimetable.length,
                   itemBuilder: (context, index) {
                     if (index >= _focusedDays.length) {
@@ -79,19 +98,51 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: Text(
-                            '${employee.firstName} ${employee.lastName}',
-                            style: context.textTheme.headlineSmall!.copyWith(
-                              fontFamily: FontFamily.geologica,
+                        Container(
+                          clipBehavior: Clip.hardEdge,
+                          padding: const EdgeInsets.only(
+                            left: 12,
+                            top: 8,
+                            right: 12,
+                          ),
+                          decoration: ShapeDecoration(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
                             ),
+                            color: context.colorScheme.onBackground,
+                          ),
+                          child: Row(
+                            children: [
+                              AvatarWidget(
+                                title:
+                                    '${employee.firstName} ${employee.lastName}',
+                              ),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: Text(
+                                  '${employee.firstName} ${employee.lastName}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style:
+                                      context.textTheme.headlineSmall!.copyWith(
+                                    fontFamily: FontFamily.geologica,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            ),
                             color: context.colorScheme.onBackground,
                           ),
                           child: _CustomTableCalendar(
@@ -122,10 +173,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
                             },
                           ),
                         ),
-                        const Divider(),
                       ],
                     );
                   },
+                  separatorBuilder: (context, index) => const Divider(),
                 ),
               )
             else
