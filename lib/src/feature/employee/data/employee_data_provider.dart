@@ -10,6 +10,12 @@ abstract interface class EmployeeDataProvider {
   /// Fetch employee by id.
   Future<Employee> fetchEmployee(int id);
 
+  /// Fetch staff by salon id
+  Future<List<Employee>> fetchSalonEmployees(int salonId);
+
+  /// Fetch all employees.
+  Future<List<Employee>> fetchAllEmployee();
+
   /// Create new employee.
   Future<void> createEmployee(Employee$Create employee);
 
@@ -34,6 +40,27 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   Future<Employee> fetchEmployee(int id) async {
     final response = await restClient.get('/api/employee/$id');
     return Employee.fromJson(response);
+  }
+
+  @override
+  Future<List<Employee>> fetchAllEmployee() async {
+    final response = await restClient.get('/api/employee/all');
+
+    final staff = List.from((response['data'] as List))
+        .map((e) => Employee.fromJson(e))
+        .toList();
+    return staff;
+  }
+
+  @override
+  Future<List<Employee>> fetchSalonEmployees(int salonId) async {
+    final response = await restClient.get('/api/employee/by_salon_id/$salonId');
+
+    final staff = List.from((response['data'] as List))
+        .map((e) => Employee.fromJson(e))
+        .toList();
+
+    return staff;
   }
 
   @override

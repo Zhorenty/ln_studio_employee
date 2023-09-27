@@ -48,6 +48,9 @@ final class UserModel {
   /// Indicator whether user is active.
   final bool isActive;
 
+  ///
+  String get fullName => '$firstName $lastName';
+
   /// Returns [UserModel] from [json].
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(

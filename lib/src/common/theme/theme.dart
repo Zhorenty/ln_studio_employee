@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
 /// Light theme of this application.
 final $lightThemeData = ThemeData(
@@ -17,6 +18,7 @@ const lightColorScheme = ColorScheme.light(
 final $darkThemeData = ThemeData(
   useMaterial3: true,
   colorScheme: darkColorScheme,
+  fontFamily: FontFamily.geologica,
   bottomNavigationBarTheme: bottomNavigationBarThemeDataDark,
   splashColor: darkColorScheme.scrim,
   highlightColor: darkColorScheme.scrim,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 
@@ -22,8 +23,13 @@ class SettingsScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Text('Настройки'),
+      body: Center(
+        child: Text(
+          'Настройки',
+          style: context.textTheme.titleLarge?.copyWith(
+            fontFamily: FontFamily.geologica,
+          ),
+        ),
       ),
     );
   }

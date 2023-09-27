@@ -69,7 +69,10 @@ abstract base class _$EmployeeStateBase {
 
   /// Indicator whether state is succesful now.
   bool get isSuccessful => maybeMap(
-      idle: (_) => false, orElse: () => false, successful: (_) => true);
+        idle: (_) => false,
+        orElse: () => false,
+        successful: (_) => true,
+      );
 
   /// Map over state union.
   R map<R>({

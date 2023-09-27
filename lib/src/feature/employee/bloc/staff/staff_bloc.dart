@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/feature/employee/data/employee_repository.dart';
 
 import '/src/common/utils/error_util.dart';
-import '/src/feature/employee_all/data/staff_repository.dart';
 import 'staff_event.dart';
 import 'staff_state.dart';
 
@@ -17,7 +17,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
   }
 
   /// Repository for staff data.
-  final StaffRepository repository;
+  final EmployeeRepository repository;
 
   /// Fetch staff from repository.
   Future<void> _fetchAllEmployees(
@@ -25,8 +25,8 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
     Emitter<StaffState> emit,
   ) async {
     try {
-      final staff = await repository.getStaff();
-      emit(StaffState.loaded(staff: staff));
+      final employees = await repository.getAll();
+      emit(StaffState.loaded(staff: employees));
     } on Object catch (e) {
       emit(
         StaffState.idle(staff: state.staff, error: ErrorUtil.formatError(e)),
@@ -41,7 +41,7 @@ class StaffBloc extends Bloc<StaffEvent, StaffState> {
     Emitter<StaffState> emit,
   ) async {
     try {
-      final employees = await repository.fetchSalonEmployees(event.salonId);
+      final employees = await repository.getAllBySalon(event.salonId);
       emit(StaffState.loaded(staff: employees));
     } on Object catch (e) {
       emit(
