@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 
@@ -39,7 +40,7 @@ abstract class ModalPopup {
         transitionAnimationController: transitionAnimationController,
         barrierColor: context.colorScheme.background.withOpacity(.5),
         isScrollControlled: true,
-        backgroundColor: context.colorScheme.onBackground,
+        backgroundColor: const Color.fromRGBO(14, 15, 17, 1),
         isDismissible: isDismissible,
         enableDrag: isDismissible,
         shape: const RoundedRectangleBorder(
@@ -156,7 +157,12 @@ class ModalPopupHeader extends StatelessWidget {
           if (text != null)
             Expanded(
               child: Center(
-                child: Text(text!, style: context.textTheme.titleLarge),
+                child: Text(
+                  text!,
+                  style: context.textTheme.titleLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
+                ),
               ),
             )
           else

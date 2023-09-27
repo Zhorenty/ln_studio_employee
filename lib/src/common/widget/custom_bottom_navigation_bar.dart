@@ -33,14 +33,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 BottomNavigationBarItem(
                   icon: const AnimatedButton(
                     child: Icon(
-                      Icons.receipt_outlined,
+                      Icons.edit_calendar_outlined,
                       color: Color(0xFF828282),
                       size: 28,
                     ),
                   ),
                   activeIcon: AnimatedButton(
                     child: Icon(
-                      Icons.receipt_rounded,
+                      Icons.edit_calendar_rounded,
                       color: context.colorScheme.primary,
                       size: 28,
                     ),

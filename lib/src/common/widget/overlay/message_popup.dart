@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import 'floating_snack_bar.dart';
@@ -14,12 +15,27 @@ class MessagePopup {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Ошибка'),
-        content: Text(message),
+        title: Text(
+          'Ошибка',
+          style: context.textTheme.bodyLarge?.copyWith(
+            fontFamily: FontFamily.geologica,
+          ),
+        ),
+        content: Text(
+          message,
+          style: context.textTheme.bodyLarge?.copyWith(
+            fontFamily: FontFamily.geologica,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: const Text('Хорошо'),
+            child: Text(
+              'Хорошо',
+              style: context.textTheme.bodyLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
+              ),
+            ),
           )
         ],
       ),

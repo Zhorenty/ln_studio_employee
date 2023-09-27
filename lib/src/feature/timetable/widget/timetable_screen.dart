@@ -7,7 +7,6 @@ import 'package:ln_employee/src/common/widget/pop_up_button.dart';
 import 'package:ln_employee/src/common/widget/shimmer.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/custom_app_bar.dart';
@@ -70,7 +69,14 @@ class _TimetableScreenState extends State<TimetableScreen> {
               bottomChild: BlocBuilder<SalonBLoC, SalonState>(
                 builder: (context, state) => PopupButton(
                   label: state.currentSalon != null
-                      ? Text(state.currentSalon!.name)
+                      ? Text(
+                          state.currentSalon!.name,
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            fontSize: 17,
+                            color: context.colorScheme.onBackground,
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        )
                       : Shimmer(
                           backgroundColor: context.colorScheme.onBackground,
                         ),
@@ -119,13 +125,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
                           child: Row(
                             children: [
                               AvatarWidget(
-                                title:
-                                    '${employee.firstName} ${employee.lastName}',
+                                title: employee.fullName,
                               ),
                               const SizedBox(width: 10),
                               Flexible(
                                 child: Text(
-                                  '${employee.firstName} ${employee.lastName}',
+                                  employee.fullName,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style:
@@ -186,8 +191,8 @@ class _TimetableScreenState extends State<TimetableScreen> {
                   child: Text(
                     context.stringOf().noEmployees,
                     style: context.textTheme.titleMedium!.copyWith(
-                      fontFamily: FontFamily.geologica,
                       color: context.colorScheme.primary,
+                      fontFamily: FontFamily.geologica,
                     ),
                   ),
                 ),
@@ -255,35 +260,27 @@ class _CustomTableCalendar extends StatelessWidget {
       headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,
-        titleTextStyle: context.textTheme.bodyLarge!.copyWith(
-          fontFamily: FontFamily.geologica,
-        ),
+        titleTextStyle: context.textTheme.bodyLarge!.copyWith(),
       ),
       calendarStyle: CalendarStyle(
         todayTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
           color: context.colorScheme.onBackground,
         ),
         selectedTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
           color: context.colorScheme.background,
         ),
         defaultTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
         ),
         holidayTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
           fontWeight: FontWeight.bold,
         ),
         weekendTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
           color: context.colorScheme.primaryContainer,
         ),
         outsideTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
           color: context.colorScheme.primaryContainer,
         ),
         defaultDecoration: BoxDecoration(

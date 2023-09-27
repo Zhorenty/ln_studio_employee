@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/src/common/utils/error_util.dart';
 import '/src/feature/employee/data/employee_repository.dart';
-import '/src/feature/employee/bloc/employee_event.dart';
-import '/src/feature/employee/bloc/employee_state.dart';
+import 'employee_event.dart';
+import 'employee_state.dart';
 
 /// Employee bloc.
 class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {

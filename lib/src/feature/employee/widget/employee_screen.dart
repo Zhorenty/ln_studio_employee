@@ -4,6 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/widget/field_button.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
+import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
+import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
+import 'package:ln_employee/src/feature/employee/bloc/employee/employee_state.dart';
+import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
+import 'package:ln_employee/src/feature/employee/bloc/staff/staff_event.dart';
 import 'package:ln_employee/src/feature/salon/models/salon.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
@@ -17,17 +22,12 @@ import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
 import '/src/common/widget/star_rating.dart';
-import '/src/feature/employee/bloc/employee_bloc.dart';
-import '/src/feature/employee/bloc/employee_event.dart';
-import '/src/feature/employee/bloc/employee_state.dart';
 import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 import '/src/feature/employee/model/employee_edit/user_edit.dart';
-import '/src/feature/employee_all/bloc/staff_bloc.dart';
-import '/src/feature/employee_all/bloc/staff_event.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 
 import 'components/expanded_app_bar.dart';
-import 'skeleton_employee_screen.dart';
+import 'components/skeleton_employee_screen.dart';
 
 /// {@template employee_screen}
 /// Employee screen.
@@ -44,8 +44,10 @@ class EmployeeScreen extends StatefulWidget {
 }
 
 class _EmployeeScreenState extends State<EmployeeScreen> {
+  ///
   final _formKey = GlobalKey<FormState>();
 
+  ///
   late final phoneFocusNode = FocusNode();
 
   /// User information
@@ -128,9 +130,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             body: CustomScrollView(
               slivers: [
                 ExpandedAppBar(
-                  label: '${user.firstName} ${user.lastName}',
+                  label: user.fullName,
                   title: Text(
-                    '${user.firstName} ${user.lastName}',
+                    user.fullName,
                     style: context.textTheme.titleLarge!.copyWith(
                       fontFamily: FontFamily.geologica,
                     ),
@@ -165,6 +167,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         dissmised
                             ? 'Восстановить сотрудника в должности'
                             : 'Уволить сотрудника',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colorScheme.secondary,
+                          fontFamily: FontFamily.geologica,
+                        ),
                       ),
                     ),
                   ],
@@ -207,10 +213,10 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               const SizedBox(height: 16),
                               DefaultTextStyle(
                                 style: context.textTheme.bodyLarge!.copyWith(
-                                  fontFamily: FontFamily.geologica,
                                   color: dissmised
                                       ? const Color(0xFFF45636)
                                       : context.colorScheme.primary,
+                                  fontFamily: FontFamily.geologica,
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
@@ -228,6 +234,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               ),
                               const SizedBox(height: 16),
                               const HeaderWidget(label: 'Личная информация'),
+                              const SizedBox(height: 14),
                               CustomTextField(
                                 controller: firstNameController,
                                 dense: false,
@@ -272,26 +279,22 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               const SizedBox(height: 32),
                               const HeaderWidget(label: 'Рабочая информация'),
                               StatefulBuilder(
-                                builder: (context, setState) {
-                                  return FieldButton(
-                                    dense: false,
-                                    label: 'Салон',
-                                    title: employeeSalon.name,
-                                    onTap: () => ModalPopup.show(
-                                      context: context,
-                                      child: SalonChoiceScreen(
-                                        currentSalon: employeeSalon,
-                                        onChanged: (salon) {
-                                          setState(() {
-                                            if (salon != null) {
-                                              employeeSalon = salon;
-                                            }
-                                          });
-                                        },
+                                builder: (_, setState) => FieldButton(
+                                  dense: false,
+                                  label: 'Салон',
+                                  title: employeeSalon.name,
+                                  onTap: () => ModalPopup.show(
+                                    context: context,
+                                    child: SalonChoiceScreen(
+                                      currentSalon: employeeSalon,
+                                      onChanged: (salon) => setState(
+                                        () => salon != null
+                                            ? employeeSalon = salon
+                                            : null,
                                       ),
                                     ),
-                                  );
-                                },
+                                  ),
+                                ),
                               ),
                               StatefulBuilder(
                                 builder: (context, setState) {

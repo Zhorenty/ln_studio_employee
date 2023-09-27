@@ -9,8 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/employee/data/employee_data_provider.dart';
 import '/src/feature/employee/data/employee_repository.dart';
-import '/src/feature/employee_all/data/staff_datasource.dart';
-import '/src/feature/employee_all/data/staff_repository.dart';
 import '/src/feature/initialization/model/initialization_progress.dart';
 import '/src/feature/timetable/data/timetable_datasource.dart';
 import '/src/feature/timetable/data/timetable_repository.dart';
@@ -38,13 +36,6 @@ mixin InitializationSteps {
       );
       final timetableRepository = TimetableRepositoryImpl(timetableDatasource);
       progress.dependencies.timetableRepository = timetableRepository;
-    },
-    'Staff repository': (progress) async {
-      final staffDatasource = StaffDatasourceImpl(
-        restClient: progress.dependencies.restClient,
-      );
-      final staffRepository = StaffRepositoryImpl(staffDatasource);
-      progress.dependencies.staffRepository = staffRepository;
     },
     'Employee repository': (progress) async {
       final employeeDatasource = EmployeeDataProviderImpl(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/widget/shimmer.dart';
 import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 
@@ -55,7 +56,9 @@ class _SpecializationChoiceScreenState
                     children: [
                       Text(
                         'Выберите специализацию',
-                        style: context.textTheme.bodyLarge,
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
                       ),
                       ...specializationBloc.state.specializations.map(
                         (specialization) => _SpecializationChoiceRow(
@@ -103,7 +106,12 @@ class _SpecializationChoiceRow extends StatelessWidget {
           groupValue: currentSpecialization,
           onChanged: onChanged,
         ),
-        title: Text(specialization.name),
+        title: Text(
+          specialization.name,
+          style: context.textTheme.bodyMedium?.copyWith(
+            fontFamily: FontFamily.geologica,
+          ),
+        ),
         onTap: () => onChanged?.call(specialization),
       );
 }

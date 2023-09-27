@@ -60,47 +60,57 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: dense ? 4 + 2 : 2),
-      child: TextFormField(
-        focusNode: focusNode,
-        validator: validator,
-        maxLength: maxLength,
-        controller: controller,
-        textInputAction: textInputAction,
-        style: context.textTheme.bodyLarge!.copyWith(
-          fontFamily: FontFamily.geologica,
-        ),
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatters,
-        onChanged: onChanged,
-        decoration: InputDecoration(
-          labelStyle: context.textTheme.bodyMedium!.copyWith(
-            color: context.colorScheme.primary,
+      padding: EdgeInsets.only(top: dense ? 16 : 2),
+      child: SizedBox(
+        height: 55,
+        child: TextFormField(
+          focusNode: focusNode,
+          validator: validator,
+          maxLength: maxLength,
+          controller: controller,
+          textInputAction: textInputAction,
+          style: context.textTheme.bodyLarge!.copyWith(
             fontFamily: FontFamily.geologica,
-            fontWeight: FontWeight.bold,
           ),
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFA8A6A6)),
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatters,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            labelStyle: context.textTheme.bodyMedium!.copyWith(
+              color: context.colorScheme.primary,
+              fontFamily: FontFamily.geologica,
+              fontWeight: FontWeight.bold,
+            ),
+            filled: true,
+            fillColor: context.colorScheme.background,
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF272727)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+            disabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF272727)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: context.colorScheme.primary),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+            ),
+            errorText: errorText,
+            labelText: label,
+            isDense: true,
+            suffixIcon: copyable && controller?.text != null
+                ? AnimatedButton(
+                    child: Icon(
+                      Icons.copy,
+                      color: context.colorScheme.primary,
+                    ),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: controller!.text));
+                      MessagePopup.success(context, 'Скопировано');
+                    },
+                  )
+                : const SizedBox.shrink(),
           ),
-          disabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFFA8A6A6)),
-          ),
-          errorText: errorText,
-          labelText: label,
-          isDense: true,
-          suffixIcon: copyable && controller?.text != null
-              ? AnimatedButton(
-                  padding: const EdgeInsets.only(top: 8 + 2, left: 8 + 4),
-                  child: Icon(
-                    Icons.copy,
-                    color: context.colorScheme.primary,
-                  ),
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: controller!.text));
-                    MessagePopup.success(context, 'Скопировано');
-                  },
-                )
-              : const SizedBox.shrink(),
         ),
       ),
     );

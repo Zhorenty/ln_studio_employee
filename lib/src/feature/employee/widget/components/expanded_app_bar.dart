@@ -96,8 +96,8 @@ class ExpandedAppBar extends StatelessWidget {
                   Text(
                     context.stringOf().amountOfClients,
                     style: context.textTheme.titleSmall!.copyWith(
-                      fontFamily: FontFamily.geologica,
                       color: const Color(0xFFA8A6A6),
+                      fontFamily: FontFamily.geologica,
                     ),
                   ),
                 ],
@@ -108,8 +108,8 @@ class ExpandedAppBar extends StatelessWidget {
                   Text(
                     context.stringOf().daysWorkedOut,
                     style: context.textTheme.titleSmall!.copyWith(
-                      fontFamily: FontFamily.geologica,
                       color: const Color(0xFFA8A6A6),
+                      fontFamily: FontFamily.geologica,
                     ),
                   ),
                 ],

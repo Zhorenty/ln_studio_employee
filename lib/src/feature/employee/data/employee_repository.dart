@@ -8,6 +8,12 @@ abstract interface class EmployeeRepository {
   /// Get employee by id.
   Future<Employee> get({required int id});
 
+  /// Fetch staff by salon id
+  Future<List<Employee>> getAllBySalon(int salonId);
+
+  /// Get staff.
+  Future<List<Employee>> getAll();
+
   /// Create employee.
   Future<void> create({required Employee$Create employee});
 
@@ -30,6 +36,13 @@ final class EmployeeRepositoryImpl implements EmployeeRepository {
 
   @override
   Future<Employee> get({required int id}) => _dataSource.fetchEmployee(id);
+
+  @override
+  Future<List<Employee>> getAllBySalon(int salonId) =>
+      _dataSource.fetchSalonEmployees(salonId);
+
+  @override
+  Future<List<Employee>> getAll() => _dataSource.fetchAllEmployee();
 
   @override
   Future<void> create({required Employee$Create employee}) =>

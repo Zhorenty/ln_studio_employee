@@ -5,7 +5,6 @@ import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/employee/data/employee_repository.dart';
-import '/src/feature/employee_all/data/staff_repository.dart';
 import '/src/feature/timetable/data/timetable_repository.dart';
 
 /// Dependencies container.
@@ -18,9 +17,6 @@ abstract interface class Dependencies {
 
   /// Timetable repository.
   abstract final TimetableRepository timetableRepository;
-
-  /// Staff repository.
-  abstract final StaffRepository staffRepository;
 
   /// Employee  repository.
   abstract final EmployeeRepository employeeRepository;
@@ -51,9 +47,6 @@ final class Dependencies$Mutable implements Dependencies {
   late TimetableRepository timetableRepository;
 
   @override
-  late StaffRepository staffRepository;
-
-  @override
   late EmployeeRepository employeeRepository;
 
   @override
@@ -67,7 +60,6 @@ final class Dependencies$Mutable implements Dependencies {
         sharedPreferences: sharedPreferences,
         restClient: restClient,
         timetableRepository: timetableRepository,
-        staffRepository: staffRepository,
         employeeRepository: employeeRepository,
         salonRepository: salonRepository,
         specializationRepository: specializationRepository,
@@ -82,7 +74,6 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.sharedPreferences,
     required this.restClient,
     required this.timetableRepository,
-    required this.staffRepository,
     required this.employeeRepository,
     required this.salonRepository,
     required this.specializationRepository,
@@ -96,9 +87,6 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final TimetableRepository timetableRepository;
-
-  @override
-  final StaffRepository staffRepository;
 
   @override
   final EmployeeRepository employeeRepository;

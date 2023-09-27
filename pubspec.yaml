@@ -23,9 +23,6 @@ dependencies:
   # BLoC
   flutter_bloc: ^8.1.3
 
-  # TODO: Should be move into dev_deps after splash screen approve.
-  flutter_native_splash: ^2.2.0+1
-
   # Router
   go_router: ^10.0.0
 
@@ -66,6 +63,7 @@ dev_dependencies:
   meta: ^1.9.1
 
   # Splash & launcher icon
+  flutter_native_splash: ^2.2.0+1
   flutter_launcher_icons: ^0.11.0
 
 flutter_icons:
@@ -79,6 +77,8 @@ flutter_native_splash:
 
 flutter:
   uses-material-design: true
+
+  generate: false
 
   shaders:
     - assets/shaders/shimmer.frag
@@ -105,9 +105,6 @@ flutter:
           weight: 400
         - asset: assets/fonts/Geologica-Bold.ttf
           weight: 700
-
-  # Enable generation of localized Strings from arb files.
-  generate: true
 
 flutter_gen:
   output: lib/src/common/assets/generated

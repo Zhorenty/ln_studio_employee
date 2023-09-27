@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 
@@ -39,7 +40,12 @@ class FloatingSnackBar extends StatefulWidget {
           entry = null;
         },
         bottom: bottom,
-        child: Text(title, style: context.textTheme.titleMedium),
+        child: Text(
+          title,
+          style: context.textTheme.titleMedium?.copyWith(
+            fontFamily: FontFamily.geologica,
+          ),
+        ),
       ),
     );
 
