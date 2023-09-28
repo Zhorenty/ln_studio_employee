@@ -22,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.onChanged,
     this.dense = true,
     this.copyable = false,
+    this.enabled = true,
   });
 
   /// Controls the text being edited.
@@ -30,6 +31,8 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
 
   final FocusNode? focusNode;
+
+  final bool enabled;
 
   /// Optional text that describes this input field.
   final String? label;
@@ -64,6 +67,7 @@ class CustomTextField extends StatelessWidget {
       child: SizedBox(
         height: 55,
         child: TextFormField(
+          enabled: enabled,
           focusNode: focusNode,
           validator: validator,
           maxLength: maxLength,
@@ -91,9 +95,9 @@ class CustomTextField extends StatelessWidget {
               borderSide: BorderSide(color: Color(0xFF272727)),
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: context.colorScheme.primary),
-              borderRadius: const BorderRadius.all(Radius.circular(12)),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF6B6A6A)),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             errorText: errorText,
             labelText: label,

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '../../feature/employee/widget/staff_screen.dart';
-import '../../feature/employee/widget/employee_screen.dart';
+import '../../feature/employee/widget/edit_employee_screen.dart';
 import '/src/feature/settings/widget/settings_screen.dart';
 import '/src/feature/timetable/widget/timetable_screen.dart';
 
@@ -40,7 +40,7 @@ final router = GoRouter(
                     final id = state.extra as int;
                     return CustomTransitionPage<void>(
                       key: state.pageKey,
-                      child: EmployeeScreen(employeeId: id),
+                      child: EditEmployeeScreen(employeeId: id),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         const begin = Offset(0.0, 1.0);

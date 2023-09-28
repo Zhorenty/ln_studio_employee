@@ -11,7 +11,7 @@ import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
 import '/src/common/widget/animated_button.dart';
-import '/src/common/widget/custom_date_picker.dart';
+import 'components/custom_date_picker.dart';
 import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/star_rating.dart';

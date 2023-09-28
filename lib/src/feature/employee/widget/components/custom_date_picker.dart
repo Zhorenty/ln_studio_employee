@@ -72,11 +72,6 @@ class DatePickerButtonState extends State<DatePickerButton> {
                 )
               ],
             ),
-            Container(
-              color: const Color(0xFFA8A6A6),
-              height: 1,
-              margin: const EdgeInsets.only(top: 4),
-            )
           ],
         ),
       ),

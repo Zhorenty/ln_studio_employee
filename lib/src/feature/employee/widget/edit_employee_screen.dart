@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_employee/src/common/widget/field_button.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
@@ -17,7 +18,7 @@ import 'package:ln_employee/src/feature/specialization/widget/specialization_lis
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
-import '/src/common/widget/custom_date_picker.dart';
+import 'components/custom_date_picker.dart';
 import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
@@ -32,18 +33,18 @@ import 'components/skeleton_employee_screen.dart';
 /// {@template employee_screen}
 /// Employee screen.
 /// {@endtemplate}
-class EmployeeScreen extends StatefulWidget {
+class EditEmployeeScreen extends StatefulWidget {
   /// {@macro employee_screen}
-  const EmployeeScreen({super.key, required this.employeeId});
+  const EditEmployeeScreen({super.key, required this.employeeId});
 
   /// Employee id.
   final int employeeId;
 
   @override
-  State<EmployeeScreen> createState() => _EmployeeScreenState();
+  State<EditEmployeeScreen> createState() => _EditEmployeeScreenState();
 }
 
-class _EmployeeScreenState extends State<EmployeeScreen> {
+class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   ///
   final _formKey = GlobalKey<FormState>();
 
@@ -56,6 +57,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   late final TextEditingController phoneController;
   late final TextEditingController addressController;
   late final TextEditingController emailController;
+  late final TextEditingController birthDateController;
 
   /// Employee information
   late final TextEditingController contractNumberController;
@@ -75,6 +77,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     phoneController = TextEditingController();
     addressController = TextEditingController();
     emailController = TextEditingController();
+    birthDateController = TextEditingController();
 
     /// Employee information.
     contractNumberController = TextEditingController();
@@ -89,6 +92,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     phoneController.dispose();
     addressController.dispose();
     emailController.dispose();
+    birthDateController.dispose();
     contractNumberController.dispose();
     descriptionController.dispose();
     salesController.dispose();
@@ -101,7 +105,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     return BlocBuilder<EmployeeBloc, EmployeeState>(
       builder: (context, state) {
         if (state.employee == null) {
-          return const SkeletonEmployeeScreen();
+          return const SkeletonEditEmployeeScreen();
         } else {
           final employee = state.employee!;
           final user = state.employee!.userModel;
@@ -119,6 +123,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           phoneController.text = user.phone;
           addressController.text = employee.address;
           emailController.text = user.email;
+          birthDateController.text = birthDate.defaultFormat();
 
           /// Employee information
           contractNumberController.text = employee.contractNumber;
@@ -270,6 +275,11 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 copyable: true,
                                 keyboardType: TextInputType.emailAddress,
                                 validator: _emailValidator,
+                              ),
+                              CustomTextField(
+                                enabled: false,
+                                controller: birthDateController,
+                                label: 'День рождения',
                               ),
                               DatePickerButton(
                                 label: 'День рождения',
