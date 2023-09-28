@@ -11,7 +11,7 @@ import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
 import '/src/common/widget/animated_button.dart';
-import 'components/custom_date_picker.dart';
+import 'components/date_picker_field.dart';
 import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/star_rating.dart';
@@ -39,11 +39,13 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   late final TextEditingController phoneController;
   late final TextEditingController addressController;
   late final TextEditingController emailController;
+  late final TextEditingController birthDateController;
 
   /// Employee information
   late final TextEditingController contractNumberController;
   late final TextEditingController descriptionController;
   late final TextEditingController salesController;
+  late final TextEditingController dateOfEmploymentController;
 
   int stars = 1;
   DateTime dateOfEmployment = DateTime.now();
@@ -59,11 +61,13 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
     phoneController = TextEditingController();
     addressController = TextEditingController();
     emailController = TextEditingController();
+    birthDateController = TextEditingController();
 
     /// Employee information.
     contractNumberController = TextEditingController();
     descriptionController = TextEditingController();
     salesController = TextEditingController();
+    dateOfEmploymentController = TextEditingController();
 
     /// Request focus on first name field.
     firstNameFocusNode.requestFocus();
@@ -76,9 +80,11 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
     phoneController.dispose();
     addressController.dispose();
     emailController.dispose();
+    birthDateController.dispose();
     contractNumberController.dispose();
     descriptionController.dispose();
     salesController.dispose();
+    dateOfEmploymentController.dispose();
     firstNameFocusNode.dispose();
     phoneFocusNode.dispose();
     addressFocusNode.dispose();
@@ -182,6 +188,7 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                const SizedBox(height: 16),
                                 CustomTextField(
                                   dense: false,
                                   controller: firstNameController,
@@ -223,19 +230,16 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   keyboardType: TextInputType.emailAddress,
                                   validator: _emailValidator,
                                 ),
-                                DatePickerButton(
+                                DatePickerField(
+                                  controller: birthDateController,
                                   label: 'День рождения',
                                   initialDate: birthDate,
                                   onDateSelected: (day) => birthDate = day,
+                                  validator: _emptyValidator,
                                 ),
                                 const SizedBox(height: 32),
                                 const HeaderWidget(label: 'Рабочая информация'),
-                                DatePickerButton(
-                                  label: 'Дата принятия на работу',
-                                  initialDate: dateOfEmployment,
-                                  onDateSelected: (day) =>
-                                      dateOfEmployment = day,
-                                ),
+                                const SizedBox(height: 16),
                                 CustomTextField(
                                   controller: descriptionController,
                                   textInputAction: TextInputAction.next,
@@ -262,6 +266,14 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   ),
                                   validator: _emptyValidator,
                                   onChanged: _checkSales,
+                                ),
+                                DatePickerField(
+                                  controller: dateOfEmploymentController,
+                                  label: 'Дата принятия на работу',
+                                  initialDate: dateOfEmployment,
+                                  onDateSelected: (day) =>
+                                      dateOfEmployment = day,
+                                  validator: _emptyValidator,
                                 ),
                               ],
                             ),

@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
 
-import '/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_employee/src/common/widget/custom_text_field.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 /// Custom [ElevatedButton] with provided [showDatePicker] method.
-class DatePickerButton extends StatefulWidget {
-  const DatePickerButton({
+class DatePickerField extends StatefulWidget {
+  const DatePickerField({
     super.key,
     required this.initialDate,
-    this.onDateSelected,
     required this.label,
-    this.dense = true,
+    this.controller,
+    this.onDateSelected,
+    this.validator,
   });
+
+  ///
+  final TextEditingController? controller;
 
   /// Initial [DateTime].
   final DateTime initialDate;
@@ -20,17 +24,17 @@ class DatePickerButton extends StatefulWidget {
   /// Callback, called when day was selected
   final Function(DateTime)? onDateSelected;
 
-  /// Indicator whether this [DatePickerButton] should be densed.
-  final bool dense;
-
-  /// Label of this [DatePickerButton].
+  /// Label of this [DatePickerField].
   final String label;
 
+  ///
+  final String? Function(String?)? validator;
+
   @override
-  DatePickerButtonState createState() => DatePickerButtonState();
+  DatePickerFieldState createState() => DatePickerFieldState();
 }
 
-class DatePickerButtonState extends State<DatePickerButton> {
+class DatePickerFieldState extends State<DatePickerField> {
   /// Initial or selected [DateTime].
   late DateTime selectedDate;
 
@@ -44,36 +48,11 @@ class DatePickerButtonState extends State<DatePickerButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _selectDate(),
-      child: Padding(
-        padding: EdgeInsets.only(top: widget.dense ? 12 : 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.label,
-              style: context.textTheme.labelSmall!.copyWith(
-                color: context.colorScheme.primary,
-                fontFamily: FontFamily.geologica,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  selectedDate.defaultFormat().toString(),
-                  style: context.textTheme.bodyLarge!.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 4 + 2, bottom: 8),
-                  child: Icon(Icons.calendar_month, size: 20),
-                )
-              ],
-            ),
-          ],
-        ),
+      child: CustomTextField(
+        enabled: false,
+        controller: widget.controller,
+        label: widget.label,
+        validator: widget.validator,
       ),
     );
   }
@@ -101,6 +80,7 @@ class DatePickerButtonState extends State<DatePickerButton> {
     if (picked != null && picked != selectedDate) {
       setState(() => selectedDate = picked);
       widget.onDateSelected?.call(selectedDate);
+      widget.controller?.text = selectedDate.defaultFormat();
     }
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
+import 'package:ln_employee/src/common/widget/animated_button.dart';
 import 'package:ln_employee/src/common/widget/field_button.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
@@ -18,7 +20,7 @@ import 'package:ln_employee/src/feature/specialization/widget/specialization_lis
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
-import 'components/custom_date_picker.dart';
+import 'components/date_picker_field.dart';
 import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
@@ -63,6 +65,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   late final TextEditingController contractNumberController;
   late final TextEditingController descriptionController;
   late final TextEditingController salesController;
+  late final TextEditingController dateOfEmploymentController;
 
   @override
   void initState() {
@@ -83,6 +86,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     contractNumberController = TextEditingController();
     descriptionController = TextEditingController();
     salesController = TextEditingController();
+    dateOfEmploymentController = TextEditingController();
   }
 
   @override
@@ -97,6 +101,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     descriptionController.dispose();
     salesController.dispose();
     phoneFocusNode.dispose();
+    dateOfEmploymentController.dispose();
     super.dispose();
   }
 
@@ -129,6 +134,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
           contractNumberController.text = employee.contractNumber;
           descriptionController.text = employee.description;
           salesController.text = employee.percentageOfSales.toString();
+          dateOfEmploymentController.text = dateOfEmployment.defaultFormat();
 
           return Scaffold(
             backgroundColor: context.colorScheme.background,
@@ -261,7 +267,21 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                 inputFormatters: [RuPhoneInputFormatter()],
                                 keyboardType: TextInputType.phone,
                                 validator: _emptyValidator,
-                                copyable: true,
+                                suffix: AnimatedButton(
+                                  child: Icon(
+                                    Icons.copy,
+                                    color: context.colorScheme.primary,
+                                  ),
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                      ClipboardData(text: phoneController.text),
+                                    );
+                                    MessagePopup.success(
+                                      context,
+                                      'Скопировано',
+                                    );
+                                  },
+                                ),
                               ),
                               CustomTextField(
                                 controller: addressController,
@@ -272,19 +292,30 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                               CustomTextField(
                                 controller: emailController,
                                 label: 'Электронная почта',
-                                copyable: true,
                                 keyboardType: TextInputType.emailAddress,
                                 validator: _emailValidator,
+                                suffix: AnimatedButton(
+                                  child: Icon(
+                                    Icons.copy,
+                                    color: context.colorScheme.primary,
+                                  ),
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                      ClipboardData(text: emailController.text),
+                                    );
+                                    MessagePopup.success(
+                                      context,
+                                      'Скопировано',
+                                    );
+                                  },
+                                ),
                               ),
-                              CustomTextField(
-                                enabled: false,
+                              DatePickerField(
                                 controller: birthDateController,
-                                label: 'День рождения',
-                              ),
-                              DatePickerButton(
                                 label: 'День рождения',
                                 initialDate: birthDate,
                                 onDateSelected: (day) => birthDate = day,
+                                validator: _emptyValidator,
                               ),
                               const SizedBox(height: 32),
                               const HeaderWidget(label: 'Рабочая информация'),
@@ -350,11 +381,12 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                 ),
                                 validator: _emptyValidator,
                               ),
-                              DatePickerButton(
-                                dense: true,
+                              DatePickerField(
+                                controller: dateOfEmploymentController,
                                 label: 'Дата принятия на работу',
                                 initialDate: dateOfEmployment,
                                 onDateSelected: (day) => dateOfEmployment = day,
+                                validator: _emptyValidator,
                               ),
                               const SizedBox(height: 16),
                               Center(
