@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_employee/src/common/widget/field_button.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
@@ -9,15 +11,14 @@ import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.da
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_state.dart';
 import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/staff/staff_event.dart';
+import 'package:ln_employee/src/feature/employee/widget/components/copy_icon.dart';
 import 'package:ln_employee/src/feature/salon/models/salon.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 import 'package:ln_employee/src/feature/specialization/widget/specialization_list.dart';
-
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
-import '/src/common/widget/custom_date_picker.dart';
 import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
@@ -25,74 +26,92 @@ import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 import '/src/feature/employee/model/employee_edit/user_edit.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
-
+import 'components/date_picker_field.dart';
 import 'components/expanded_app_bar.dart';
 import 'components/skeleton_employee_screen.dart';
+
+typedef EmployeeData = (int id, int clients, int workedDays);
 
 /// {@template employee_screen}
 /// Employee screen.
 /// {@endtemplate}
-class EmployeeScreen extends StatefulWidget {
+class EditEmployeeScreen extends StatefulWidget {
   /// {@macro employee_screen}
-  const EmployeeScreen({super.key, required this.employeeId});
+  const EditEmployeeScreen({super.key, required this.id});
 
   /// Employee id.
-  final int employeeId;
+  final int id;
 
   @override
-  State<EmployeeScreen> createState() => _EmployeeScreenState();
+  State<EditEmployeeScreen> createState() => _EditEmployeeScreenState();
 }
 
-class _EmployeeScreenState extends State<EmployeeScreen> {
+class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   ///
   final _formKey = GlobalKey<FormState>();
 
   ///
-  late final phoneFocusNode = FocusNode();
+  late final _phoneFocusNode = FocusNode();
 
   /// User information
-  late final TextEditingController firstNameController;
-  late final TextEditingController lastNameController;
-  late final TextEditingController phoneController;
-  late final TextEditingController addressController;
-  late final TextEditingController emailController;
+  late final TextEditingController _firstNameController;
+  late final TextEditingController _lastNameController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _addressController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _birthDateController;
 
   /// Employee information
-  late final TextEditingController contractNumberController;
-  late final TextEditingController descriptionController;
-  late final TextEditingController salesController;
+  late final TextEditingController _salonController;
+  late final TextEditingController _specializationController;
+  late final TextEditingController _contractNumberController;
+  late final TextEditingController _descriptionController;
+  late final TextEditingController _salesController;
+  late final TextEditingController _dateOfEmploymentController;
 
   @override
   void initState() {
     super.initState();
-    context.read<EmployeeBloc>().add(
-          EmployeeEvent.fetch(id: widget.employeeId),
-        );
+
+    context.read<EmployeeBloc>().add(EmployeeEvent.fetch(id: widget.id));
 
     /// User information.
-    firstNameController = TextEditingController();
-    lastNameController = TextEditingController();
-    phoneController = TextEditingController();
-    addressController = TextEditingController();
-    emailController = TextEditingController();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _addressController = TextEditingController();
+    _emailController = TextEditingController();
+    _birthDateController = TextEditingController();
 
     /// Employee information.
-    contractNumberController = TextEditingController();
-    descriptionController = TextEditingController();
-    salesController = TextEditingController();
+    _salonController = TextEditingController();
+    _specializationController = TextEditingController();
+    _contractNumberController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _salesController = TextEditingController();
+    _dateOfEmploymentController = TextEditingController();
   }
 
   @override
   void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    phoneController.dispose();
-    addressController.dispose();
-    emailController.dispose();
-    contractNumberController.dispose();
-    descriptionController.dispose();
-    salesController.dispose();
-    phoneFocusNode.dispose();
+    /// User information
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _emailController.dispose();
+    _birthDateController.dispose();
+
+    /// Employee information
+    _salonController.dispose();
+    _specializationController.dispose();
+    _contractNumberController.dispose();
+    _descriptionController.dispose();
+    _salesController.dispose();
+    _dateOfEmploymentController.dispose();
+
+    /// Focus nodes
+    _phoneFocusNode.dispose();
     super.dispose();
   }
 
@@ -101,7 +120,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     return BlocBuilder<EmployeeBloc, EmployeeState>(
       builder: (context, state) {
         if (state.employee == null) {
-          return const SkeletonEmployeeScreen();
+          return const SkeletonEditEmployeeScreen();
         } else {
           final employee = state.employee!;
           final user = state.employee!.userModel;
@@ -114,16 +133,20 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           Specialization employeeSpecialization = employee.jobModel;
 
           /// User information
-          firstNameController.text = user.firstName;
-          lastNameController.text = user.lastName;
-          phoneController.text = user.phone;
-          addressController.text = employee.address;
-          emailController.text = user.email;
+          _firstNameController.text = user.firstName;
+          _lastNameController.text = user.lastName;
+          _phoneController.text = user.phone;
+          _addressController.text = employee.address;
+          _emailController.text = user.email;
+          _birthDateController.text = birthDate.defaultFormat();
 
           /// Employee information
-          contractNumberController.text = employee.contractNumber;
-          descriptionController.text = employee.description;
-          salesController.text = employee.percentageOfSales.toString();
+          _salonController.text = employeeSalon.name;
+          _specializationController.text = employeeSpecialization.name;
+          _contractNumberController.text = employee.contractNumber;
+          _descriptionController.text = employee.description;
+          _salesController.text = employee.percentageOfSales.toString();
+          _dateOfEmploymentController.text = dateOfEmployment.defaultFormat();
 
           return Scaffold(
             backgroundColor: context.colorScheme.background,
@@ -151,6 +174,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                   ),
                   additionalTrailing: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        backgroundColor: context.colorScheme.primary,
+                        side: const BorderSide(color: Color(0xFF272727)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                       onPressed: () {
                         dissmised
                             ? _reinstatement(employee.id)
@@ -167,16 +198,16 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         dissmised
                             ? 'Восстановить сотрудника в должности'
                             : 'Уволить сотрудника',
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: context.colorScheme.secondary,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.colorScheme.onBackground,
                           fontFamily: FontFamily.geologica,
                         ),
                       ),
                     ),
                   ],
                   onExit: () {
-                    _refreshStaff();
                     context.pop();
+                    _refreshStaff();
                   },
                 ),
                 CupertinoSliverRefreshControl(
@@ -236,103 +267,110 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                               const HeaderWidget(label: 'Личная информация'),
                               const SizedBox(height: 14),
                               CustomTextField(
-                                controller: firstNameController,
+                                controller: _firstNameController,
                                 dense: false,
                                 label: 'Имя',
                                 keyboardType: TextInputType.name,
                                 validator: _emptyValidator,
                               ),
                               CustomTextField(
-                                controller: lastNameController,
+                                controller: _lastNameController,
                                 label: 'Фамилия',
                                 keyboardType: TextInputType.name,
                                 validator: _emptyValidator,
                               ),
                               CustomTextField(
-                                controller: phoneController,
+                                controller: _phoneController,
                                 label: 'Номер телефона',
-                                focusNode: phoneFocusNode,
+                                focusNode: _phoneFocusNode,
                                 onChanged: _checkPhoneNumber,
                                 inputFormatters: [RuPhoneInputFormatter()],
                                 keyboardType: TextInputType.phone,
                                 validator: _emptyValidator,
-                                copyable: true,
+                                suffix: CopyIcon(_phoneController.text),
                               ),
                               CustomTextField(
-                                controller: addressController,
+                                controller: _addressController,
                                 label: 'Домашний адрес',
                                 keyboardType: TextInputType.streetAddress,
                                 validator: _emptyValidator,
                               ),
                               CustomTextField(
-                                controller: emailController,
+                                controller: _emailController,
                                 label: 'Электронная почта',
-                                copyable: true,
                                 keyboardType: TextInputType.emailAddress,
                                 validator: _emailValidator,
+                                suffix: CopyIcon(_emailController.text),
                               ),
-                              DatePickerButton(
+                              DatePickerField(
+                                controller: _birthDateController,
                                 label: 'День рождения',
                                 initialDate: birthDate,
                                 onDateSelected: (day) => birthDate = day,
+                                validator: _emptyValidator,
                               ),
                               const SizedBox(height: 32),
                               const HeaderWidget(label: 'Рабочая информация'),
+                              const SizedBox(height: 8),
+                              // TODO(zhorenty): refactor
                               StatefulBuilder(
                                 builder: (_, setState) => FieldButton(
-                                  dense: false,
+                                  controller: _salonController,
                                   label: 'Салон',
-                                  title: employeeSalon.name,
                                   onTap: () => ModalPopup.show(
                                     context: context,
                                     child: SalonChoiceScreen(
                                       currentSalon: employeeSalon,
-                                      onChanged: (salon) => setState(
-                                        () => salon != null
+                                      onChanged: (salon) => setState(() {
+                                        salon != null
                                             ? employeeSalon = salon
-                                            : null,
-                                      ),
+                                            : null;
+                                        _salonController.text =
+                                            employeeSalon.name;
+                                      }),
                                     ),
                                   ),
                                 ),
                               ),
+                              // TODO(zhorenty): refactor
                               StatefulBuilder(
                                 builder: (context, setState) {
                                   return FieldButton(
-                                    dense: false,
+                                    controller: _specializationController,
                                     label: 'Специализация',
-                                    title: employeeSpecialization.name,
                                     onTap: () => ModalPopup.show(
                                       context: context,
                                       child: SpecializationChoiceScreen(
                                         currentSpecialization:
                                             employeeSpecialization,
-                                        onChanged: (specialization) {
-                                          setState(() {
-                                            if (specialization != null) {
-                                              employeeSpecialization =
-                                                  specialization;
-                                            }
-                                          });
-                                        },
+                                        onChanged: (specialization) => setState(
+                                          () {
+                                            specialization != null
+                                                ? employeeSpecialization =
+                                                    specialization
+                                                : null;
+                                            _specializationController.text =
+                                                employeeSpecialization.name;
+                                          },
+                                        ),
                                       ),
                                     ),
                                   );
                                 },
                               ),
                               CustomTextField(
-                                controller: contractNumberController,
+                                controller: _contractNumberController,
                                 label: 'Номер договора',
                                 validator: _emptyValidator,
                               ),
                               CustomTextField(
-                                controller: descriptionController,
+                                controller: _descriptionController,
                                 label: 'Описание сотрудника',
                                 keyboardType: TextInputType.multiline,
                                 validator: _emptyValidator,
                               ),
                               CustomTextField(
-                                controller: salesController,
+                                controller: _salesController,
                                 label: 'Процент от продаж',
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -340,11 +378,12 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                 ),
                                 validator: _emptyValidator,
                               ),
-                              DatePickerButton(
-                                dense: true,
+                              DatePickerField(
+                                controller: _dateOfEmploymentController,
                                 label: 'Дата принятия на работу',
                                 initialDate: dateOfEmployment,
                                 onDateSelected: (day) => dateOfEmployment = day,
+                                validator: _emptyValidator,
                               ),
                               const SizedBox(height: 16),
                               Center(
@@ -415,20 +454,20 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
           EmployeeEvent.edit(
             employee: Employee$Edit(
               id: id,
-              address: addressController.text,
+              address: _addressController.text,
               jobId: specializationId,
               salonId: employeeSalonId,
-              description: descriptionController.text,
+              description: _descriptionController.text,
               dateOfEmployment: dateOfEmployment,
-              contractNumber: contractNumberController.text,
-              percentageOfSales: double.parse(salesController.text),
+              contractNumber: _contractNumberController.text,
+              percentageOfSales: double.parse(_salesController.text),
               stars: stars,
               isDismiss: isDismiss,
               userModel: UserModel$Edit(
-                email: emailController.text,
-                firstName: firstNameController.text,
-                lastName: lastNameController.text,
-                phone: phoneController.text,
+                email: _emailController.text,
+                firstName: _firstNameController.text,
+                lastName: _lastNameController.text,
+                phone: _phoneController.text,
                 birthDate: birthDate,
               ),
             ),
@@ -440,7 +479,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   void _checkPhoneNumber(String value) {
     if ((value.length == 18 && value.startsWith('+')) ||
         (value.length == 17 && value.startsWith('8'))) {
-      phoneFocusNode.unfocus();
+      _phoneFocusNode.unfocus();
     }
   }
 

@@ -99,19 +99,30 @@ class _SalonChoiceRow extends StatelessWidget {
   final void Function(Salon?)? onChanged;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: Radio<Salon>(
-          value: salon,
-          groupValue: currentSalon,
-          onChanged: onChanged,
-        ),
-        title: Text(
-          salon.name,
-          style: context.textTheme.bodyMedium?.copyWith(
-            fontFamily: FontFamily.geologica,
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: ListTile(
+          selected: salon == currentSalon,
+          selectedTileColor: context.colorScheme.background,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: salon == currentSalon
+                ? const BorderSide(color: Color(0xFF272727))
+                : BorderSide(color: context.colorScheme.scrim),
           ),
+          contentPadding: const EdgeInsets.only(left: 12),
+          trailing: Radio<Salon>(
+            value: salon,
+            groupValue: currentSalon,
+            onChanged: onChanged,
+          ),
+          title: Text(
+            salon.name,
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontFamily: FontFamily.geologica,
+            ),
+          ),
+          onTap: () => onChanged?.call(salon),
         ),
-        onTap: () => onChanged?.call(salon),
       );
 }

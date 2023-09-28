@@ -42,7 +42,7 @@ class FloatingSnackBar extends StatefulWidget {
         bottom: bottom,
         child: Text(
           title,
-          style: context.textTheme.titleMedium?.copyWith(
+          style: context.textTheme.titleSmall?.copyWith(
             fontFamily: FontFamily.geologica,
           ),
         ),

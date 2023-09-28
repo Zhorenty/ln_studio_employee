@@ -49,6 +49,7 @@ class MessagePopup {
     String? title, {
     List<TextSpan> description = const [],
     List<Widget> additional = const [],
+    bool scrolled = true,
   }) {
     return ModalPopup.show(
       context: context,
@@ -63,6 +64,9 @@ class MessagePopup {
               Flexible(
                 child: ListView(
                   shrinkWrap: true,
+                  physics: scrolled
+                      ? const BouncingScrollPhysics()
+                      : const NeverScrollableScrollPhysics(),
                   children: [
                     if (description.isNotEmpty)
                       Padding(

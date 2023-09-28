@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:ln_employee/src/common/widget/pop_up_button.dart';
 import 'package:ln_employee/src/common/widget/shimmer.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
-import 'package:table_calendar/table_calendar.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/custom_app_bar.dart';
@@ -15,6 +14,7 @@ import '/src/feature/timetable/bloc/timetable_event.dart';
 import '/src/feature/timetable/bloc/timetable_state.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
+import 'components/custom_table_calendar.dart';
 
 /// {@template timetable_screen}
 /// Timetable screen.
@@ -150,7 +150,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                             ),
                             color: context.colorScheme.onBackground,
                           ),
-                          child: _CustomTableCalendar(
+                          child: CustomTableCalendar(
                             focusedDay: _focusedDays[index],
                             selectedDayPredicate: (day) {
                               return employeeTimetable.timetableItems.any(
@@ -213,107 +213,5 @@ class _TimetableScreenState extends State<TimetableScreen> {
       );
     }
     await block;
-  }
-}
-
-/// Custom [TableCalendar] widget.
-class _CustomTableCalendar extends StatelessWidget {
-  const _CustomTableCalendar({
-    required this.focusedDay,
-    this.selectedDayPredicate,
-    this.onDaySelected,
-  });
-
-  /// Focused day.
-  final DateTime focusedDay;
-
-  /// Deciding whether given day should be marked as selected.
-  final bool Function(DateTime)? selectedDayPredicate;
-
-  /// Called whenever any day gets tapped.
-  final void Function(DateTime, DateTime)? onDaySelected;
-
-  @override
-  Widget build(BuildContext context) {
-    DateTime firstDayOfPreviousMonth = DateTime(
-      DateTime.now().year,
-      DateTime.now().month - 1,
-      1,
-    );
-    DateTime lastDayOfNextMonth = DateTime(
-      DateTime.now().year,
-      DateTime.now().month + 2,
-      0,
-    );
-
-    return TableCalendar(
-      locale: 'ru_RU',
-      availableGestures:
-          kIsWeb ? AvailableGestures.none : AvailableGestures.all,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      firstDay: firstDayOfPreviousMonth,
-      lastDay: lastDayOfNextMonth,
-      focusedDay: focusedDay,
-      calendarFormat: CalendarFormat.month,
-      selectedDayPredicate: selectedDayPredicate,
-      onDaySelected: onDaySelected,
-      headerStyle: HeaderStyle(
-        formatButtonVisible: false,
-        titleCentered: true,
-        titleTextStyle: context.textTheme.bodyLarge!.copyWith(),
-      ),
-      calendarStyle: CalendarStyle(
-        todayTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontWeight: FontWeight.bold,
-          color: context.colorScheme.onBackground,
-        ),
-        selectedTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontWeight: FontWeight.bold,
-          color: context.colorScheme.background,
-        ),
-        defaultTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
-        holidayTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
-        weekendTextStyle: context.textTheme.titleSmall!.copyWith(
-          color: context.colorScheme.primaryContainer,
-        ),
-        outsideTextStyle: context.textTheme.titleSmall!.copyWith(
-          color: context.colorScheme.primaryContainer,
-        ),
-        defaultDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.scrim,
-        ),
-        weekendDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.scrim,
-        ),
-        holidayDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.scrim,
-        ),
-        outsideDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.scrim,
-        ),
-        selectedDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.primary,
-        ),
-        todayDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.secondary,
-        ),
-      ),
-    );
   }
 }

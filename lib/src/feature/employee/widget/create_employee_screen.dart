@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_state.dart';
@@ -11,13 +12,14 @@ import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
 import '/src/common/widget/animated_button.dart';
-import '/src/common/widget/custom_date_picker.dart';
+import 'components/date_picker_field.dart';
 import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/model/employee_create/employee_create.dart';
 import '/src/feature/employee/model/employee_create/user_create.dart';
 
+///
 class CreateEmployeeScreen extends StatefulWidget {
   const CreateEmployeeScreen({super.key});
 
@@ -26,25 +28,30 @@ class CreateEmployeeScreen extends StatefulWidget {
 }
 
 class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
+  /// [FormState] for validating.
   final _formKey = GlobalKey<FormState>();
 
-  late final FocusNode firstNameFocusNode = FocusNode();
-  late final FocusNode phoneFocusNode = FocusNode();
-  late final FocusNode addressFocusNode = FocusNode();
-  late final FocusNode salesFocusNode = FocusNode();
+  /// Focus nodes
+  late final FocusNode _firstNameFocusNode;
+  late final FocusNode _phoneFocusNode;
+  late final FocusNode _addressFocusNode;
+  late final FocusNode _salesFocusNode;
 
   /// User information
-  late final TextEditingController firstNameController;
-  late final TextEditingController lastNameController;
-  late final TextEditingController phoneController;
-  late final TextEditingController addressController;
-  late final TextEditingController emailController;
+  late final TextEditingController _firstNameController;
+  late final TextEditingController _lastNameController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _addressController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _birthDateController;
 
   /// Employee information
-  late final TextEditingController contractNumberController;
-  late final TextEditingController descriptionController;
-  late final TextEditingController salesController;
+  late final TextEditingController _contractNumberController;
+  late final TextEditingController _descriptionController;
+  late final TextEditingController _salesController;
+  late final TextEditingController _dateOfEmploymentController;
 
+  /// Mutable variables
   int stars = 1;
   DateTime dateOfEmployment = DateTime.now();
   DateTime birthDate = DateTime.now();
@@ -54,35 +61,50 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
     super.initState();
 
     /// User information.
-    firstNameController = TextEditingController();
-    lastNameController = TextEditingController();
-    phoneController = TextEditingController();
-    addressController = TextEditingController();
-    emailController = TextEditingController();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _addressController = TextEditingController();
+    _emailController = TextEditingController();
+    _birthDateController = TextEditingController();
 
     /// Employee information.
-    contractNumberController = TextEditingController();
-    descriptionController = TextEditingController();
-    salesController = TextEditingController();
+    _contractNumberController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _salesController = TextEditingController();
+    _dateOfEmploymentController = TextEditingController();
+
+    /// Focus nodes
+    _firstNameFocusNode = FocusNode();
+    _phoneFocusNode = FocusNode();
+    _addressFocusNode = FocusNode();
+    _salesFocusNode = FocusNode();
 
     /// Request focus on first name field.
-    firstNameFocusNode.requestFocus();
+    _firstNameFocusNode.requestFocus();
   }
 
   @override
   void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    phoneController.dispose();
-    addressController.dispose();
-    emailController.dispose();
-    contractNumberController.dispose();
-    descriptionController.dispose();
-    salesController.dispose();
-    firstNameFocusNode.dispose();
-    phoneFocusNode.dispose();
-    addressFocusNode.dispose();
-    salesFocusNode.dispose();
+    /// User information
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _emailController.dispose();
+    _birthDateController.dispose();
+
+    /// Employee information
+    _contractNumberController.dispose();
+    _descriptionController.dispose();
+    _salesController.dispose();
+    _dateOfEmploymentController.dispose();
+
+    /// Focus nodes
+    _firstNameFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    _addressFocusNode.dispose();
+    _salesFocusNode.dispose();
     super.dispose();
   }
 
@@ -139,23 +161,26 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                       child: Column(
                         children: [
                           const SizedBox(height: 8),
-                          CircleAvatar(
-                            radius: 65,
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  color: context.colorScheme.onBackground,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Icon(
-                                  Icons.photo_camera_rounded,
-                                  color: context.colorScheme.secondary,
+                          Stack(
+                            children: [
+                              const AvatarWidget(radius: 65),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    color: context.colorScheme.background,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(
+                                    Icons.photo_camera_rounded,
+                                    color: context.colorScheme.secondary,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                           const SizedBox(height: 32),
                         ],
@@ -182,25 +207,26 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                const SizedBox(height: 16),
                                 CustomTextField(
                                   dense: false,
-                                  controller: firstNameController,
-                                  focusNode: firstNameFocusNode,
+                                  controller: _firstNameController,
+                                  focusNode: _firstNameFocusNode,
                                   textInputAction: TextInputAction.next,
                                   label: 'Имя*',
                                   keyboardType: TextInputType.name,
                                   validator: _emptyValidator,
                                 ),
                                 CustomTextField(
-                                  controller: lastNameController,
+                                  controller: _lastNameController,
                                   label: 'Фамилия*',
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.name,
                                   validator: _emptyValidator,
                                 ),
                                 CustomTextField(
-                                  controller: phoneController,
-                                  focusNode: phoneFocusNode,
+                                  controller: _phoneController,
+                                  focusNode: _phoneFocusNode,
                                   label: 'Телефон*',
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.phone,
@@ -209,35 +235,32 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   onChanged: _checkPhoneNumber,
                                 ),
                                 CustomTextField(
-                                  controller: addressController,
+                                  controller: _addressController,
                                   textInputAction: TextInputAction.next,
-                                  focusNode: addressFocusNode,
+                                  focusNode: _addressFocusNode,
                                   label: 'Адрес проживания',
                                   keyboardType: TextInputType.streetAddress,
                                   validator: _emptyValidator,
                                 ),
                                 CustomTextField(
-                                  controller: emailController,
+                                  controller: _emailController,
                                   label: 'Почта',
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.emailAddress,
                                   validator: _emailValidator,
                                 ),
-                                DatePickerButton(
+                                DatePickerField(
+                                  controller: _birthDateController,
                                   label: 'День рождения',
                                   initialDate: birthDate,
                                   onDateSelected: (day) => birthDate = day,
+                                  validator: _emptyValidator,
                                 ),
                                 const SizedBox(height: 32),
                                 const HeaderWidget(label: 'Рабочая информация'),
-                                DatePickerButton(
-                                  label: 'Дата принятия на работу',
-                                  initialDate: dateOfEmployment,
-                                  onDateSelected: (day) =>
-                                      dateOfEmployment = day,
-                                ),
+                                const SizedBox(height: 16),
                                 CustomTextField(
-                                  controller: descriptionController,
+                                  controller: _descriptionController,
                                   textInputAction: TextInputAction.next,
                                   dense: false,
                                   label: 'Описание сотрудника',
@@ -245,15 +268,15 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   validator: _emptyValidator,
                                 ),
                                 CustomTextField(
-                                  controller: contractNumberController,
+                                  controller: _contractNumberController,
                                   textInputAction: TextInputAction.next,
                                   label: 'Номер договора',
                                   keyboardType: TextInputType.streetAddress,
                                   validator: _emptyValidator,
                                 ),
                                 CustomTextField(
-                                  controller: salesController,
-                                  focusNode: salesFocusNode,
+                                  controller: _salesController,
+                                  focusNode: _salesFocusNode,
                                   textInputAction: TextInputAction.done,
                                   label: 'Процент от продаж*',
                                   keyboardType:
@@ -262,6 +285,14 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   ),
                                   validator: _emptyValidator,
                                   onChanged: _checkSales,
+                                ),
+                                DatePickerField(
+                                  controller: _dateOfEmploymentController,
+                                  label: 'Дата принятия на работу',
+                                  initialDate: dateOfEmployment,
+                                  onDateSelected: (day) =>
+                                      dateOfEmployment = day,
+                                  validator: _emptyValidator,
                                 ),
                               ],
                             ),
@@ -285,20 +316,20 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
     context.read<EmployeeBloc>().add(
           EmployeeEvent.create(
             employee: Employee$Create(
-              address: addressController.text,
+              address: _addressController.text,
               // TODO(zhorenty): Fetch salons and jobs
               jobId: 1,
               salonId: 1,
-              description: descriptionController.text,
+              description: _descriptionController.text,
               dateOfEmployment: dateOfEmployment,
-              contractNumber: contractNumberController.text,
-              percentageOfSales: double.parse(salesController.text),
+              contractNumber: _contractNumberController.text,
+              percentageOfSales: double.parse(_salesController.text),
               stars: stars,
               userModel: UserModel$Create(
-                phone: phoneController.text,
-                firstName: firstNameController.text,
-                lastName: lastNameController.text,
-                email: emailController.text,
+                phone: _phoneController.text,
+                firstName: _firstNameController.text,
+                lastName: _lastNameController.text,
+                email: _emailController.text,
                 birthDate: birthDate,
               ),
             ),
@@ -338,15 +369,15 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   void _checkPhoneNumber(String value) {
     if ((value.length == 18 && value.startsWith('+')) ||
         (value.length == 17 && value.startsWith('8'))) {
-      phoneFocusNode.unfocus();
-      FocusScope.of(context).requestFocus(addressFocusNode);
+      _phoneFocusNode.unfocus();
+      FocusScope.of(context).requestFocus(_addressFocusNode);
     }
   }
 
   ///
   void _checkSales(String value) {
     if (value.length == 3) {
-      salesFocusNode.unfocus();
+      _salesFocusNode.unfocus();
     }
   }
 }

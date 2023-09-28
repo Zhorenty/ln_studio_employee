@@ -7,8 +7,8 @@ import '/src/common/widget/header.dart';
 import '/src/common/widget/shimmer.dart';
 import 'expanded_app_bar.dart';
 
-class SkeletonEmployeeScreen extends StatelessWidget {
-  const SkeletonEmployeeScreen({super.key});
+class SkeletonEditEmployeeScreen extends StatelessWidget {
+  const SkeletonEditEmployeeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
