@@ -137,7 +137,7 @@ class ModalPopupHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 48),
+      constraints: const BoxConstraints(minHeight: 30),
       child: Row(
         children: [
           if (onBack != null)
@@ -159,7 +159,7 @@ class ModalPopupHeader extends StatelessWidget {
               child: Center(
                 child: Text(
                   text!,
-                  style: context.textTheme.titleLarge?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontFamily: FontFamily.geologica,
                   ),
                 ),

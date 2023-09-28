@@ -55,7 +55,7 @@ class _SpecializationChoiceScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Выберите специализацию',
+                        'Выберите должность',
                         style: context.textTheme.bodyLarge?.copyWith(
                           fontFamily: FontFamily.geologica,
                         ),
@@ -99,19 +99,36 @@ class _SpecializationChoiceRow extends StatelessWidget {
   final void Function(Specialization?)? onChanged;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-        contentPadding: EdgeInsets.zero,
-        leading: Radio<Specialization>(
-          value: specialization,
-          groupValue: currentSpecialization,
-          onChanged: onChanged,
-        ),
-        title: Text(
-          specialization.name,
-          style: context.textTheme.bodyMedium?.copyWith(
-            fontFamily: FontFamily.geologica,
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: ListTile(
+          selected: specialization == currentSpecialization,
+          selectedTileColor: context.colorScheme.background,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: specialization == currentSpecialization
+                ? const BorderSide(color: Color(0xFF272727))
+                : BorderSide(color: context.colorScheme.scrim),
           ),
+          contentPadding: const EdgeInsets.only(left: 12),
+          trailing: Radio<Specialization>(
+            value: specialization,
+            groupValue: currentSpecialization,
+            onChanged: onChanged,
+          ),
+          title: Text(
+            specialization.name,
+            style: context.textTheme.bodyMedium?.copyWith(
+              fontFamily: FontFamily.geologica,
+            ),
+          ),
+          subtitle: Text(
+            'Оклад: ${specialization.oklad}₽',
+            style: context.textTheme.bodySmall?.copyWith(
+              fontFamily: FontFamily.geologica,
+            ),
+          ),
+          onTap: () => onChanged?.call(specialization),
         ),
-        onTap: () => onChanged?.call(specialization),
       );
 }

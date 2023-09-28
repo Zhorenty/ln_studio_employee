@@ -71,11 +71,10 @@ class ExpandedAppBar extends StatelessWidget {
               Icons.more_horiz_rounded,
               color: context.colorScheme.primary,
             ),
-
-            /// TODO(zhorenty): Button "Delete employee here"
             onPressed: () {
               MessagePopup.bottomSheet(
                 context,
+                scrolled: false,
                 'Действия с сотрудником',
                 additional: additionalTrailing,
               );

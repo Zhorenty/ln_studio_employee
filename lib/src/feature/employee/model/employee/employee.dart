@@ -30,8 +30,10 @@ final class Employee {
   /// UUID of employee.
   final int id;
 
+  ///
   final int? workedDays;
 
+  ///
   final int? clients;
 
   /// Residential address of employee.
@@ -102,6 +104,8 @@ final class Employee {
   /// Converts [Employee] into json.
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
+        'clients': clients,
+        'worked_days': workedDays,
         'address': address,
         'job_place_id': jobId,
         'salon_id': salonId,
