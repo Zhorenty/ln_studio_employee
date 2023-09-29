@@ -58,7 +58,7 @@ class ExpandedAppBar extends StatelessWidget {
           onPressed: onExit,
           child: Icon(
             Icons.arrow_back_ios_new_outlined,
-            color: context.colorScheme.primary,
+            color: context.colorScheme.secondary,
           ),
         ),
       ),
@@ -69,7 +69,7 @@ class ExpandedAppBar extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8 + 2),
             child: Icon(
               Icons.more_horiz_rounded,
-              color: context.colorScheme.primary,
+              color: context.colorScheme.secondary,
             ),
             onPressed: () {
               MessagePopup.bottomSheet(

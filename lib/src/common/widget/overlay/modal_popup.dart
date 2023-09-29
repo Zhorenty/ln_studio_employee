@@ -27,7 +27,7 @@ abstract class ModalPopup {
       maxWidth: double.infinity,
       maxHeight: double.infinity,
     ),
-    EdgeInsets mobilePadding = const EdgeInsets.fromLTRB(10, 0, 10, 0),
+    EdgeInsets mobilePadding = const EdgeInsets.symmetric(horizontal: 10),
     EdgeInsets desktopPadding = const EdgeInsets.all(10),
     bool isDismissible = true,
     bool showDivider = true,

@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/widget/avatar_widget.dart';
+import 'package:ln_employee/src/common/widget/field_button.dart';
+import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_state.dart';
 import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/staff/staff_event.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
+import 'package:ln_employee/src/feature/salon/models/salon.dart';
+import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
+import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
+import 'package:ln_employee/src/feature/specialization/widget/specialization_list.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -46,6 +53,8 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   late final TextEditingController _birthDateController;
 
   /// Employee information
+  late final TextEditingController _salonController;
+  late final TextEditingController _specializationController;
   late final TextEditingController _contractNumberController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _salesController;
@@ -69,6 +78,8 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
     _birthDateController = TextEditingController();
 
     /// Employee information.
+    _salonController = TextEditingController();
+    _specializationController = TextEditingController();
     _contractNumberController = TextEditingController();
     _descriptionController = TextEditingController();
     _salesController = TextEditingController();
@@ -95,6 +106,8 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
     _birthDateController.dispose();
 
     /// Employee information
+    _salonController.dispose();
+    _specializationController.dispose();
     _contractNumberController.dispose();
     _descriptionController.dispose();
     _salesController.dispose();
@@ -109,12 +122,10 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<EmployeeBloc, EmployeeState>(
-      builder: (context, state) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
+  Widget build(BuildContext context) =>
+      BlocBuilder<EmployeeBloc, EmployeeState>(
+        builder: (context, state) {
+          return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
@@ -173,10 +184,14 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   decoration: BoxDecoration(
                                     color: context.colorScheme.background,
                                     borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: const Color(0xFF272727),
+                                    ),
                                   ),
                                   child: Icon(
                                     Icons.photo_camera_rounded,
                                     color: context.colorScheme.secondary,
+                                    size: 22,
                                   ),
                                 ),
                               ),
@@ -245,7 +260,7 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                 CustomTextField(
                                   controller: _emailController,
                                   label: 'Почта',
-                                  textInputAction: TextInputAction.next,
+                                  textInputAction: TextInputAction.done,
                                   keyboardType: TextInputType.emailAddress,
                                   validator: _emailValidator,
                                 ),
@@ -259,6 +274,59 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                 const SizedBox(height: 32),
                                 const HeaderWidget(label: 'Рабочая информация'),
                                 const SizedBox(height: 16),
+                                StatefulBuilder(
+                                  builder: (_, setState) => FieldButton(
+                                    controller: _salonController,
+                                    label: 'Салон',
+                                    onTap: () {
+                                      Salon? employeeSalon;
+
+                                      ModalPopup.show(
+                                        context: context,
+                                        child: SalonChoiceScreen(
+                                          currentSalon: employeeSalon,
+                                          onChanged: (salon) => setState(() {
+                                            salon != null
+                                                ? employeeSalon = salon
+                                                : null;
+                                            _salonController.text =
+                                                employeeSalon!.name;
+                                          }),
+                                        ),
+                                      );
+                                    },
+                                    validator: _emptyValidator,
+                                  ),
+                                ),
+                                StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return FieldButton(
+                                      controller: _specializationController,
+                                      label: 'Специализация',
+                                      onTap: () {
+                                        Specialization? employeeSpecialization;
+
+                                        ModalPopup.show(
+                                          context: context,
+                                          child: SpecializationChoiceScreen(
+                                            currentSpecialization:
+                                                employeeSpecialization,
+                                            onChanged: (specialization) =>
+                                                setState(() {
+                                              specialization != null
+                                                  ? employeeSpecialization =
+                                                      specialization
+                                                  : null;
+                                              _specializationController.text =
+                                                  employeeSpecialization!.name;
+                                            }),
+                                          ),
+                                        );
+                                      },
+                                      validator: _emptyValidator,
+                                    );
+                                  },
+                                ),
                                 CustomTextField(
                                   controller: _descriptionController,
                                   textInputAction: TextInputAction.next,
@@ -305,11 +373,9 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                 ),
               ),
             ],
-          ),
-        );
-      },
-    );
-  }
+          );
+        },
+      );
 
   ///
   Future<void> _create() async {
@@ -361,7 +427,10 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   /// Refresh [StaffBloc].
   Future<void> _refresh() async {
     final block = context.read<StaffBloc>().stream.first;
-    context.read<StaffBloc>().add(const StaffEvent.fetch());
+    final salonBloc = context.read<SalonBLoC>();
+    context.read<StaffBloc>().add(
+          StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
+        );
     await block;
   }
 

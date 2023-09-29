@@ -8,7 +8,6 @@ import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/overlay/modal_popup.dart';
 import '/src/common/widget/pop_up_button.dart';
-import '/src/common/widget/shimmer.dart';
 import '/src/feature/employee/bloc/staff/staff_bloc.dart';
 import '/src/feature/employee/bloc/staff/staff_event.dart';
 import '/src/feature/employee/bloc/staff/staff_state.dart';
@@ -80,26 +79,25 @@ class _StaffScreenState extends State<StaffScreen>
                       context: context,
                       showDivider: false,
                       transitionAnimationController: controller,
+                      mobilePadding: const EdgeInsets.symmetric(horizontal: 16),
                       child: const CreateEmployeeScreen(),
                     ),
                   ),
                 ],
                 bottomChild: BlocBuilder<SalonBLoC, SalonState>(
-                  builder: (context, state) => PopupButton(
-                    label: state.currentSalon != null
-                        ? Text(
-                            state.currentSalon!.name,
-                            style: context.textTheme.bodyLarge?.copyWith(
-                              fontSize: 17,
-                              color: context.colorScheme.onBackground,
-                              fontFamily: FontFamily.geologica,
-                            ),
-                          )
-                        : Shimmer(
-                            backgroundColor: context.colorScheme.onBackground,
+                  builder: (context, state) => state.currentSalon != null
+                      ? PopupButton(
+                          label: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: state.currentSalon != null
+                                ? Text(state.currentSalon!.name)
+                                : const SizedBox(height: 26),
                           ),
-                    child: SalonChoiceScreen(currentSalon: state.currentSalon),
-                  ),
+                          child: SalonChoiceScreen(
+                            currentSalon: state.currentSalon,
+                          ),
+                        )
+                      : const SkeletonPopUpButton(),
                 ),
               ),
               CupertinoSliverRefreshControl(onRefresh: _refresh),

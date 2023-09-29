@@ -7,8 +7,6 @@ import '/src/common/utils/pattern_match.dart';
 sealed class StaffEvent extends _$StaffEventBase {
   const StaffEvent();
 
-  /// TODO: Implement fetch all
-  ///
   /// Factory for fetching staff.
   const factory StaffEvent.fetch() = StaffEvent$Fetch;
 

@@ -30,8 +30,6 @@ import 'components/date_picker_field.dart';
 import 'components/expanded_app_bar.dart';
 import 'components/skeleton_employee_screen.dart';
 
-typedef EmployeeData = (int id, int clients, int workedDays);
-
 /// {@template employee_screen}
 /// Employee screen.
 /// {@endtemplate}

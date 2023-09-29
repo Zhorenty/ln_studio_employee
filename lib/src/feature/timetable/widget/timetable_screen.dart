@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:ln_employee/src/common/widget/pop_up_button.dart';
-import 'package:ln_employee/src/common/widget/shimmer.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -68,19 +67,15 @@ class _TimetableScreenState extends State<TimetableScreen> {
               ],
               bottomChild: BlocBuilder<SalonBLoC, SalonState>(
                 builder: (context, state) => PopupButton(
-                  label: state.currentSalon != null
-                      ? Text(
-                          state.currentSalon!.name,
-                          style: context.textTheme.bodyLarge?.copyWith(
-                            fontSize: 17,
-                            color: context.colorScheme.onBackground,
-                            fontFamily: FontFamily.geologica,
-                          ),
-                        )
-                      : Shimmer(
-                          backgroundColor: context.colorScheme.onBackground,
-                        ),
-                  child: SalonChoiceScreen(currentSalon: state.currentSalon),
+                  label: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: state.currentSalon != null
+                        ? Text(state.currentSalon!.name)
+                        : const SizedBox(height: 26),
+                  ),
+                  child: SalonChoiceScreen(
+                    currentSalon: state.currentSalon,
+                  ),
                 ),
               ),
             ),
@@ -124,9 +119,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                           ),
                           child: Row(
                             children: [
-                              AvatarWidget(
-                                title: employee.fullName,
-                              ),
+                              AvatarWidget(title: employee.fullName),
                               const SizedBox(width: 10),
                               Flexible(
                                 child: Text(

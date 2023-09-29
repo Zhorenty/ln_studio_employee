@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/overlay/modal_popup.dart';
+import 'shimmer.dart';
 
 /// Container with [ModalPopup.show] method.
 class PopupButton extends StatelessWidget {
@@ -46,4 +47,17 @@ class PopupButton extends StatelessWidget {
           ),
         ),
       );
+}
+
+class SkeletonPopUpButton extends StatelessWidget {
+  const SkeletonPopUpButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer(
+      size: const Size(295, 50),
+      cornerRadius: 16,
+      backgroundColor: context.colorScheme.onBackground,
+    );
+  }
 }
