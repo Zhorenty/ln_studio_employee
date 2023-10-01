@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/common/widget/header.dart';
 import '/src/common/widget/shimmer.dart';
 import 'expanded_app_bar.dart';
 
@@ -19,23 +18,17 @@ class SkeletonEditEmployeeScreen extends StatelessWidget {
         slivers: [
           ExpandedAppBar(
             onExit: () => context.pop(),
-            title: const Shimmer(
-              speed: 30,
-              size: Size(200, 28),
-              color: Color(0xFF121212),
-              backgroundColor: Color(0xFF454545),
+            title: const SizedBox(
+              width: 200,
+              height: 28,
             ),
-            leading: const Shimmer(
-              speed: 30,
-              size: Size(40, 28),
-              color: Color(0xFF121212),
-              backgroundColor: Color(0xFF454545),
+            leading: const SizedBox(
+              width: 40,
+              height: 28,
             ),
-            trailing: const Shimmer(
-              speed: 30,
-              size: Size(40, 28),
-              color: Color(0xFF121212),
-              backgroundColor: Color(0xFF454545),
+            trailing: const SizedBox(
+              width: 40,
+              height: 28,
             ),
           ),
           SliverList(
@@ -47,32 +40,6 @@ class SkeletonEditEmployeeScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: context.colorScheme.onBackground,
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          HeaderWidget(label: 'Рейтинг'),
-                          Shimmer(
-                            size: Size(128, 25),
-                            color: Color.fromARGB(255, 20, 20, 18),
-                            backgroundColor: Color(0xFF525252),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16 + 8),
-                      HeaderWidget(label: 'Личная информация'),
-                      _CustomShimmer(label: 'Имя', dense: true),
-                      _CustomShimmer(label: 'Фамилия'),
-                      _CustomShimmer(label: 'Номер телефона'),
-                      _CustomShimmer(label: 'Домашний адрес'),
-                      _CustomShimmer(label: 'Электронная почта'),
-                      HeaderWidget(label: 'Рабочая информация'),
-                      _CustomShimmer(label: 'Номер договора', dense: true),
-                      _CustomShimmer(label: 'Описание сотрудника'),
-                    ],
                   ),
                 )
               ],
@@ -86,7 +53,7 @@ class SkeletonEditEmployeeScreen extends StatelessWidget {
 
 /// Custom [Shimmer] for this skeleton.
 class _CustomShimmer extends StatelessWidget {
-  const _CustomShimmer({required this.label, this.dense = false});
+  const _CustomShimmer({required this.label, required this.dense});
 
   /// Indicator whether this [_CustomShimmer] should be densed.
   final bool dense;

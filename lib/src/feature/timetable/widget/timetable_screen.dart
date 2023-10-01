@@ -153,8 +153,6 @@ class _TimetableScreenState extends State<TimetableScreen> {
                                     timetable.dateAt.day == day.day,
                               );
                             },
-
-                            /// TODO: Implement EditScheduleScreen.
                             onDaySelected: (selectedDay, focusedDay) {
                               _focusedDays[index] = selectedDay;
 

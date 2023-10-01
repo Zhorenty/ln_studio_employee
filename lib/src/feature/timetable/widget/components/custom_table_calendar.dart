@@ -38,7 +38,7 @@ class CustomTableCalendar extends StatelessWidget {
     return TableCalendar(
       locale: 'ru_RU',
       availableGestures:
-          kIsWeb ? AvailableGestures.none : AvailableGestures.all,
+          kIsWeb ? AvailableGestures.none : AvailableGestures.horizontalSwipe,
       startingDayOfWeek: StartingDayOfWeek.monday,
       firstDay: firstDayOfPreviousMonth,
       lastDay: lastDayOfNextMonth,

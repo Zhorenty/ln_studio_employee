@@ -50,6 +50,7 @@ final router = GoRouter(
                         final offsetAnimation = animation.drive(tween);
 
                         return SlideTransition(
+                          transformHitTests: false,
                           position: offsetAnimation,
                           child: child,
                         );

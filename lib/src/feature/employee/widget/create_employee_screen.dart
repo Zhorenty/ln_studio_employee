@@ -90,9 +90,6 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
     _phoneFocusNode = FocusNode();
     _addressFocusNode = FocusNode();
     _salesFocusNode = FocusNode();
-
-    /// Request focus on first name field.
-    _firstNameFocusNode.requestFocus();
   }
 
   @override
