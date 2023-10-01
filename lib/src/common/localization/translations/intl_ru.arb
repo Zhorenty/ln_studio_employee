@@ -10,7 +10,7 @@
   "noEmployees": "Нет сотрудников",
 
   "@_Timetable" :{},
-  "workShedule": "График работы",
+  "workSchedule": "График работы",
 
   "@_Staff" :{},
   "employees": "Сотрудники",

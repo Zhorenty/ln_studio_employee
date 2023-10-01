@@ -38,6 +38,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "phoneExists":
             MessageLookupByLibrary.simpleMessage("Данный номер уже занят"),
         "unknownError": m1,
-        "workShedule": MessageLookupByLibrary.simpleMessage("График работы")
+        "workSchedule": MessageLookupByLibrary.simpleMessage("График работы")
       };
 }

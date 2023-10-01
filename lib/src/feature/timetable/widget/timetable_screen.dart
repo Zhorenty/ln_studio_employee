@@ -54,7 +54,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
         builder: (context, state) => CustomScrollView(
           slivers: [
             CustomSliverAppBar(
-              title: context.stringOf().workShedule,
+              title: context.stringOf().workSchedule,
               actions: [
                 IconButton(
                   // TODO: Implement notifications screen.

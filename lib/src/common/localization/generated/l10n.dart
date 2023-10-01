@@ -92,10 +92,10 @@ class GeneratedLocalization {
   }
 
   /// `График работы`
-  String get workShedule {
+  String get workSchedule {
     return Intl.message(
       'График работы',
-      name: 'workShedule',
+      name: 'workSchedule',
       desc: '',
       args: [],
     );
