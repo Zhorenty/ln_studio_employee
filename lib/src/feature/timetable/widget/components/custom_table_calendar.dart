@@ -35,80 +35,89 @@ class CustomTableCalendar extends StatelessWidget {
       0,
     );
 
-    return TableCalendar(
-      locale: 'ru_RU',
-      availableGestures:
-          kIsWeb ? AvailableGestures.none : AvailableGestures.horizontalSwipe,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      firstDay: firstDayOfPreviousMonth,
-      lastDay: lastDayOfNextMonth,
-      focusedDay: focusedDay,
-      calendarFormat: CalendarFormat.month,
-      selectedDayPredicate: selectedDayPredicate,
-      onDaySelected: onDaySelected,
-      headerStyle: HeaderStyle(
-        formatButtonVisible: false,
-        titleCentered: true,
-        titleTextStyle: context.textTheme.bodyLarge!.copyWith(
-          fontFamily: FontFamily.geologica,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
         ),
+        color: context.colorScheme.onBackground,
       ),
-      calendarStyle: CalendarStyle(
-        todayTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontWeight: FontWeight.bold,
-          fontFamily: FontFamily.geologica,
-          color: context.colorScheme.onBackground,
+      child: TableCalendar(
+        locale: 'ru_RU',
+        availableGestures:
+            kIsWeb ? AvailableGestures.none : AvailableGestures.horizontalSwipe,
+        startingDayOfWeek: StartingDayOfWeek.monday,
+        firstDay: firstDayOfPreviousMonth,
+        lastDay: lastDayOfNextMonth,
+        focusedDay: focusedDay,
+        calendarFormat: CalendarFormat.month,
+        selectedDayPredicate: selectedDayPredicate,
+        onDaySelected: onDaySelected,
+        headerStyle: HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
+          titleTextStyle: context.textTheme.bodyLarge!.copyWith(
+            fontFamily: FontFamily.geologica,
+          ),
         ),
-        selectedTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontWeight: FontWeight.bold,
-          fontFamily: FontFamily.geologica,
-          color: context.colorScheme.background,
-        ),
-        defaultTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
-          fontWeight: FontWeight.bold,
-        ),
-        holidayTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
-          fontWeight: FontWeight.bold,
-        ),
-        weekendTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
-          color: context.colorScheme.primaryContainer,
-        ),
-        outsideTextStyle: context.textTheme.titleSmall!.copyWith(
-          fontFamily: FontFamily.geologica,
-          color: context.colorScheme.primaryContainer,
-        ),
-        defaultDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.scrim,
-        ),
-        weekendDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.scrim,
-        ),
-        holidayDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.scrim,
-        ),
-        outsideDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.scrim,
-        ),
-        selectedDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.primary,
-        ),
-        todayDecoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          color: context.colorScheme.secondary,
+        calendarStyle: CalendarStyle(
+          todayTextStyle: context.textTheme.titleSmall!.copyWith(
+            fontWeight: FontWeight.bold,
+            fontFamily: FontFamily.geologica,
+            color: context.colorScheme.onBackground,
+          ),
+          selectedTextStyle: context.textTheme.titleSmall!.copyWith(
+            fontWeight: FontWeight.bold,
+            fontFamily: FontFamily.geologica,
+            color: context.colorScheme.background,
+          ),
+          defaultTextStyle: context.textTheme.titleSmall!.copyWith(
+            fontFamily: FontFamily.geologica,
+            fontWeight: FontWeight.bold,
+          ),
+          holidayTextStyle: context.textTheme.titleSmall!.copyWith(
+            fontFamily: FontFamily.geologica,
+            fontWeight: FontWeight.bold,
+          ),
+          weekendTextStyle: context.textTheme.titleSmall!.copyWith(
+            fontFamily: FontFamily.geologica,
+            color: context.colorScheme.primaryContainer,
+          ),
+          outsideTextStyle: context.textTheme.titleSmall!.copyWith(
+            fontFamily: FontFamily.geologica,
+            color: context.colorScheme.primaryContainer,
+          ),
+          defaultDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          weekendDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          holidayDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          outsideDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.scrim,
+          ),
+          selectedDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.primary,
+          ),
+          todayDecoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            color: context.colorScheme.secondary,
+          ),
         ),
       ),
     );

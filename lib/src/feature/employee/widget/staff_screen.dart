@@ -118,35 +118,36 @@ class _StaffScreenState extends State<StaffScreen>
                     },
                   ),
                 ),
-                SliverPadding(
-                  padding: EdgeInsets.only(
-                    left: 8,
-                    right: 8,
-                    bottom: MediaQuery.sizeOf(context).height / 8,
-                  ),
-                  sliver: SliverToBoxAdapter(
-                    child: ExpansionTile(
-                      title: Text(
-                        'Уволенные сотрудники',
-                        style: context.textTheme.titleMedium?.copyWith(
-                          fontFamily: FontFamily.geologica,
+                if (state.staff.any((employee) => employee.isDismiss)) ...[
+                  SliverPadding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    sliver: SliverToBoxAdapter(
+                      child: ExpansionTile(
+                        title: Text(
+                          'Уволенные сотрудники',
+                          style: context.textTheme.titleMedium?.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
                         ),
-                      ),
-                      children: [
-                        ...state.staff.map(
-                          (employee) {
-                            return employee.isDismiss
+                        children: [
+                          ...state.staff.map(
+                            (employee) => employee.isDismiss
                                 ? EmployeeCard(
                                     employee: employee,
                                     refresh: _refresh,
                                   )
-                                : const SizedBox.shrink();
-                          },
-                        ),
-                      ],
+                                : const SizedBox.shrink(),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ],
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: MediaQuery.sizeOf(context).height / 8,
+                  ),
+                )
               ] else
                 SliverFillRemaining(
                   child: Center(

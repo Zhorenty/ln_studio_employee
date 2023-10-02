@@ -32,14 +32,13 @@ class EmployeeCard extends StatelessWidget {
       child: Row(
         children: [
           AvatarWidget(radius: 40, title: user.fullName),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: MediaQuery.sizeOf(context).width / 1.9,
-                child: Text(
+          const SizedBox(width: 10),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
                   user.fullName,
                   style: context.textTheme.titleMedium?.copyWith(
                     fontFamily: FontFamily.geologica,
@@ -47,17 +46,17 @@ class EmployeeCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Text(
-                jobPlace.name,
-                style: context.textTheme.labelMedium?.copyWith(
-                  fontFamily: FontFamily.geologica,
-                  color: context.colorScheme.primaryContainer,
+                Text(
+                  jobPlace.name,
+                  style: context.textTheme.labelMedium?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.primaryContainer,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              StarRating(initialRating: employee.stars)
-            ],
+                const SizedBox(height: 4),
+                StarRating(initialRating: employee.stars)
+              ],
+            ),
           ),
           AnimatedButton(
             onPressed: () => context.go('/staff/employee', extra: employee.id),
@@ -66,11 +65,11 @@ class EmployeeCard extends StatelessWidget {
                 shape: const CircleBorder(),
                 color: context.colorScheme.primary,
               ),
-              margin: const EdgeInsets.all(5),
-              padding: const EdgeInsets.all(5),
+              margin: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(6),
               child: Icon(
                 Icons.edit,
-                size: 18,
+                size: 21,
                 color: context.colorScheme.onBackground,
               ),
             ),

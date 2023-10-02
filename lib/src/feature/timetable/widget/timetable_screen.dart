@@ -83,12 +83,14 @@ class _TimetableScreenState extends State<TimetableScreen> {
               ),
             ),
             CupertinoSliverRefreshControl(onRefresh: _refresh),
-            if (state.hasTimetables)
-              SliverPadding(
+            SliverAnimatedOpacity(
+              opacity: state.hasTimetables ? 1 : 0,
+              duration: const Duration(milliseconds: 400),
+              sliver: SliverPadding(
                 padding: EdgeInsets.only(
                   left: 8,
                   right: 8,
-                  top: 8,
+                  top: 12,
                   bottom: MediaQuery.sizeOf(context).height / 8,
                 ),
                 sliver: SliverList.separated(
@@ -138,41 +140,20 @@ class _TimetableScreenState extends State<TimetableScreen> {
                             ],
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(16),
-                              bottomRight: Radius.circular(16),
-                            ),
-                            color: context.colorScheme.onBackground,
-                          ),
-                          child: CustomTableCalendar(
-                            focusedDay: _focusedDays[index],
-                            selectedDayPredicate: (day) =>
-                                selectedDayPredicate(day, index, employee),
-                            onDaySelected: (sel, foc) =>
-                                onDaySelected(sel, foc, index, employee.id),
-                          ),
+                        CustomTableCalendar(
+                          focusedDay: _focusedDays[index],
+                          selectedDayPredicate: (day) =>
+                              selectedDayPredicate(day, index, employee),
+                          onDaySelected: (sel, foc) =>
+                              onDaySelected(sel, foc, index, employee.id),
                         ),
                       ],
                     );
                   },
                   separatorBuilder: (context, index) => const Divider(),
                 ),
-              )
-            else
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(
-                  child: Text(
-                    context.stringOf().noEmployees,
-                    style: context.textTheme.titleMedium!.copyWith(
-                      color: context.colorScheme.primary,
-                      fontFamily: FontFamily.geologica,
-                    ),
-                  ),
-                ),
               ),
+            ),
           ],
         ),
       ),

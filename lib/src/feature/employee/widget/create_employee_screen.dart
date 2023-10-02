@@ -65,6 +65,9 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   DateTime dateOfEmployment = DateTime.now();
   DateTime birthDate = DateTime.now();
 
+  Specialization? employeeSpecialization;
+  Salon? employeeSalon;
+
   @override
   void initState() {
     super.initState();
@@ -165,11 +168,11 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
               Expanded(
                 child: CustomScrollView(
                   slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 8),
-                          Stack(
+                    SliverList.list(
+                      children: [
+                        const SizedBox(height: 8),
+                        Center(
+                          child: Stack(
                             children: [
                               const AvatarWidget(radius: 65),
                               Positioned(
@@ -194,9 +197,9 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 32),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 32),
+                      ],
                     ),
                     SliverToBoxAdapter(
                       child: Column(
@@ -275,23 +278,19 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                   builder: (_, setState) => FieldButton(
                                     controller: _salonController,
                                     label: 'Салон',
-                                    onTap: () {
-                                      Salon? employeeSalon;
-
-                                      ModalPopup.show(
-                                        context: context,
-                                        child: SalonChoiceScreen(
-                                          currentSalon: employeeSalon,
-                                          onChanged: (salon) => setState(() {
-                                            salon != null
-                                                ? employeeSalon = salon
-                                                : null;
-                                            _salonController.text =
-                                                employeeSalon!.name;
-                                          }),
-                                        ),
-                                      );
-                                    },
+                                    onTap: () => ModalPopup.show(
+                                      context: context,
+                                      child: SalonChoiceScreen(
+                                        currentSalon: employeeSalon,
+                                        onChanged: (salon) => setState(() {
+                                          salon != null
+                                              ? employeeSalon = salon
+                                              : null;
+                                          _salonController.text =
+                                              employeeSalon!.name;
+                                        }),
+                                      ),
+                                    ),
                                     validator: _emptyValidator,
                                   ),
                                 ),
@@ -300,26 +299,22 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                                     return FieldButton(
                                       controller: _specializationController,
                                       label: 'Специализация',
-                                      onTap: () {
-                                        Specialization? employeeSpecialization;
-
-                                        ModalPopup.show(
-                                          context: context,
-                                          child: SpecializationChoiceScreen(
-                                            currentSpecialization:
-                                                employeeSpecialization,
-                                            onChanged: (specialization) =>
-                                                setState(() {
-                                              specialization != null
-                                                  ? employeeSpecialization =
-                                                      specialization
-                                                  : null;
-                                              _specializationController.text =
-                                                  employeeSpecialization!.name;
-                                            }),
-                                          ),
-                                        );
-                                      },
+                                      onTap: () => ModalPopup.show(
+                                        context: context,
+                                        child: SpecializationChoiceScreen(
+                                          currentSpecialization:
+                                              employeeSpecialization,
+                                          onChanged: (specialization) =>
+                                              setState(() {
+                                            specialization != null
+                                                ? employeeSpecialization =
+                                                    specialization
+                                                : null;
+                                            _specializationController.text =
+                                                employeeSpecialization!.name;
+                                          }),
+                                        ),
+                                      ),
                                       validator: _emptyValidator,
                                     );
                                   },
@@ -380,9 +375,8 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
           EmployeeEvent.create(
             employee: Employee$Create(
               address: _addressController.text,
-              // TODO(zhorenty): Fetch salons and jobs
-              jobId: 1,
-              salonId: 1,
+              jobId: employeeSpecialization!.id,
+              salonId: employeeSalon!.id,
               description: _descriptionController.text,
               dateOfEmployment: dateOfEmployment,
               contractNumber: _contractNumberController.text,
