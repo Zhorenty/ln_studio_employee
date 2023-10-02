@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:ln_employee/src/common/widget/pop_up_button.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
+import 'package:table_calendar/table_calendar.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/custom_app_bar.dart';
@@ -27,6 +28,7 @@ class TimetableScreen extends StatefulWidget {
 }
 
 class _TimetableScreenState extends State<TimetableScreen> {
+  final List<DateTime> _selectedDays = [];
   final List<DateTime> _focusedDays = [];
 
   /// Timetable bloc.
@@ -91,11 +93,15 @@ class _TimetableScreenState extends State<TimetableScreen> {
                 sliver: SliverList.separated(
                   itemCount: state.employeeTimetable.length,
                   itemBuilder: (context, index) {
+                    final employeeTimetable = state.employeeTimetable[index];
+                    final employee = employeeTimetable;
+
                     if (index >= _focusedDays.length) {
                       _focusedDays.add(DateTime.now());
                     }
-                    final employeeTimetable = state.employeeTimetable[index];
-                    final employee = employeeTimetable;
+                    if (index >= _selectedDays.length) {
+                      _selectedDays.add(DateTime.now());
+                    }
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,6 +152,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                           child: CustomTableCalendar(
                             focusedDay: _focusedDays[index],
                             selectedDayPredicate: (day) {
+                              isSameDay(_selectedDays[index], day);
                               return employeeTimetable.timetableItems.any(
                                 (timetable) =>
                                     timetable.dateAt.year == day.year &&
@@ -154,7 +161,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
                               );
                             },
                             onDaySelected: (selectedDay, focusedDay) {
-                              _focusedDays[index] = selectedDay;
+                              setState(() {
+                                _selectedDays[index] = selectedDay;
+                                _focusedDays[index] = focusedDay;
+                              });
 
                               _timetableBloc.add(
                                 TimetableEvent.fillTimetable(
