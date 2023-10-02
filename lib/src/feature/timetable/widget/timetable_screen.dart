@@ -61,7 +61,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                   onPressed: () {},
                   icon: Icon(
                     Icons.notifications,
-                    color: context.colorScheme.primary,
+                    color: context.colorScheme.secondary,
                   ),
                 ),
               ],
