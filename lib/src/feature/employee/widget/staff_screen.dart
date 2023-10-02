@@ -70,10 +70,10 @@ class _StaffScreenState extends State<StaffScreen>
                 title: context.stringOf().employees,
                 actions: [
                   AnimatedButton(
-                    padding: const EdgeInsets.only(right: 8 + 2, top: 2),
+                    padding: const EdgeInsets.only(right: 16, top: 2),
                     child: Icon(
                       Icons.person_add,
-                      color: context.colorScheme.primary,
+                      color: context.colorScheme.secondary,
                     ),
                     onPressed: () => ModalPopup.show(
                       context: context,

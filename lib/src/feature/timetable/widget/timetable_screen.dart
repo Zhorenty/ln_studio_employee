@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:ln_employee/src/common/widget/pop_up_button.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
+import 'package:ln_employee/src/feature/timetable/model/employee_timetable.dart';
+import 'package:table_calendar/table_calendar.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/custom_app_bar.dart';
@@ -27,6 +29,7 @@ class TimetableScreen extends StatefulWidget {
 }
 
 class _TimetableScreenState extends State<TimetableScreen> {
+  final List<DateTime> _selectedDays = [];
   final List<DateTime> _focusedDays = [];
 
   /// Timetable bloc.
@@ -61,7 +64,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                   onPressed: () {},
                   icon: Icon(
                     Icons.notifications,
-                    color: context.colorScheme.primary,
+                    color: context.colorScheme.secondary,
                   ),
                 ),
               ],
@@ -91,11 +94,11 @@ class _TimetableScreenState extends State<TimetableScreen> {
                 sliver: SliverList.separated(
                   itemCount: state.employeeTimetable.length,
                   itemBuilder: (context, index) {
-                    if (index >= _focusedDays.length) {
-                      _focusedDays.add(DateTime.now());
-                    }
                     final employeeTimetable = state.employeeTimetable[index];
                     final employee = employeeTimetable;
+
+                    ///
+                    addFDaysIfNecessary(index);
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +123,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                           child: Row(
                             children: [
                               AvatarWidget(title: employee.fullName),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 16),
                               Flexible(
                                 child: Text(
                                   employee.fullName,
@@ -145,28 +148,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
                           ),
                           child: CustomTableCalendar(
                             focusedDay: _focusedDays[index],
-                            selectedDayPredicate: (day) {
-                              return employeeTimetable.timetableItems.any(
-                                (timetable) =>
-                                    timetable.dateAt.year == day.year &&
-                                    timetable.dateAt.month == day.month &&
-                                    timetable.dateAt.day == day.day,
-                              );
-                            },
-                            onDaySelected: (selectedDay, focusedDay) {
-                              _focusedDays[index] = selectedDay;
-
-                              _timetableBloc.add(
-                                TimetableEvent.fillTimetable(
-                                  employeeId: employee.id,
-                                  salonId: BlocProvider.of<SalonBLoC>(context)
-                                      .state
-                                      .currentSalon!
-                                      .id,
-                                  dateAt: selectedDay,
-                                ),
-                              );
-                            },
+                            selectedDayPredicate: (day) =>
+                                selectedDayPredicate(day, index, employee),
+                            onDaySelected: (sel, foc) =>
+                                onDaySelected(sel, foc, index, employee.id),
                           ),
                         ),
                       ],
@@ -204,5 +189,51 @@ class _TimetableScreenState extends State<TimetableScreen> {
       );
     }
     await block;
+  }
+
+  ///
+  void addFDaysIfNecessary(int index) {
+    if (index >= _focusedDays.length) {
+      _focusedDays.add(DateTime.now());
+    }
+    if (index >= _selectedDays.length) {
+      _selectedDays.add(DateTime.now());
+    }
+  }
+
+  ///
+  void onDaySelected(
+    DateTime selectedDay,
+    DateTime focusedDay,
+    int index,
+    int employeeId,
+  ) {
+    setState(() {
+      _selectedDays[index] = selectedDay;
+      _focusedDays[index] = focusedDay;
+    });
+
+    _timetableBloc.add(
+      TimetableEvent.fillTimetable(
+        employeeId: employeeId,
+        salonId: BlocProvider.of<SalonBLoC>(context).state.currentSalon!.id,
+        dateAt: selectedDay,
+      ),
+    );
+  }
+
+  ///
+  bool selectedDayPredicate(
+    DateTime day,
+    int index,
+    EmployeeTimetable employeeTimetable,
+  ) {
+    isSameDay(_selectedDays[index], day);
+    return employeeTimetable.timetableItems.any(
+      (timetable) =>
+          timetable.dateAt.year == day.year &&
+          timetable.dateAt.month == day.month &&
+          timetable.dateAt.day == day.day,
+    );
   }
 }

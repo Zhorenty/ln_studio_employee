@@ -23,3 +23,6 @@ clean:
 
 watch:
 	dart run build_runner watch
+
+intl:
+	dart run intl_utils:generate
