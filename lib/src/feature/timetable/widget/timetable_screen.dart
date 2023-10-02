@@ -97,12 +97,8 @@ class _TimetableScreenState extends State<TimetableScreen> {
                     final employeeTimetable = state.employeeTimetable[index];
                     final employee = employeeTimetable;
 
-                    if (index >= _focusedDays.length) {
-                      _focusedDays.add(DateTime.now());
-                    }
-                    if (index >= _selectedDays.length) {
-                      _selectedDays.add(DateTime.now());
-                    }
+                    ///
+                    addFDaysIfNecessary(index);
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,6 +189,16 @@ class _TimetableScreenState extends State<TimetableScreen> {
       );
     }
     await block;
+  }
+
+  ///
+  void addFDaysIfNecessary(int index) {
+    if (index >= _focusedDays.length) {
+      _focusedDays.add(DateTime.now());
+    }
+    if (index >= _selectedDays.length) {
+      _selectedDays.add(DateTime.now());
+    }
   }
 
   ///
