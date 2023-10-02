@@ -123,7 +123,13 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<EmployeeBloc, EmployeeState>(
+      BlocConsumer<EmployeeBloc, EmployeeState>(
+        listener: (context, state) => state.mapOrNull(
+          successful: (state) {
+            _refresh();
+            context.pop();
+          },
+        ),
         builder: (context, state) {
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -157,8 +163,6 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _create();
-                        _refresh();
-                        context.pop();
                       }
                     },
                   ),

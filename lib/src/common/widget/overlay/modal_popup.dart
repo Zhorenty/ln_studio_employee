@@ -80,7 +80,7 @@ abstract class ModalPopup {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12 + MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
           );

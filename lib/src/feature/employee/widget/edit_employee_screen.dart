@@ -68,6 +68,10 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   late final TextEditingController _salesController;
   late final TextEditingController _dateOfEmploymentController;
 
+  // Переменные, которые не должны изменяться при rebuild'е
+  int? clientsCount;
+  int? workedDaysCount;
+
   @override
   void initState() {
     super.initState();
@@ -130,6 +134,11 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                     final user = state.employee!.userModel;
                     final dismissed = state.employee!.isDismiss;
 
+                    if (clientsCount == null) {
+                      clientsCount = employee.clients;
+                      workedDaysCount = employee.workedDays;
+                    }
+
                     int stars = employee.stars;
                     DateTime birthDate = user.birthDate;
                     DateTime dateOfEmployment = employee.dateOfEmployment;
@@ -165,13 +174,13 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                             ),
                           ),
                           leading: Text(
-                            employee.clients.toString(),
+                            clientsCount.toString(),
                             style: context.textTheme.titleLarge!.copyWith(
                               fontFamily: FontFamily.geologica,
                             ),
                           ),
                           trailing: Text(
-                            employee.workedDays.toString(),
+                            workedDaysCount.toString(),
                             style: context.textTheme.titleLarge!.copyWith(
                               fontFamily: FontFamily.geologica,
                             ),

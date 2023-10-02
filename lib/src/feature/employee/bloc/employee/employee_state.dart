@@ -102,6 +102,17 @@ abstract base class _$EmployeeStateBase {
         successful: successful ?? (_) => orElse(),
       );
 
+  R? mapOrNull<R>({
+    PatternMatch<R, _EmployeeState$Idle>? idle,
+    PatternMatch<R, _EmployeeState$Processing>? processing,
+    PatternMatch<R, _EmployeeState$Successful>? successful,
+  }) =>
+      map<R?>(
+        idle: idle ?? (_) => null,
+        processing: processing ?? (_) => null,
+        successful: successful ?? (_) => null,
+      );
+
   @override
   String toString() => 'EmployeeState(Employee: $employee, error: $error)';
 

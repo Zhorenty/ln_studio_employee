@@ -30,7 +30,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     emit(EmployeeState.processing(employee: state.employee));
     try {
       final employee = await repository.get(id: event.id);
-      emit(EmployeeState.idle(employee: employee));
+      emit(EmployeeState.successful(employee: employee));
     } on Object catch (e) {
       emit(EmployeeState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
