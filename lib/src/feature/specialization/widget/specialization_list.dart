@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/widget/shimmer.dart';
+import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
+import 'package:ln_employee/src/feature/specialization/bloc/specialization_event.dart';
 import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
@@ -36,45 +38,48 @@ class _SpecializationChoiceScreenState
     extends State<SpecializationChoiceScreen> {
   late final SpecializationBloc specializationBloc;
 
-  /* #region Lifecycle */
   @override
   void initState() {
     super.initState();
-    specializationBloc = context.read<SpecializationBloc>();
+    specializationBloc = SpecializationBloc(
+      repository: DependenciesScope.of(context).specializationRepository,
+    )..add(const SpecializationEvent.fetchAll());
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocBuilder<SpecializationBloc, SpecializationState>(
-        builder: (context, state) {
-          return specializationBloc.state.hasSpecializations
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Выберите должность',
-                        style: context.textTheme.bodyLarge?.copyWith(
-                          fontFamily: FontFamily.geologica,
+  Widget build(BuildContext context) => BlocProvider(
+        create: (context) => specializationBloc,
+        child: BlocBuilder<SpecializationBloc, SpecializationState>(
+          builder: (context, state) {
+            return state.hasSpecializations
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Выберите должность',
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
                         ),
-                      ),
-                      ...specializationBloc.state.specializations.map(
-                        (specialization) => _SpecializationChoiceRow(
-                          specialization: specialization,
-                          currentSpecialization: widget.currentSpecialization,
-                          onChanged: (specialization) {
-                            widget.onChanged!(specialization);
-                            context.pop();
-                          },
+                        ...state.specializations.map(
+                          (specialization) => _SpecializationChoiceRow(
+                            specialization: specialization,
+                            currentSpecialization: widget.currentSpecialization,
+                            onChanged: (specialization) {
+                              widget.onChanged!(specialization);
+                              context.pop();
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              : const Shimmer();
-        },
+                      ],
+                    ),
+                  )
+                : const Shimmer();
+          },
+        ),
       );
 }
 

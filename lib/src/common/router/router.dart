@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '../../feature/employee/widget/staff_screen.dart';
@@ -34,14 +35,16 @@ final router = GoRouter(
               builder: (context, state) => const StaffScreen(),
               routes: [
                 GoRoute(
-                  path: 'employee',
+                  name: 'employee',
+                  path: 'employee/:id',
                   parentNavigatorKey: _parentKey,
                   pageBuilder: (context, state) {
-                    final id = state.extra as int;
-
                     return CustomTransitionPage<void>(
                       key: state.pageKey,
-                      child: EditEmployeeScreen(id: id),
+                      child: EditEmployeeScreen(
+                        id: int.parse(state.pathParameters['id'] as String),
+                        staffBloc: state.extra as StaffBloc,
+                      ),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         const begin = Offset(0.0, 1.0);
