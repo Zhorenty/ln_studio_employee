@@ -105,7 +105,7 @@ class _SalonChoiceRow extends StatelessWidget {
           selected: salon == currentSalon,
           selectedTileColor: context.colorScheme.background,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             side: salon == currentSalon
                 ? const BorderSide(color: Color(0xFF272727))
                 : BorderSide(color: context.colorScheme.scrim),

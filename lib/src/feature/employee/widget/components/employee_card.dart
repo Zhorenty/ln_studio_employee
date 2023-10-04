@@ -25,7 +25,6 @@ class EmployeeCard extends StatelessWidget {
     final user = employee.userModel;
     final jobPlace = employee.jobModel;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: context.colorScheme.onBackground,

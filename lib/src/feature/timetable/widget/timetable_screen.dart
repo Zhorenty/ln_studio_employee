@@ -155,7 +155,8 @@ class _TimetableScreenState extends State<TimetableScreen> {
                         ],
                       );
                     },
-                    separatorBuilder: (context, index) => const Divider(),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 16),
                   ),
                 ),
               ),

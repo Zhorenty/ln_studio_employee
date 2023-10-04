@@ -68,107 +68,114 @@ class _StaffScreenState extends State<StaffScreen>
           return false;
         },
         child: BlocBuilder<StaffBloc, StaffState>(
-          builder: (context, state) => Scaffold(
-            body: CustomScrollView(
-              slivers: [
-                CustomSliverAppBar(
-                  title: context.stringOf().employees,
-                  actions: [
-                    AnimatedButton(
-                      padding: const EdgeInsets.only(right: 16, top: 2),
-                      child: Icon(
-                        Icons.person_add,
-                        color: context.colorScheme.secondary,
+          builder: (context, state) {
+            final staff =
+                state.staff.where((employee) => !employee.isDismiss).toList();
+            final dismisseddStaff =
+                state.staff.where((employee) => employee.isDismiss).toList();
+            return Scaffold(
+              body: CustomScrollView(
+                slivers: [
+                  CustomSliverAppBar(
+                    title: context.stringOf().employees,
+                    actions: [
+                      AnimatedButton(
+                        padding: const EdgeInsets.only(right: 16, top: 2),
+                        child: Icon(
+                          Icons.person_add,
+                          color: context.colorScheme.secondary,
+                        ),
+                        onPressed: () => ModalPopup.show(
+                          context: context,
+                          showDivider: false,
+                          transitionAnimationController: controller,
+                          mobilePadding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                          child: CreateEmployeeScreen(staffBloc: staffBloc),
+                        ),
                       ),
-                      onPressed: () => ModalPopup.show(
-                        context: context,
-                        showDivider: false,
-                        transitionAnimationController: controller,
-                        mobilePadding:
-                            const EdgeInsets.symmetric(horizontal: 16),
-                        child: CreateEmployeeScreen(staffBloc: staffBloc),
-                      ),
-                    ),
-                  ],
-                  bottomChild: BlocBuilder<SalonBLoC, SalonState>(
-                    builder: (context, state) => state.currentSalon != null
-                        ? PopupButton(
-                            label: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
-                              child: state.currentSalon != null
-                                  ? Text(state.currentSalon!.name)
-                                  : const SizedBox(height: 26),
-                            ),
-                            child: SalonChoiceScreen(
-                              currentSalon: state.currentSalon,
-                            ),
-                          )
-                        : const SkeletonPopUpButton(),
-                  ),
-                ),
-                CupertinoSliverRefreshControl(onRefresh: _refresh),
-                if (state.hasStaff) ...[
-                  SliverPadding(
-                    padding: const EdgeInsets.all(8),
-                    sliver: SliverList.builder(
-                      itemCount: state.staff.length,
-                      itemBuilder: (context, index) {
-                        final employee = state.staff[index];
-
-                        return !employee.isDismiss
-                            ? EmployeeCard(
-                                employee: employee,
-                                refresh: _refresh,
-                              )
-                            : const SizedBox.shrink();
-                      },
+                    ],
+                    bottomChild: BlocBuilder<SalonBLoC, SalonState>(
+                      builder: (context, state) => state.currentSalon != null
+                          ? PopupButton(
+                              label: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                child: state.currentSalon != null
+                                    ? Text(state.currentSalon!.name)
+                                    : const SizedBox(height: 26),
+                              ),
+                              child: SalonChoiceScreen(
+                                currentSalon: state.currentSalon,
+                              ),
+                            )
+                          : const SkeletonPopUpButton(),
                     ),
                   ),
-                  if (state.staff.any((employee) => employee.isDismiss)) ...[
+                  CupertinoSliverRefreshControl(onRefresh: _refresh),
+                  if (state.hasStaff) ...[
                     SliverPadding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      sliver: SliverToBoxAdapter(
-                        child: ExpansionTile(
-                          title: Text(
-                            'Уволенные сотрудники',
-                            style: context.textTheme.titleMedium?.copyWith(
-                              fontFamily: FontFamily.geologica,
+                      padding: const EdgeInsets.all(16),
+                      sliver: SliverList.separated(
+                        itemCount: staff.length,
+                        itemBuilder: (context, index) {
+                          final employee = staff[index];
+
+                          return EmployeeCard(
+                            employee: employee,
+                            refresh: _refresh,
+                          );
+                        },
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 16),
+                      ),
+                    ),
+                    if (dismisseddStaff.isNotEmpty) ...[
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        sliver: SliverToBoxAdapter(
+                          child: ExpansionTile(
+                            title: Text(
+                              'Уволенные сотрудники',
+                              style: context.textTheme.titleMedium?.copyWith(
+                                fontFamily: FontFamily.geologica,
+                              ),
                             ),
+                            children: [
+                              ...dismisseddStaff.map(
+                                (employee) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: EmployeeCard(
+                                    employee: employee,
+                                    refresh: _refresh,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          children: [
-                            ...state.staff.map(
-                              (employee) => employee.isDismiss
-                                  ? EmployeeCard(
-                                      employee: employee,
-                                      refresh: _refresh,
-                                    )
-                                  : const SizedBox.shrink(),
-                            ),
-                          ],
+                        ),
+                      ),
+                    ],
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: MediaQuery.sizeOf(context).height / 8,
+                      ),
+                    )
+                  ] else
+                    SliverFillRemaining(
+                      child: Center(
+                        child: Text(
+                          context.stringOf().noEmployees,
+                          style: context.textTheme.titleMedium!.copyWith(
+                            fontFamily: FontFamily.geologica,
+                            color: context.colorScheme.primary,
+                          ),
                         ),
                       ),
                     ),
-                  ],
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: MediaQuery.sizeOf(context).height / 8,
-                    ),
-                  )
-                ] else
-                  SliverFillRemaining(
-                    child: Center(
-                      child: Text(
-                        context.stringOf().noEmployees,
-                        style: context.textTheme.titleMedium!.copyWith(
-                          fontFamily: FontFamily.geologica,
-                          color: context.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

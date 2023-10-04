@@ -248,7 +248,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
                                     color: context.colorScheme.onBackground,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Form(
                                     key: _formKey,
