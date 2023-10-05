@@ -38,13 +38,13 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
 
   @override
   Future<Employee> fetchEmployee(int id) async {
-    final response = await restClient.get('/api/employee/$id');
+    final response = await restClient.get('/api/v1/employee/$id');
     return Employee.fromJson(response);
   }
 
   @override
   Future<List<Employee>> fetchAllEmployee() async {
-    final response = await restClient.get('/api/employee/all');
+    final response = await restClient.get('/api/v1/employee');
 
     final staff = List.from((response['data'] as List))
         .map((e) => Employee.fromJson(e))
@@ -54,7 +54,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
 
   @override
   Future<List<Employee>> fetchSalonEmployees(int salonId) async {
-    final response = await restClient.get('/api/employee/by_salon_id/$salonId');
+    final response = await restClient.get('/api/v1/salon/$salonId/employees');
 
     final staff = List.from((response['data'] as List))
         .map((e) => Employee.fromJson(e))
@@ -66,7 +66,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   @override
   Future<void> createEmployee(Employee$Create employee) async =>
       await restClient.post(
-        '/api/employee/create',
+        '/api/v1/employee/create',
         body: {
           "address": employee.address,
           "job_id": employee.jobId,
@@ -89,7 +89,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   @override
   Future<Employee> editEmployee(Employee$Edit employee) async {
     final result = await restClient.put(
-      '/api/employee/edit/${employee.id}',
+      '/api/v1/employee/edit/${employee.id}',
       body: {
         'address': employee.address,
         'job_id': employee.jobId,
@@ -113,9 +113,9 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
 
   @override
   Future<void> dismissEmployee(int id) async =>
-      await restClient.patch('/api/employee/dismiss/$id');
+      await restClient.patch('/api/v1/employee/dismiss/$id');
 
   @override
   Future<void> reinstatementEmployee(int id) async =>
-      await restClient.patch('/api/employee/reinstatement/$id');
+      await restClient.patch('/api/v1/employee/reinstatement/$id');
 }

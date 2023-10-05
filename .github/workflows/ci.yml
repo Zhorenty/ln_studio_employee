@@ -31,6 +31,7 @@ jobs:
           flutter pub global activate very_good_cli
           flutter pub global activate intl_utils
           flutter pub global run intl_utils:generate
+          make runner
           
 
       - name: ✨ Check Formatting
