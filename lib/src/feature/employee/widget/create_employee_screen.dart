@@ -216,166 +216,162 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                           const SizedBox(height: 32),
                         ],
                       ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      SliverList.list(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const HeaderWidget(label: 'Рейтинг'),
+                              StarRating(
+                                initialRating: stars,
+                                onRatingChanged: (rating) => stars = rating,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          const HeaderWidget(label: 'Личная информация'),
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const HeaderWidget(label: 'Рейтинг'),
-                                StarRating(
-                                  initialRating: stars,
-                                  onRatingChanged: (rating) => stars = rating,
+                                const SizedBox(height: 16),
+                                CustomTextField(
+                                  dense: false,
+                                  controller: _firstNameController,
+                                  focusNode: _firstNameFocusNode,
+                                  textInputAction: TextInputAction.next,
+                                  label: 'Имя*',
+                                  keyboardType: TextInputType.name,
+                                  validator: _emptyValidator,
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            const HeaderWidget(label: 'Личная информация'),
-                            Form(
-                              key: _formKey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 16),
-                                  CustomTextField(
-                                    dense: false,
-                                    controller: _firstNameController,
-                                    focusNode: _firstNameFocusNode,
-                                    textInputAction: TextInputAction.next,
-                                    label: 'Имя*',
-                                    keyboardType: TextInputType.name,
+                                CustomTextField(
+                                  controller: _lastNameController,
+                                  label: 'Фамилия*',
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.name,
+                                  validator: _emptyValidator,
+                                ),
+                                CustomTextField(
+                                  controller: _phoneController,
+                                  focusNode: _phoneFocusNode,
+                                  label: 'Телефон*',
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.phone,
+                                  inputFormatters: [RuPhoneInputFormatter()],
+                                  validator: _emptyValidator,
+                                  onChanged: _checkPhoneNumber,
+                                ),
+                                CustomTextField(
+                                  controller: _addressController,
+                                  textInputAction: TextInputAction.next,
+                                  focusNode: _addressFocusNode,
+                                  label: 'Адрес проживания',
+                                  keyboardType: TextInputType.streetAddress,
+                                  validator: _emptyValidator,
+                                ),
+                                CustomTextField(
+                                  controller: _emailController,
+                                  label: 'Почта',
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.emailAddress,
+                                  validator: _emailValidator,
+                                ),
+                                DatePickerField(
+                                  controller: _birthDateController,
+                                  label: 'День рождения',
+                                  initialDate: birthDate,
+                                  onDateSelected: (day) => birthDate = day,
+                                  validator: _emptyValidator,
+                                ),
+                                const SizedBox(height: 32),
+                                const HeaderWidget(label: 'Рабочая информация'),
+                                const SizedBox(height: 16),
+                                StatefulBuilder(
+                                  builder: (_, setState) => FieldButton(
+                                    controller: _salonController,
+                                    label: 'Салон',
+                                    onTap: () => ModalPopup.show(
+                                      context: context,
+                                      child: SalonChoiceScreen(
+                                        currentSalon: employeeSalon,
+                                        onChanged: (salon) => setState(() {
+                                          salon != null
+                                              ? employeeSalon = salon
+                                              : null;
+                                          _salonController.text =
+                                              employeeSalon!.name;
+                                        }),
+                                      ),
+                                    ),
                                     validator: _emptyValidator,
                                   ),
-                                  CustomTextField(
-                                    controller: _lastNameController,
-                                    label: 'Фамилия*',
-                                    textInputAction: TextInputAction.next,
-                                    keyboardType: TextInputType.name,
-                                    validator: _emptyValidator,
-                                  ),
-                                  CustomTextField(
-                                    controller: _phoneController,
-                                    focusNode: _phoneFocusNode,
-                                    label: 'Телефон*',
-                                    textInputAction: TextInputAction.next,
-                                    keyboardType: TextInputType.phone,
-                                    inputFormatters: [RuPhoneInputFormatter()],
-                                    validator: _emptyValidator,
-                                    onChanged: _checkPhoneNumber,
-                                  ),
-                                  CustomTextField(
-                                    controller: _addressController,
-                                    textInputAction: TextInputAction.next,
-                                    focusNode: _addressFocusNode,
-                                    label: 'Адрес проживания',
-                                    keyboardType: TextInputType.streetAddress,
-                                    validator: _emptyValidator,
-                                  ),
-                                  CustomTextField(
-                                    controller: _emailController,
-                                    label: 'Почта',
-                                    textInputAction: TextInputAction.done,
-                                    keyboardType: TextInputType.emailAddress,
-                                    validator: _emailValidator,
-                                  ),
-                                  DatePickerField(
-                                    controller: _birthDateController,
-                                    label: 'День рождения',
-                                    initialDate: birthDate,
-                                    onDateSelected: (day) => birthDate = day,
-                                    validator: _emptyValidator,
-                                  ),
-                                  const SizedBox(height: 32),
-                                  const HeaderWidget(
-                                      label: 'Рабочая информация'),
-                                  const SizedBox(height: 16),
-                                  StatefulBuilder(
-                                    builder: (_, setState) => FieldButton(
-                                      controller: _salonController,
-                                      label: 'Салон',
+                                ),
+                                StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return FieldButton(
+                                      controller: _specializationController,
+                                      label: 'Специализация',
                                       onTap: () => ModalPopup.show(
                                         context: context,
-                                        child: SalonChoiceScreen(
-                                          currentSalon: employeeSalon,
-                                          onChanged: (salon) => setState(() {
-                                            salon != null
-                                                ? employeeSalon = salon
+                                        child: SpecializationChoiceScreen(
+                                          currentSpecialization:
+                                              employeeSpecialization,
+                                          onChanged: (specialization) =>
+                                              setState(() {
+                                            specialization != null
+                                                ? employeeSpecialization =
+                                                    specialization
                                                 : null;
-                                            _salonController.text =
-                                                employeeSalon!.name;
+                                            _specializationController.text =
+                                                employeeSpecialization!.name;
                                           }),
                                         ),
                                       ),
                                       validator: _emptyValidator,
-                                    ),
+                                    );
+                                  },
+                                ),
+                                CustomTextField(
+                                  controller: _descriptionController,
+                                  textInputAction: TextInputAction.next,
+                                  dense: false,
+                                  label: 'Описание сотрудника',
+                                  keyboardType: TextInputType.multiline,
+                                  validator: _emptyValidator,
+                                ),
+                                CustomTextField(
+                                  controller: _contractNumberController,
+                                  textInputAction: TextInputAction.next,
+                                  label: 'Номер договора',
+                                  keyboardType: TextInputType.streetAddress,
+                                  validator: _emptyValidator,
+                                ),
+                                CustomTextField(
+                                  controller: _salesController,
+                                  focusNode: _salesFocusNode,
+                                  textInputAction: TextInputAction.done,
+                                  label: 'Процент от продаж*',
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: true,
                                   ),
-                                  StatefulBuilder(
-                                    builder: (context, setState) {
-                                      return FieldButton(
-                                        controller: _specializationController,
-                                        label: 'Специализация',
-                                        onTap: () => ModalPopup.show(
-                                          context: context,
-                                          child: SpecializationChoiceScreen(
-                                            currentSpecialization:
-                                                employeeSpecialization,
-                                            onChanged: (specialization) =>
-                                                setState(() {
-                                              specialization != null
-                                                  ? employeeSpecialization =
-                                                      specialization
-                                                  : null;
-                                              _specializationController.text =
-                                                  employeeSpecialization!.name;
-                                            }),
-                                          ),
-                                        ),
-                                        validator: _emptyValidator,
-                                      );
-                                    },
-                                  ),
-                                  CustomTextField(
-                                    controller: _descriptionController,
-                                    textInputAction: TextInputAction.next,
-                                    dense: false,
-                                    label: 'Описание сотрудника',
-                                    keyboardType: TextInputType.multiline,
-                                    validator: _emptyValidator,
-                                  ),
-                                  CustomTextField(
-                                    controller: _contractNumberController,
-                                    textInputAction: TextInputAction.next,
-                                    label: 'Номер договора',
-                                    keyboardType: TextInputType.streetAddress,
-                                    validator: _emptyValidator,
-                                  ),
-                                  CustomTextField(
-                                    controller: _salesController,
-                                    focusNode: _salesFocusNode,
-                                    textInputAction: TextInputAction.done,
-                                    label: 'Процент от продаж*',
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
-                                    validator: _emptyValidator,
-                                    onChanged: _checkSales,
-                                  ),
-                                  DatePickerField(
-                                    controller: _dateOfEmploymentController,
-                                    label: 'Дата принятия на работу',
-                                    initialDate: dateOfEmployment,
-                                    onDateSelected: (day) =>
-                                        dateOfEmployment = day,
-                                    validator: _emptyValidator,
-                                  ),
-                                ],
-                              ),
+                                  validator: _emptyValidator,
+                                  onChanged: _checkSales,
+                                ),
+                                DatePickerField(
+                                  controller: _dateOfEmploymentController,
+                                  label: 'Дата принятия на работу',
+                                  initialDate: dateOfEmployment,
+                                  onDateSelected: (day) =>
+                                      dateOfEmployment = day,
+                                  validator: _emptyValidator,
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 16 + 8),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 16 + 8),
+                        ],
                       ),
                     ],
                   ),
