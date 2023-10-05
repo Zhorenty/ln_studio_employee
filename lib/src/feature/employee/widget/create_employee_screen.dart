@@ -407,13 +407,8 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   }
 
   /// Empty value validator.
-  String? _emptyValidator(String? value) {
-    if (value!.isEmpty) {
-      return 'Обязательное поле';
-    } else {
-      return null;
-    }
-  }
+  String? _emptyValidator(String? value) =>
+      value!.isEmpty ? 'Обязательное поле' : null;
 
   /// Refresh [StaffBloc].
   Future<void> _refresh() async {
