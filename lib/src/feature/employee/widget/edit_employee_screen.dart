@@ -46,6 +46,7 @@ class EditEmployeeScreen extends StatefulWidget {
   /// Employee id.
   final int id;
 
+  ///
   final StaffBloc staffBloc;
 
   @override
@@ -53,6 +54,7 @@ class EditEmployeeScreen extends StatefulWidget {
 }
 
 class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
+  /// Employee bloc maintaining [EditEmployeeScreen] state.
   late final EmployeeBloc employeeBloc;
 
   ///
@@ -131,8 +133,8 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => employeeBloc,
+    return BlocProvider.value(
+      value: employeeBloc,
       child: BlocBuilder<EmployeeBloc, EmployeeState>(
         builder: (context, state) => Scaffold(
           backgroundColor: context.colorScheme.background,

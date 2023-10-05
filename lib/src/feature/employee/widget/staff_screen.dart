@@ -200,7 +200,7 @@ class _StaffScreenState extends State<StaffScreen>
 
   ///
   Future<void> _refresh() async {
-    final block = context.read<StaffBloc>().stream.first;
+    final block = staffBloc.stream.first;
     _fetchSalonEmployees();
     await block;
   }

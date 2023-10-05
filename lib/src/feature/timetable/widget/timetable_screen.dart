@@ -169,7 +169,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
   /// Refresh timetables.
   Future<void> _refresh() async {
-    final block = context.read<TimetableBloc>().stream.first;
+    final block = _timetableBloc.stream.first;
     final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {
       _timetableBloc.add(

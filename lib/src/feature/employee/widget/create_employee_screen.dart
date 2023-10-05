@@ -29,11 +29,9 @@ import '/src/feature/employee/model/employee_create/user_create.dart';
 
 ///
 class CreateEmployeeScreen extends StatefulWidget {
-  const CreateEmployeeScreen({
-    super.key,
-    required this.staffBloc,
-  });
+  const CreateEmployeeScreen({super.key, required this.staffBloc});
 
+  ///
   final StaffBloc staffBloc;
 
   @override
@@ -134,11 +132,11 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (context) => employeeBloc,
+  Widget build(BuildContext context) => BlocProvider.value(
+        value: employeeBloc,
         child: BlocConsumer<EmployeeBloc, EmployeeState>(
           listener: (context, state) => state.mapOrNull(
-            successful: (state) {
+            successful: (_) {
               _refresh();
               context.pop();
             },
