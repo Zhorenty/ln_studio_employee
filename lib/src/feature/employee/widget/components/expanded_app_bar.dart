@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
-import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/overlay/message_popup.dart';
 
@@ -42,6 +41,7 @@ class ExpandedAppBar extends StatelessWidget {
       backgroundColor: context.colorScheme.background,
       surfaceTintColor: context.colorScheme.background,
       toolbarHeight: 180,
+      centerTitle: true,
       title: Column(
         children: [
           AvatarWidget(radius: 60, title: label),
@@ -53,10 +53,10 @@ class ExpandedAppBar extends StatelessWidget {
       pinned: true,
       leading: Align(
         alignment: Alignment.topLeft,
-        child: AnimatedButton(
-          padding: const EdgeInsets.only(top: 16 + 8 + 4, left: 8),
+        child: IconButton(
+          padding: const EdgeInsets.only(top: 28),
           onPressed: onExit,
-          child: Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_outlined,
             color: context.colorScheme.secondary,
           ),
@@ -65,12 +65,12 @@ class ExpandedAppBar extends StatelessWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.only(bottom: 100),
-          child: AnimatedButton(
-            padding: const EdgeInsets.only(right: 8 + 2),
-            child: Icon(
+          child: IconButton(
+            icon: Icon(
               Icons.more_horiz_rounded,
               color: context.colorScheme.secondary,
             ),
+            highlightColor: context.colorScheme.scrim,
             onPressed: () {
               MessagePopup.bottomSheet(
                 context,
