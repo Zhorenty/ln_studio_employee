@@ -31,7 +31,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
 
   @override
   Future<List<EmployeeTimetable>> fetchTimetables() async {
-    final response = await _restClient.get('/api/timetable/all');
+    final response = await _restClient.get('/api/v1/timetable');
 
     final timetables = List.from((response['data'] as List))
         .map((e) => EmployeeTimetable.fromJson(e))
@@ -43,7 +43,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   @override
   Future<List<EmployeeTimetable>> fetchTimetablesBySalonId(int salonId) async {
     final response = await _restClient.get(
-      '/api/timetable/by_salon_id/$salonId',
+      '/api/v1/salon/$salonId/timetables',
     );
 
     final timetables = List.from((response['data'] as List))
@@ -60,7 +60,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
     required DateTime dateAt,
   }) =>
       _restClient.post(
-        '/api/timetable/fill',
+        '/api/v1/timetable/fill',
         body: {
           'employee_id': employeeId,
           'salon_id': salonId,

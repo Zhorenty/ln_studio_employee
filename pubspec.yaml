@@ -91,16 +91,10 @@ flutter:
           weight: 400
         - asset: assets/fonts/PlayfairDisplay-Bold.ttf
           weight: 700
-    - family: Outfit
-      fonts:
-        - asset: assets/fonts/Outfit-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Outfit-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Outfit-Bold.ttf
-          weight: 700
     - family: Geologica
       fonts:
+        - asset: assets/fonts/Geologica-Light.ttf
+          weight: 300
         - asset: assets/fonts/Geologica-Regular.ttf
           weight: 400
         - asset: assets/fonts/Geologica-Bold.ttf

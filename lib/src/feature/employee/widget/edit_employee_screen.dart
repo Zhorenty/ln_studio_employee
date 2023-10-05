@@ -547,13 +547,8 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   }
 
   /// Empty value validator.
-  String? _emptyValidator(String? value) {
-    if (value!.isEmpty) {
-      return 'Обязательное поле';
-    } else {
-      return null;
-    }
-  }
+  String? _emptyValidator(String? value) =>
+      value!.isEmpty ? 'Обязательное поле' : null;
 
   /// Validate email address.
   String? _emailValidator(String? value) {
