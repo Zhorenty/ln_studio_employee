@@ -36,6 +36,14 @@ class AppBlocObserver extends BlocObserver {
   }
 
   @override
+  void onClose(BlocBase bloc) {
+    final buffer = StringBuffer()
+      ..writeln('Bloc: ${bloc.runtimeType} has been closed');
+    logger.info(buffer.toString());
+    super.onClose(bloc);
+  }
+
+  @override
   void onError(BlocBase<Object?> bloc, Object error, StackTrace stackTrace) {
     logger.error(
       'Bloc: ${bloc.runtimeType}',

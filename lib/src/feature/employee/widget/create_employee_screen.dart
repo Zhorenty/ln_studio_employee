@@ -9,6 +9,7 @@ import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.da
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_state.dart';
 import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/staff/staff_event.dart';
+import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
 import 'package:ln_employee/src/feature/salon/models/salon.dart';
 import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
@@ -28,13 +29,18 @@ import '/src/feature/employee/model/employee_create/user_create.dart';
 
 ///
 class CreateEmployeeScreen extends StatefulWidget {
-  const CreateEmployeeScreen({super.key});
+  const CreateEmployeeScreen({super.key, required this.staffBloc});
+
+  ///
+  final StaffBloc staffBloc;
 
   @override
   State<CreateEmployeeScreen> createState() => _CreateEmployeeScreenState();
 }
 
 class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
+  late final EmployeeBloc employeeBloc;
+
   /// [FormState] for validating.
   final _formKey = GlobalKey<FormState>();
 
@@ -71,6 +77,10 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   @override
   void initState() {
     super.initState();
+
+    employeeBloc = EmployeeBloc(
+      repository: DependenciesScope.of(context).employeeRepository,
+    );
 
     /// User information.
     _firstNameController = TextEditingController();
@@ -122,92 +132,91 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      BlocConsumer<EmployeeBloc, EmployeeState>(
-        listener: (context, state) => state.mapOrNull(
-          successful: (state) {
-            _refresh();
-            context.pop();
-          },
-        ),
-        builder: (context, state) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AnimatedButton(
-                    child: Text(
-                      'Отмена',
-                      style: context.textTheme.bodyMedium?.copyWith(
+  Widget build(BuildContext context) => BlocProvider.value(
+        value: employeeBloc,
+        child: BlocConsumer<EmployeeBloc, EmployeeState>(
+          listener: (context, state) => state.mapOrNull(
+            successful: (_) {
+              _refresh();
+              context.pop();
+            },
+          ),
+          builder: (context, state) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AnimatedButton(
+                      child: Text(
+                        'Отмена',
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
+                      ),
+                      onPressed: () => context.pop(),
+                    ),
+                    Text(
+                      'Новый сотрудник',
+                      style: context.textTheme.titleMedium?.copyWith(
                         fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.primary,
                       ),
                     ),
-                    onPressed: () => context.pop(),
-                  ),
-                  Text(
-                    'Новый сотрудник',
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.primary,
-                    ),
-                  ),
-                  AnimatedButton(
-                    child: Text(
-                      'Готово',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontFamily: FontFamily.geologica,
+                    AnimatedButton(
+                      child: Text(
+                        'Готово',
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
                       ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _create();
+                        }
+                      },
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _create();
-                      }
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverList.list(
-                      children: [
-                        const SizedBox(height: 8),
-                        Center(
-                          child: Stack(
-                            children: [
-                              const AvatarWidget(radius: 65),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    color: context.colorScheme.background,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: const Color(0xFF272727),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverList.list(
+                        children: [
+                          const SizedBox(height: 8),
+                          Center(
+                            child: Stack(
+                              children: [
+                                const AvatarWidget(radius: 65),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      color: context.colorScheme.background,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: const Color(0xFF272727),
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.photo_camera_rounded,
+                                      color: context.colorScheme.secondary,
+                                      size: 22,
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.photo_camera_rounded,
-                                    color: context.colorScheme.secondary,
-                                    size: 22,
-                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 32),
-                      ],
-                    ),
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                          const SizedBox(height: 32),
+                        ],
+                      ),
+                      SliverList.list(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -364,38 +373,38 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
                           const SizedBox(height: 16 + 8),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       );
 
   ///
   Future<void> _create() async {
-    context.read<EmployeeBloc>().add(
-          EmployeeEvent.create(
-            employee: Employee$Create(
-              address: _addressController.text,
-              jobId: employeeSpecialization!.id,
-              salonId: employeeSalon!.id,
-              description: _descriptionController.text,
-              dateOfEmployment: dateOfEmployment,
-              contractNumber: _contractNumberController.text,
-              percentageOfSales: double.parse(_salesController.text),
-              stars: stars,
-              userModel: UserModel$Create(
-                phone: _phoneController.text,
-                firstName: _firstNameController.text,
-                lastName: _lastNameController.text,
-                email: _emailController.text,
-                birthDate: birthDate,
-              ),
-            ),
+    employeeBloc.add(
+      EmployeeEvent.create(
+        employee: Employee$Create(
+          address: _addressController.text,
+          jobId: employeeSpecialization!.id,
+          salonId: employeeSalon!.id,
+          description: _descriptionController.text,
+          dateOfEmployment: dateOfEmployment,
+          contractNumber: _contractNumberController.text,
+          percentageOfSales: double.parse(_salesController.text),
+          stars: stars,
+          userModel: UserModel$Create(
+            phone: _phoneController.text,
+            firstName: _firstNameController.text,
+            lastName: _lastNameController.text,
+            email: _emailController.text,
+            birthDate: birthDate,
           ),
-        );
+        ),
+      ),
+    );
   }
 
   /// Validate email address.
@@ -416,11 +425,11 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
 
   /// Refresh [StaffBloc].
   Future<void> _refresh() async {
-    final block = context.read<StaffBloc>().stream.first;
+    final block = widget.staffBloc.stream.first;
     final salonBloc = context.read<SalonBLoC>();
-    context.read<StaffBloc>().add(
-          StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
-        );
+    widget.staffBloc.add(
+      StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
+    );
     await block;
   }
 

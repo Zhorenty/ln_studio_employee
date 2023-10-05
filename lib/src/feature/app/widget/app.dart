@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
-import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
-import 'package:ln_employee/src/feature/specialization/bloc/specialization_event.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
 import '/src/feature/initialization/model/dependencies.dart';
 import '/src/feature/initialization/widget/dependencies_scope.dart';
-import '/src/feature/timetable/bloc/timetable_bloc.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_event.dart';
-import '/src/feature/specialization/bloc/specialization_bloc.dart';
 
 import 'app_context.dart';
 
@@ -31,29 +26,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => TimetableBloc(
-              repository: result.dependencies.timetableRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => StaffBloc(
-              repository: result.dependencies.employeeRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => EmployeeBloc(
-              repository: result.dependencies.employeeRepository,
-            ),
-          ),
-          BlocProvider(
             create: (context) => SalonBLoC(
               repository: result.dependencies.salonRepository,
             )..add(const SalonEvent.fetchAll()),
-          ),
-          BlocProvider(
-            create: (context) => SpecializationBloc(
-              repository: result.dependencies.specializationRepository,
-            )..add(const SpecializationEvent.fetchAll()),
           ),
         ],
         child: ScopesProvider(
