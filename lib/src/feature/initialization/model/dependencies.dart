@@ -1,11 +1,10 @@
-import 'package:ln_employee/src/feature/specialization/data/specialization_repository.dart';
-
-import '/src/feature/salon/data/salon_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/employee/data/employee_repository.dart';
 import '/src/feature/timetable/data/timetable_repository.dart';
+import '/src/feature/salon/data/salon_repository.dart';
+import '/src/feature/specialization/data/specialization_repository.dart';
 
 /// Dependencies container.
 abstract interface class Dependencies {

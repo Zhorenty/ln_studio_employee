@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import 'floating_snack_bar.dart';
 import 'modal_popup.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
-import '../../feature/employee/widget/staff_screen.dart';
-import '../../feature/employee/widget/edit_employee_screen.dart';
-import '/src/feature/settings/widget/settings_screen.dart';
+import '/src/feature/employee/bloc/staff/staff_bloc.dart';
+import '/src/feature/employee/widget/edit_employee_screen.dart';
+import '/src/feature/employee/widget/staff_screen.dart';
+import '/src/feature/profile/widget/profile_screen.dart';
 import '/src/feature/timetable/widget/timetable_screen.dart';
 
 final _parentKey = GlobalKey<NavigatorState>();
@@ -68,8 +68,8 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/settings',
-              builder: (context, state) => const SettingsScreen(),
+              path: '/profile',
+              builder: (context, state) => const ProfileScreen(),
             ),
           ],
         ),

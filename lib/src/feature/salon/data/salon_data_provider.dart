@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import '/src/feature/salon/models/salon.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '/src/feature/salon/models/salon.dart';
 
 /// Abstract interface class for providing salon data.
 abstract class SalonDataProvider {

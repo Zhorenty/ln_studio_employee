@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import 'components/category_list_tile.dart';
 import 'components/custom_divider.dart';
 import 'components/header_list_tile.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
-  @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -77,6 +72,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 CategoryListTile(
                   icon: Icons.loyalty_rounded,
                   title: 'Скидки',
+                  size: 23,
+                ),
+                CustomDivider(),
+                CategoryListTile(
+                  icon: Icons.settings_rounded,
+                  title: 'Настройки',
                   size: 23,
                 ),
                 CustomDivider(),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/utils/extensions/color_extension.dart';
 
+import '/src/common/utils/extensions/color_extension.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 class CustomDivider extends StatelessWidget {

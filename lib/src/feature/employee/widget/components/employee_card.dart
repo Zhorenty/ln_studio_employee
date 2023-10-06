@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
-import 'package:ln_employee/src/common/widget/animated_button.dart';
-import 'package:ln_employee/src/common/widget/avatar_widget.dart';
-import 'package:ln_employee/src/common/widget/star_rating.dart';
-import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
-import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
+import '/src/common/assets/generated/fonts.gen.dart';
+import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/animated_button.dart';
+import '/src/common/widget/avatar_widget.dart';
+import '/src/common/widget/star_rating.dart';
+import '/src/feature/employee/bloc/staff/staff_bloc.dart';
+import '/src/feature/employee/model/employee/employee.dart';
 
 ///
 class EmployeeCard extends StatelessWidget {

@@ -1,4 +1,3 @@
-/// Extension adding an ability to get initials from a [String].
 extension InitialsExtension on String {
   /// Returns initials (two letters which begin each word) of this string.
   String initials() {

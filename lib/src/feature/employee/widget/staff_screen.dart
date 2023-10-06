@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -13,6 +12,7 @@ import '/src/feature/employee/bloc/staff/staff_bloc.dart';
 import '/src/feature/employee/bloc/staff/staff_event.dart';
 import '/src/feature/employee/bloc/staff/staff_state.dart';
 import '/src/feature/employee/widget/components/employee_card.dart';
+import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
 import '/src/feature/salon/widget/salon_choice_screen.dart';

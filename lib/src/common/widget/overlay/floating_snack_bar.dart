@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 /// Animated message briefly displayed at the bottom of the screen.
@@ -29,8 +29,10 @@ class FloatingSnackBar extends StatefulWidget {
 
   /// Displays a [FloatingSnackBar] in a [Overlay] with the provided [title].
   static void show(BuildContext context, String title, {double bottom = 16}) {
+    /// Place in an [Overlay] that can contain a widget.
     OverlayEntry? entry;
 
+    ///
     entry = OverlayEntry(
       builder: (_) => FloatingSnackBar(
         onEnd: () {
@@ -49,6 +51,7 @@ class FloatingSnackBar extends StatefulWidget {
       ),
     );
 
+    /// Stack of entries that can be managed independently.
     Overlay.of(context).insert(entry!);
   }
 

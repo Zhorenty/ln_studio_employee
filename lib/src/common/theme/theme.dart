@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
+
+import '/src/common/assets/generated/fonts.gen.dart';
 
 /// Light theme of this application.
 final $lightThemeData = ThemeData(

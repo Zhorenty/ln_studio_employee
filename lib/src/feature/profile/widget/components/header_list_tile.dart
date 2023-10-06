@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/common/widget/animated_button.dart';
-import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
-import 'package:ln_employee/src/feature/salon/bloc/salon_state.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/color_extension.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/animated_button.dart';
+import '/src/feature/salon/bloc/salon_bloc.dart';
+import '/src/feature/salon/bloc/salon_state.dart';
 
 ///
 class HeaderListTile extends StatelessWidget {
