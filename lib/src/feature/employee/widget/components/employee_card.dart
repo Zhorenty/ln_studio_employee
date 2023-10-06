@@ -24,50 +24,50 @@ class EmployeeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = employee.userModel;
     final jobPlace = employee.jobModel;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      decoration: BoxDecoration(
-        color: context.colorScheme.onBackground,
-        borderRadius: BorderRadius.circular(20),
+    return AnimatedButton(
+      onPressed: () => context.goNamed(
+        'employee',
+        extra: context.read<StaffBloc>(),
+        pathParameters: {
+          'id': employee.id.toString(),
+        },
       ),
-      child: Row(
-        children: [
-          AvatarWidget(radius: 40, title: user.fullName),
-          const SizedBox(width: 10),
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  user.fullName,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontFamily: FontFamily.geologica,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        decoration: BoxDecoration(
+          color: context.colorScheme.onBackground,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            AvatarWidget(radius: 40, title: user.fullName),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    user.fullName,
+                    style: context.textTheme.titleMedium?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  jobPlace.name,
-                  style: context.textTheme.labelMedium?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.primaryContainer,
+                  Text(
+                    jobPlace.name,
+                    style: context.textTheme.labelMedium?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.primaryContainer,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                StarRating(initialRating: employee.stars)
-              ],
+                  const SizedBox(height: 4),
+                  StarRating(initialRating: employee.stars)
+                ],
+              ),
             ),
-          ),
-          AnimatedButton(
-            onPressed: () => context.goNamed(
-              'employee',
-              extra: context.read<StaffBloc>(),
-              pathParameters: {
-                'id': employee.id.toString(),
-              },
-            ),
-            child: Container(
+            Container(
               decoration: ShapeDecoration(
                 shape: const CircleBorder(),
                 color: context.colorScheme.primary,
@@ -80,8 +80,8 @@ class EmployeeCard extends StatelessWidget {
                 color: context.colorScheme.onBackground,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
