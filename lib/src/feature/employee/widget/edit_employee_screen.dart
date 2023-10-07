@@ -3,31 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
-import 'package:ln_employee/src/common/widget/animated_button.dart';
-import 'package:ln_employee/src/common/widget/field_button.dart';
-import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
-import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
-import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
-import 'package:ln_employee/src/feature/employee/bloc/employee/employee_state.dart';
-import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
-import 'package:ln_employee/src/feature/employee/bloc/staff/staff_event.dart';
-import 'package:ln_employee/src/feature/employee/widget/components/copy_icon.dart';
-import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
-import 'package:ln_employee/src/feature/salon/models/salon.dart';
-import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
-import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
-import 'package:ln_employee/src/feature/specialization/widget/specialization_list.dart';
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/utils/extensions/date_time_extension.dart';
 import '/src/common/utils/phone_input_formatter.dart';
+import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/custom_text_field.dart';
+import '/src/common/widget/field_button.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
+import '/src/common/widget/overlay/modal_popup.dart';
 import '/src/common/widget/star_rating.dart';
+import '/src/feature/employee/bloc/employee/employee_bloc.dart';
+import '/src/feature/employee/bloc/employee/employee_event.dart';
+import '/src/feature/employee/bloc/employee/employee_state.dart';
+import '/src/feature/employee/bloc/staff/staff_bloc.dart';
+import '/src/feature/employee/bloc/staff/staff_event.dart';
 import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 import '/src/feature/employee/model/employee_edit/user_edit.dart';
+import '/src/feature/employee/widget/components/copy_icon.dart';
+import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
+import '/src/feature/salon/models/salon.dart';
+import '/src/feature/salon/widget/salon_choice_screen.dart';
+import '/src/feature/specialization/model/specialization.dart';
+import '/src/feature/specialization/widget/specialization_list.dart';
 import 'components/date_picker_field.dart';
 import 'components/expanded_app_bar.dart';
 import 'components/skeleton_employee_screen.dart';
@@ -319,7 +319,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                           focusNode: _phoneFocusNode,
                                           onChanged: _checkPhoneNumber,
                                           inputFormatters: [
-                                            RuPhoneInputFormatter()
+                                            RuPhoneInputFormatter(),
                                           ],
                                           keyboardType: TextInputType.phone,
                                           validator: _emptyValidator,
@@ -421,9 +421,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                           controller: _salesController,
                                           label: 'Процент от продаж',
                                           keyboardType: const TextInputType
-                                              .numberWithOptions(
-                                            decimal: true,
-                                          ),
+                                              .numberWithOptions(decimal: true),
                                           validator: _emptyValidator,
                                         ),
                                         DatePickerField(

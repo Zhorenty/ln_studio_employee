@@ -71,14 +71,12 @@ class ExpandedAppBar extends StatelessWidget {
               color: context.colorScheme.secondary,
             ),
             highlightColor: context.colorScheme.scrim,
-            onPressed: () {
-              MessagePopup.bottomSheet(
-                context,
-                scrolled: false,
-                'Действия с сотрудником',
-                additional: additionalTrailing,
-              );
-            },
+            onPressed: () => MessagePopup.bottomSheet(
+              context,
+              scrolled: false,
+              'Действия с сотрудником',
+              additional: additionalTrailing,
+            ),
           ),
         )
       ],

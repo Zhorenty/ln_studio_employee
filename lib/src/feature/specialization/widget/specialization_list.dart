@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_employee/src/common/widget/shimmer.dart';
-import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
-import 'package:ln_employee/src/feature/specialization/bloc/specialization_event.dart';
-import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/shimmer.dart';
+import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/specialization/bloc/specialization_bloc.dart';
+import '/src/feature/specialization/bloc/specialization_event.dart';
 import '/src/feature/specialization/bloc/specialization_state.dart';
+import '/src/feature/specialization/model/specialization.dart';
 
 /// {@template specialization_choice_screen}
 /// SpecializationChoiceScreen widget.

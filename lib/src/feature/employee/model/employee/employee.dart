@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:ln_employee/src/feature/salon/models/salon.dart';
-import 'package:ln_employee/src/feature/specialization/model/specialization.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
+import '/src/feature/salon/models/salon.dart';
+import '/src/feature/specialization/model/specialization.dart';
 import 'user.dart';
 
 /// Represents an employee in a salon with its properties.

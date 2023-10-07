@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/employee/data/employee_repository.dart';
 
 import '/src/common/utils/error_util.dart';
+import '/src/feature/employee/data/employee_repository.dart';
 import 'staff_event.dart';
 import 'staff_state.dart';
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
+import 'package:ln_employee/src/common/utils/extensions/color_extension.dart';
+
+import '/src/common/assets/generated/fonts.gen.dart';
 
 /// Light theme of this application.
 final $lightThemeData = ThemeData(
@@ -24,10 +26,13 @@ final $darkThemeData = ThemeData(
   highlightColor: darkColorScheme.scrim,
   textTheme: Typography.whiteHelsinki,
   brightness: Brightness.dark,
-  dividerTheme: DividerThemeData(color: darkColorScheme.onBackground),
+  dividerTheme: DividerThemeData(
+    space: 0.5,
+    color: darkColorScheme.onBackground.lighten(0.02),
+  ),
   appBarTheme: AppBarTheme(
     backgroundColor: darkColorScheme.onBackground,
-    surfaceTintColor: const Color(0x1FFFFFFF),
+    surfaceTintColor: darkColorScheme.onBackground,
   ),
   iconTheme: IconThemeData(color: darkColorScheme.primary),
   scaffoldBackgroundColor: darkColorScheme.background,

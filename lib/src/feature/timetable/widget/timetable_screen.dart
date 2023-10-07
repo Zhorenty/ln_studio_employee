@@ -1,21 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:ln_employee/src/common/widget/avatar_widget.dart';
-import 'package:ln_employee/src/common/widget/pop_up_button.dart';
-import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
-import 'package:ln_employee/src/feature/salon/widget/salon_choice_screen.dart';
-import 'package:ln_employee/src/feature/timetable/model/employee_timetable.dart';
 import 'package:table_calendar/table_calendar.dart';
+
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/custom_app_bar.dart';
+import '/src/common/widget/pop_up_button.dart';
+import '/src/feature/initialization/widget/dependencies_scope.dart';
+import '/src/feature/salon/bloc/salon_bloc.dart';
+import '/src/feature/salon/bloc/salon_state.dart';
+import '/src/feature/salon/widget/salon_choice_screen.dart';
 import '/src/feature/timetable/bloc/timetable_bloc.dart';
 import '/src/feature/timetable/bloc/timetable_event.dart';
 import '/src/feature/timetable/bloc/timetable_state.dart';
-import '/src/feature/salon/bloc/salon_bloc.dart';
-import '/src/feature/salon/bloc/salon_state.dart';
+import '/src/feature/timetable/model/employee_timetable.dart';
 import 'components/custom_table_calendar.dart';
 
 /// {@template timetable_screen}
@@ -81,9 +81,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
                           ? Text(state.currentSalon!.name)
                           : const SizedBox(height: 26),
                     ),
-                    child: SalonChoiceScreen(
-                      currentSalon: state.currentSalon,
-                    ),
+                    child: SalonChoiceScreen(currentSalon: state.currentSalon),
                   ),
                 ),
               ),
