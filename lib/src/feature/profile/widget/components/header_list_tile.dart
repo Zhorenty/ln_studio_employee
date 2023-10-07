@@ -43,7 +43,7 @@ class HeaderListTile extends StatelessWidget {
           ),
           subtitle: BlocBuilder<SalonBLoC, SalonState>(
             builder: (_, state) => Text(
-              state.currentSalon!.name,
+              state.currentSalon?.name ?? '',
               style: context.textTheme.titleSmall?.copyWith(
                 fontFamily: FontFamily.geologica,
                 color: context.colorScheme.primary,

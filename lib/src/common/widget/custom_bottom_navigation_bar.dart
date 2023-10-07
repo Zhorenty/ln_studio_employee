@@ -67,14 +67,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 BottomNavigationBarItem(
                   icon: const AnimatedButton(
                     child: Icon(
-                      Icons.settings_outlined,
+                      Icons.person_outline_rounded,
                       color: Color(0xFF828282),
                       size: 28,
                     ),
                   ),
                   activeIcon: AnimatedButton(
                     child: Icon(
-                      Icons.settings_rounded,
+                      Icons.person_rounded,
                       color: context.colorScheme.primary,
                       size: 28,
                     ),
