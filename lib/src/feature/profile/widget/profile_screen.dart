@@ -10,91 +10,89 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text(
-                'Профиль',
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontSize: 20,
-                  fontFamily: FontFamily.geologica,
-                  color: context.colorScheme.secondary,
-                ),
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: Text(
+              'Профиль',
+              style: context.textTheme.titleLarge?.copyWith(
+                fontSize: 20,
+                fontFamily: FontFamily.geologica,
+                color: context.colorScheme.secondary,
               ),
             ),
-            SliverList.list(
-              children: const [
-                HeaderListTile(),
-                Divider(),
-                CategoryListTile(
-                  icon: Icons.account_circle_rounded,
-                  title: 'Личная информация',
-                  size: 25,
-                ),
-                // Divider(),
-                // CategoryListTile(
-                //   icon: Icons.people_rounded,
-                //   title: 'Сотрудники',
-                // ),
-                Divider(),
-                CategoryListTile(
-                  icon: Icons.extension_rounded,
-                  title: 'Услуги',
-                ),
-                Divider(),
-                CategoryListTile(
-                  icon: Icons.event,
-                  title: 'Онлайн запись',
-                ),
-                Divider(),
-                CategoryListTile(
-                  icon: Icons.family_restroom_rounded,
-                  title: 'Клиенты',
-                ),
-                Divider(),
-                // TODO: Move into separated screen in NavBar
-                // CategoryListTile(
-                //   icon: Icons.chat_rounded,
-                //   title: 'Чаты',
-                // ),
-                // Divider(),
-                CategoryListTile(
-                  icon: Icons.account_balance_rounded,
-                  title: 'Финансы',
-                  size: 23,
-                ),
-                Divider(),
-                CategoryListTile(
-                  icon: Icons.markunread_rounded,
-                  title: 'Рассылка',
-                  size: 23,
-                ),
-                Divider(),
-                CategoryListTile(
-                  icon: Icons.loyalty_rounded,
-                  title: 'Скидки',
-                  size: 23,
-                ),
-                Divider(),
-                CategoryListTile(
-                  icon: Icons.settings_rounded,
-                  title: 'Настройки',
-                  size: 23,
-                ),
-                Divider(),
-                CategoryListTile(
-                  icon: Icons.exit_to_app,
-                  title: 'Выйти',
-                  size: 23,
-                ),
-                Divider(),
-              ],
-            ),
-          ],
-        ),
+          ),
+          SliverList.list(
+            children: [
+              const HeaderListTile(),
+              const Divider(),
+              const CategoryListTile(
+                icon: Icons.account_circle_rounded,
+                title: 'Личная информация',
+                size: 25,
+              ),
+              // Divider(),
+              // CategoryListTile(
+              //   icon: Icons.people_rounded,
+              //   title: 'Сотрудники',
+              // ),
+              const Divider(),
+              const CategoryListTile(
+                icon: Icons.extension_rounded,
+                title: 'Услуги',
+              ),
+              const Divider(),
+              const CategoryListTile(
+                icon: Icons.event,
+                title: 'Онлайн запись',
+              ),
+              const Divider(),
+              const CategoryListTile(
+                icon: Icons.family_restroom_rounded,
+                title: 'Клиенты',
+              ),
+              const Divider(),
+              // TODO: Move into separated screen in NavBar
+              // CategoryListTile(
+              //   icon: Icons.chat_rounded,
+              //   title: 'Чаты',
+              // ),
+              // Divider(),
+              const CategoryListTile(
+                icon: Icons.account_balance_rounded,
+                title: 'Финансы',
+                size: 23,
+              ),
+              const Divider(),
+              const CategoryListTile(
+                icon: Icons.markunread_rounded,
+                title: 'Рассылка',
+                size: 23,
+              ),
+              const Divider(),
+              const CategoryListTile(
+                icon: Icons.loyalty_rounded,
+                title: 'Скидки',
+                size: 23,
+              ),
+              const Divider(),
+              const CategoryListTile(
+                icon: Icons.settings_rounded,
+                title: 'Настройки',
+                size: 23,
+              ),
+              const Divider(),
+              const CategoryListTile(
+                icon: Icons.exit_to_app,
+                title: 'Выйти',
+                size: 23,
+              ),
+              const Divider(),
+              SizedBox(height: MediaQuery.sizeOf(context).height / 8)
+            ],
+          ),
+        ],
       ),
     );
   }
