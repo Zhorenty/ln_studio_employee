@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/services/widget/services_screen.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '/src/feature/employee/bloc/staff/staff_bloc.dart';
@@ -68,8 +69,16 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
+              name: 'profile',
               path: '/profile',
               builder: (context, state) => const ProfileScreen(),
+              routes: [
+                GoRoute(
+                  name: 'services',
+                  path: 'services',
+                  builder: (context, state) => const ServicesScreen(),
+                ),
+              ],
             ),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -26,10 +27,10 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             SliverList.list(
-              children: const [
-                HeaderListTile(),
-                Divider(),
-                CategoryListTile(
+              children: [
+                const HeaderListTile(),
+                const Divider(),
+                const CategoryListTile(
                   icon: Icons.account_circle_rounded,
                   title: 'Личная информация',
                   size: 25,
@@ -39,58 +40,59 @@ class ProfileScreen extends StatelessWidget {
                 //   icon: Icons.people_rounded,
                 //   title: 'Сотрудники',
                 // ),
-                Divider(),
+                const Divider(),
                 CategoryListTile(
                   icon: Icons.extension_rounded,
                   title: 'Услуги',
+                  onTap: () => context.goNamed('services'),
                 ),
-                Divider(),
-                CategoryListTile(
+                const Divider(),
+                const CategoryListTile(
                   icon: Icons.event,
                   title: 'Онлайн запись',
                 ),
-                Divider(),
-                CategoryListTile(
+                const Divider(),
+                const CategoryListTile(
                   icon: Icons.family_restroom_rounded,
                   title: 'Клиенты',
                 ),
-                Divider(),
+                const Divider(),
                 // TODO: Move into separated screen in NavBar
                 // CategoryListTile(
                 //   icon: Icons.chat_rounded,
                 //   title: 'Чаты',
                 // ),
                 // Divider(),
-                CategoryListTile(
+                const CategoryListTile(
                   icon: Icons.account_balance_rounded,
                   title: 'Финансы',
                   size: 23,
                 ),
-                Divider(),
-                CategoryListTile(
+                const Divider(),
+                const CategoryListTile(
                   icon: Icons.markunread_rounded,
                   title: 'Рассылка',
                   size: 23,
                 ),
-                Divider(),
-                CategoryListTile(
+                const Divider(),
+                const CategoryListTile(
                   icon: Icons.loyalty_rounded,
                   title: 'Скидки',
                   size: 23,
                 ),
-                Divider(),
-                CategoryListTile(
+                const Divider(),
+                const CategoryListTile(
                   icon: Icons.settings_rounded,
                   title: 'Настройки',
                   size: 23,
                 ),
-                Divider(),
-                CategoryListTile(
+                const Divider(),
+                const CategoryListTile(
                   icon: Icons.exit_to_app,
                   title: 'Выйти',
                   size: 23,
                 ),
-                Divider(),
+                const Divider(),
               ],
             ),
           ],

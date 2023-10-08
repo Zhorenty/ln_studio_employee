@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/services/data/services_data_provider.dart';
+import 'package:ln_employee/src/feature/services/data/services_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,6 +61,15 @@ mixin InitializationSteps {
         specializationDataProvider,
       );
       progress.dependencies.specializationRepository = specializationRepository;
+    },
+    'Services repository': (progress) async {
+      final servicesDataProvider = ServicesDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final servicesRepository = ServicesRepositoryImpl(
+        servicesDataProvider,
+      );
+      progress.dependencies.servicesRepository = servicesRepository;
     },
   };
 }
