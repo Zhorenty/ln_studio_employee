@@ -71,7 +71,7 @@ class _StaffScreenState extends State<StaffScreen>
           builder: (context, state) {
             final staff =
                 state.staff.where((employee) => !employee.isDismiss).toList();
-            final dismisseddStaff =
+            final dismissedStaff =
                 state.staff.where((employee) => employee.isDismiss).toList();
             return Scaffold(
               body: CustomScrollView(
@@ -129,7 +129,7 @@ class _StaffScreenState extends State<StaffScreen>
                             const SizedBox(height: 16),
                       ),
                     ),
-                    if (dismisseddStaff.isNotEmpty) ...[
+                    if (dismissedStaff.isNotEmpty) ...[
                       SliverPadding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         sliver: SliverToBoxAdapter(
@@ -141,7 +141,7 @@ class _StaffScreenState extends State<StaffScreen>
                               ),
                             ),
                             children: [
-                              ...dismisseddStaff.map(
+                              ...dismissedStaff.map(
                                 (employee) => Padding(
                                   padding: const EdgeInsets.only(bottom: 16),
                                   child: EmployeeCard(

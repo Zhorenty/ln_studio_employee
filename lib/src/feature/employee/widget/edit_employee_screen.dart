@@ -219,7 +219,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                   context.pop();
                                   MessagePopup.success(
                                     context,
-                                    dismissed || state.isSuccessful
+                                    dismissed
                                         ? 'Вы вернули сотрудника на должность'
                                         : 'Сотрудник успешно уволен',
                                   );
@@ -421,7 +421,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                           controller: _salesController,
                                           label: 'Процент от продаж',
                                           keyboardType: const TextInputType
-                                              .numberWithOptions(decimal: true),
+                                              .numberWithOptions(signed: true),
                                           validator: _emptyValidator,
                                         ),
                                         DatePickerField(
@@ -513,29 +513,29 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     required int employeeSalonId,
     required int specializationId,
   }) async {
-    context.read<EmployeeBloc>().add(
-          EmployeeEvent.edit(
-            employee: Employee$Edit(
-              id: id,
-              address: _addressController.text,
-              jobId: specializationId,
-              salonId: employeeSalonId,
-              description: _descriptionController.text,
-              dateOfEmployment: dateOfEmployment,
-              contractNumber: _contractNumberController.text,
-              percentageOfSales: double.parse(_salesController.text),
-              stars: stars,
-              isDismiss: isDismiss,
-              userModel: UserModel$Edit(
-                email: _emailController.text,
-                firstName: _firstNameController.text,
-                lastName: _lastNameController.text,
-                phone: _phoneController.text,
-                birthDate: birthDate,
-              ),
-            ),
+    employeeBloc.add(
+      EmployeeEvent.edit(
+        employee: Employee$Edit(
+          id: id,
+          address: _addressController.text,
+          jobId: specializationId,
+          salonId: employeeSalonId,
+          description: _descriptionController.text,
+          dateOfEmployment: dateOfEmployment,
+          contractNumber: _contractNumberController.text,
+          percentageOfSales: double.parse(_salesController.text),
+          stars: stars,
+          isDismiss: isDismiss,
+          userModel: UserModel$Edit(
+            email: _emailController.text,
+            firstName: _firstNameController.text,
+            lastName: _lastNameController.text,
+            phone: _phoneController.text,
+            birthDate: birthDate,
           ),
-        );
+        ),
+      ),
+    );
   }
 
   /// Phone number FocusNode condition.
