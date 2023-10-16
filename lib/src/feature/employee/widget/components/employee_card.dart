@@ -37,6 +37,7 @@ class EmployeeCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.colorScheme.onBackground,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFF272727)),
         ),
         child: Row(
           children: [

@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import 'expanded_app_bar.dart';
 
-class SkeletonEditEmployeeScreen extends StatelessWidget {
-  const SkeletonEditEmployeeScreen({super.key});
+class SkeletonEmployeeScreen extends StatelessWidget {
+  const SkeletonEmployeeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

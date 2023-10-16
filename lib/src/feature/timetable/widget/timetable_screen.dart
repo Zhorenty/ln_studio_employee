@@ -91,8 +91,8 @@ class _TimetableScreenState extends State<TimetableScreen> {
                 duration: const Duration(milliseconds: 400),
                 sliver: SliverPadding(
                   padding: EdgeInsets.only(
-                    left: 8,
-                    right: 8,
+                    left: 12,
+                    right: 12,
                     top: 12,
                     bottom: MediaQuery.sizeOf(context).height / 8,
                   ),
@@ -116,12 +116,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
                               top: 8,
                               right: 12,
                             ),
-                            decoration: ShapeDecoration(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
-                                ),
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
                               ),
                               color: context.colorScheme.onBackground,
                             ),

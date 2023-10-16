@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -10,53 +9,34 @@ import '/src/common/utils/phone_input_formatter.dart';
 import '/src/common/widget/animated_button.dart';
 import '/src/common/widget/custom_text_field.dart';
 import '/src/common/widget/field_button.dart';
-import '/src/common/widget/header.dart';
-import '/src/common/widget/overlay/message_popup.dart';
 import '/src/common/widget/overlay/modal_popup.dart';
-import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/bloc/employee/employee_bloc.dart';
 import '/src/feature/employee/bloc/employee/employee_event.dart';
 import '/src/feature/employee/bloc/employee/employee_state.dart';
-import '/src/feature/employee/bloc/staff/staff_bloc.dart';
-import '/src/feature/employee/bloc/staff/staff_event.dart';
 import '/src/feature/employee/model/employee_edit/employee_edit.dart';
 import '/src/feature/employee/model/employee_edit/user_edit.dart';
-import '/src/feature/employee/widget/components/copy_icon.dart';
-import '/src/feature/initialization/widget/dependencies_scope.dart';
-import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/models/salon.dart';
 import '/src/feature/salon/widget/salon_choice_screen.dart';
 import '/src/feature/specialization/model/specialization.dart';
 import '/src/feature/specialization/widget/specialization_list.dart';
+import 'components/copy_icon.dart';
 import 'components/date_picker_field.dart';
-import 'components/expanded_app_bar.dart';
-import 'components/skeleton_employee_screen.dart';
 
-/// {@template employee_screen}
-/// Employee screen.
+/// {@template employee_edit_screen}
+/// Employee edit screen.
 /// {@endtemplate}
 class EditEmployeeScreen extends StatefulWidget {
-  /// {@macro employee_screen}
-  const EditEmployeeScreen({
-    super.key,
-    required this.id,
-    required this.staffBloc,
-  });
-
-  /// Employee id.
-  final int id;
+  /// {@macro employee_edit_screen}
+  const EditEmployeeScreen({super.key, required this.id});
 
   ///
-  final StaffBloc staffBloc;
+  final int id;
 
   @override
   State<EditEmployeeScreen> createState() => _EditEmployeeScreenState();
 }
 
 class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
-  /// Employee bloc maintaining [EditEmployeeScreen] state.
-  late final EmployeeBloc employeeBloc;
-
   ///
   final _formKey = GlobalKey<FormState>();
 
@@ -79,17 +59,9 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   late final TextEditingController _salesController;
   late final TextEditingController _dateOfEmploymentController;
 
-  // Переменные, которые не должны изменяться при rebuild'е
-  int? clientsCount;
-  int? workedDaysCount;
-
   @override
   void initState() {
     super.initState();
-
-    employeeBloc = EmployeeBloc(
-      repository: DependenciesScope.of(context).employeeRepository,
-    )..add(EmployeeEvent.fetch(id: widget.id));
 
     /// User information.
     _firstNameController = TextEditingController();
@@ -132,376 +104,229 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: employeeBloc,
-      child: BlocBuilder<EmployeeBloc, EmployeeState>(
-        builder: (context, state) => Scaffold(
-          backgroundColor: context.colorScheme.background,
-          body: AnimatedOpacity(
-            duration: const Duration(milliseconds: 300),
-            opacity: state.employee == null ? 0 : 1,
-            child: state.employee == null
-                ? const SkeletonEditEmployeeScreen()
-                : Builder(
-                    builder: (context) {
-                      final employee = state.employee!;
-                      final user = state.employee!.userModel;
-                      final dismissed = state.employee!.isDismiss;
+  Widget build(BuildContext context) =>
+      BlocBuilder<EmployeeBloc, EmployeeState>(
+        builder: (context, state) {
+          final employee = state.employee!;
+          final user = state.employee!.userModel;
 
-                      if (clientsCount == null) {
-                        clientsCount = employee.clients;
-                        workedDaysCount = employee.workedDays;
-                      }
+          DateTime birthDate = user.birthDate;
+          DateTime dateOfEmployment = employee.dateOfEmployment;
+          Salon employeeSalon = employee.salon;
+          Specialization employeeSpecialization = employee.jobModel;
 
-                      int stars = employee.stars;
-                      DateTime birthDate = user.birthDate;
-                      DateTime dateOfEmployment = employee.dateOfEmployment;
-                      Salon employeeSalon = employee.salon;
-                      Specialization employeeSpecialization = employee.jobModel;
+          /// User information
+          _firstNameController.text = user.firstName;
+          _lastNameController.text = user.lastName;
+          _phoneController.text = user.phone;
+          _addressController.text = employee.address;
+          _emailController.text = user.email;
+          _birthDateController.text = birthDate.defaultFormat();
 
-                      /// User information
-                      _firstNameController.text = user.firstName;
-                      _lastNameController.text = user.lastName;
-                      _phoneController.text = user.phone;
-                      _addressController.text = employee.address;
-                      _emailController.text = user.email;
-                      _birthDateController.text = birthDate.defaultFormat();
+          /// Employee information
+          _salonController.text = employeeSalon.name;
+          _specializationController.text = employeeSpecialization.name;
+          _contractNumberController.text = employee.contractNumber;
+          _descriptionController.text = employee.description;
+          _salesController.text = employee.percentageOfSales.toString();
+          _dateOfEmploymentController.text = dateOfEmployment.defaultFormat();
 
-                      /// Employee information
-                      _salonController.text = employeeSalon.name;
-                      _specializationController.text =
-                          employeeSpecialization.name;
-                      _contractNumberController.text = employee.contractNumber;
-                      _descriptionController.text = employee.description;
-                      _salesController.text =
-                          employee.percentageOfSales.toString();
-                      _dateOfEmploymentController.text =
-                          dateOfEmployment.defaultFormat();
-                      return CustomScrollView(
-                        slivers: [
-                          ExpandedAppBar(
-                            label: user.fullName,
-                            title: Text(
-                              user.fullName,
-                              style: context.textTheme.titleLarge!.copyWith(
-                                fontFamily: FontFamily.geologica,
-                              ),
-                            ),
-                            leading: Text(
-                              clientsCount.toString(),
-                              style: context.textTheme.titleLarge!.copyWith(
-                                fontFamily: FontFamily.geologica,
-                              ),
-                            ),
-                            trailing: Text(
-                              workedDaysCount.toString(),
-                              style: context.textTheme.titleLarge!.copyWith(
-                                fontFamily: FontFamily.geologica,
-                              ),
-                            ),
-                            additionalTrailing: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 12),
-                                  backgroundColor: context.colorScheme.primary,
-                                  side: const BorderSide(
-                                      color: Color(0xFF272727)),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  dismissed
-                                      ? _reinstatement(employee.id)
-                                      : _dismiss(employee.id);
-                                  context.pop();
-                                  MessagePopup.success(
-                                    context,
-                                    dismissed
-                                        ? 'Вы вернули сотрудника на должность'
-                                        : 'Сотрудник успешно уволен',
-                                  );
-                                },
-                                child: Text(
-                                  dismissed
-                                      ? 'Восстановить сотрудника в должности'
-                                      : 'Уволить сотрудника',
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: context.colorScheme.onBackground,
-                                    fontFamily: FontFamily.geologica,
-                                  ),
-                                ),
-                              ),
-                            ],
-                            onExit: () {
-                              context.pop();
-                              _refreshStaff();
-                            },
-                          ),
-                          CupertinoSliverRefreshControl(
-                            onRefresh: () => _fetch(employee.id),
-                          ),
-                          SliverList(
-                            delegate: SliverChildListDelegate(
-                              [
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: context.colorScheme.onBackground,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const HeaderWidget(
-                                              label: 'Рейтинг',
-                                              showUnderscore: false,
-                                            ),
-                                            StarRating(
-                                              initialRating: employee.stars,
-                                              onRatingChanged: (rating) =>
-                                                  stars = rating,
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 16),
-                                        DefaultTextStyle(
-                                          style: context.textTheme.bodyLarge!
-                                              .copyWith(
-                                            color: dismissed
-                                                ? const Color(0xFFF45636)
-                                                : context.colorScheme.primary,
-                                            fontFamily: FontFamily.geologica,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const HeaderWidget(
-                                                label: 'Статус сотрудника',
-                                                showUnderscore: false,
-                                              ),
-                                              dismissed
-                                                  ? const Text('Уволен')
-                                                  : const Text('Работает')
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 16),
-                                        const HeaderWidget(
-                                            label: 'Личная информация'),
-                                        const SizedBox(height: 14),
-                                        CustomTextField(
-                                          controller: _firstNameController,
-                                          dense: false,
-                                          label: 'Имя',
-                                          keyboardType: TextInputType.name,
-                                          validator: _emptyValidator,
-                                        ),
-                                        CustomTextField(
-                                          controller: _lastNameController,
-                                          label: 'Фамилия',
-                                          keyboardType: TextInputType.name,
-                                          validator: _emptyValidator,
-                                        ),
-                                        CustomTextField(
-                                          controller: _phoneController,
-                                          label: 'Номер телефона',
-                                          focusNode: _phoneFocusNode,
-                                          onChanged: _checkPhoneNumber,
-                                          inputFormatters: [
-                                            RuPhoneInputFormatter(),
-                                          ],
-                                          keyboardType: TextInputType.phone,
-                                          validator: _emptyValidator,
-                                          suffix:
-                                              CopyIcon(_phoneController.text),
-                                        ),
-                                        CustomTextField(
-                                          controller: _addressController,
-                                          label: 'Домашний адрес',
-                                          keyboardType:
-                                              TextInputType.streetAddress,
-                                          validator: _emptyValidator,
-                                        ),
-                                        CustomTextField(
-                                          controller: _emailController,
-                                          label: 'Электронная почта',
-                                          keyboardType:
-                                              TextInputType.emailAddress,
-                                          validator: _emailValidator,
-                                          suffix:
-                                              CopyIcon(_emailController.text),
-                                        ),
-                                        DatePickerField(
-                                          controller: _birthDateController,
-                                          label: 'День рождения',
-                                          initialDate: birthDate,
-                                          onDateSelected: (day) =>
-                                              birthDate = day,
-                                          validator: _emptyValidator,
-                                        ),
-                                        const SizedBox(height: 32),
-                                        const HeaderWidget(
-                                            label: 'Рабочая информация'),
-                                        const SizedBox(height: 8),
-                                        // TODO(zhorenty): refactor
-                                        StatefulBuilder(
-                                          builder: (_, setState) => FieldButton(
-                                            controller: _salonController,
-                                            label: 'Салон',
-                                            onTap: () => ModalPopup.show(
-                                              context: context,
-                                              child: SalonChoiceScreen(
-                                                currentSalon: employeeSalon,
-                                                onChanged: (salon) =>
-                                                    setState(() {
-                                                  salon != null
-                                                      ? employeeSalon = salon
-                                                      : null;
-                                                  _salonController.text =
-                                                      employeeSalon.name;
-                                                }),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        // TODO(zhorenty): refactor
-                                        StatefulBuilder(
-                                          builder: (context, setState) {
-                                            return FieldButton(
-                                              controller:
-                                                  _specializationController,
-                                              label: 'Специализация',
-                                              onTap: () => ModalPopup.show(
-                                                context: context,
-                                                child:
-                                                    SpecializationChoiceScreen(
-                                                  currentSpecialization:
-                                                      employeeSpecialization,
-                                                  onChanged: (specialization) =>
-                                                      setState(
-                                                    () {
-                                                      specialization != null
-                                                          ? employeeSpecialization =
-                                                              specialization
-                                                          : null;
-                                                      _specializationController
-                                                              .text =
-                                                          employeeSpecialization
-                                                              .name;
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        CustomTextField(
-                                          controller: _contractNumberController,
-                                          label: 'Номер договора',
-                                          validator: _emptyValidator,
-                                        ),
-                                        CustomTextField(
-                                          controller: _descriptionController,
-                                          label: 'Описание сотрудника',
-                                          keyboardType: TextInputType.multiline,
-                                          validator: _emptyValidator,
-                                        ),
-                                        CustomTextField(
-                                          controller: _salesController,
-                                          label: 'Процент от продаж',
-                                          keyboardType: const TextInputType
-                                              .numberWithOptions(signed: true),
-                                          validator: _emptyValidator,
-                                        ),
-                                        DatePickerField(
-                                          controller:
-                                              _dateOfEmploymentController,
-                                          label: 'Дата принятия на работу',
-                                          initialDate: dateOfEmployment,
-                                          onDateSelected: (day) =>
-                                              dateOfEmployment = day,
-                                          validator: _emptyValidator,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Center(
-                                          child: AnimatedButton(
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                if (_formKey.currentState!
-                                                    .validate()) {
-                                                  _edit(
-                                                    id: employee.id,
-                                                    employeeSalonId:
-                                                        employeeSalon.id,
-                                                    specializationId:
-                                                        employeeSpecialization
-                                                            .id,
-                                                    stars: stars,
-                                                    isDismiss:
-                                                        employee.isDismiss,
-                                                    dateOfEmployment:
-                                                        dateOfEmployment,
-                                                    birthDate: birthDate,
-                                                  );
-                                                }
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 12,
-                                                  horizontal:
-                                                      MediaQuery.sizeOf(context)
-                                                              .width /
-                                                          8,
-                                                ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                backgroundColor:
-                                                    context.colorScheme.primary,
-                                              ),
-                                              child: Text(
-                                                'Сохранить изменения',
-                                                style: context
-                                                    .textTheme.bodyLarge
-                                                    ?.copyWith(
-                                                  color: context
-                                                      .colorScheme.onBackground,
-                                                  fontFamily:
-                                                      FontFamily.geologica,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 16),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    },
+          return Scaffold(
+            backgroundColor: context.colorScheme.onBackground,
+            body: Form(
+              key: _formKey,
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    title: Text(
+                      'Редактирование',
+                      style: context.textTheme.titleLarge!.copyWith(
+                        fontFamily: FontFamily.geologica,
+                      ),
+                    ),
                   ),
-          ),
-        ),
-      ),
-    );
-  }
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    sliver: SliverList.list(
+                      children: [
+                        Text(
+                          'Личная информация',
+                          style: context.textTheme.headlineSmall?.copyWith(
+                            fontSize: 25,
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        CustomTextField(
+                          controller: _firstNameController,
+                          dense: false,
+                          label: 'Имя',
+                          keyboardType: TextInputType.name,
+                          validator: _emptyValidator,
+                        ),
+                        CustomTextField(
+                          controller: _lastNameController,
+                          label: 'Фамилия',
+                          keyboardType: TextInputType.name,
+                          validator: _emptyValidator,
+                        ),
+                        CustomTextField(
+                          controller: _phoneController,
+                          label: 'Номер телефона',
+                          focusNode: _phoneFocusNode,
+                          onChanged: _checkPhoneNumber,
+                          inputFormatters: [RuPhoneInputFormatter()],
+                          keyboardType: TextInputType.phone,
+                          validator: _emptyValidator,
+                          suffix: CopyIcon(_phoneController.text),
+                        ),
+                        CustomTextField(
+                          controller: _addressController,
+                          label: 'Домашний адрес',
+                          keyboardType: TextInputType.streetAddress,
+                          validator: _emptyValidator,
+                        ),
+                        CustomTextField(
+                          controller: _emailController,
+                          label: 'Электронная почта',
+                          keyboardType: TextInputType.emailAddress,
+                          validator: _emailValidator,
+                          suffix: CopyIcon(_emailController.text),
+                        ),
+                        DatePickerField(
+                          controller: _birthDateController,
+                          label: 'День рождения',
+                          initialDate: birthDate,
+                          onDateSelected: (day) => birthDate = day,
+                          validator: _emptyValidator,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Рабочая информация',
+                          style: context.textTheme.headlineSmall?.copyWith(
+                            fontSize: 25,
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // TODO(zhorenty): refactor
+                        StatefulBuilder(
+                          builder: (_, setState) => FieldButton(
+                            controller: _salonController,
+                            label: 'Салон',
+                            onTap: () => ModalPopup.show(
+                              context: context,
+                              child: SalonChoiceScreen(
+                                currentSalon: employeeSalon,
+                                onChanged: (salon) => setState(() {
+                                  salon != null ? employeeSalon = salon : null;
+                                  _salonController.text = employeeSalon.name;
+                                }),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // TODO(zhorenty): refactor
+                        StatefulBuilder(
+                          builder: (context, setState) {
+                            return FieldButton(
+                              controller: _specializationController,
+                              label: 'Специализация',
+                              onTap: () => ModalPopup.show(
+                                context: context,
+                                child: SpecializationChoiceScreen(
+                                  currentSpecialization: employeeSpecialization,
+                                  onChanged: (specialization) => setState(
+                                    () {
+                                      specialization != null
+                                          ? employeeSpecialization =
+                                              specialization
+                                          : null;
+                                      _specializationController.text =
+                                          employeeSpecialization.name;
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        CustomTextField(
+                          controller: _contractNumberController,
+                          label: 'Номер договора',
+                          validator: _emptyValidator,
+                        ),
+                        CustomTextField(
+                          controller: _descriptionController,
+                          label: 'Описание сотрудника',
+                          keyboardType: TextInputType.multiline,
+                          validator: _emptyValidator,
+                        ),
+                        CustomTextField(
+                          controller: _salesController,
+                          label: 'Процент от продаж',
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: true),
+                          validator: _emptyValidator,
+                        ),
+                        DatePickerField(
+                          controller: _dateOfEmploymentController,
+                          label: 'Дата принятия на работу',
+                          initialDate: dateOfEmployment,
+                          onDateSelected: (day) => dateOfEmployment = day,
+                          validator: _emptyValidator,
+                        ),
+                        const SizedBox(height: 16),
+                        Center(
+                          child: AnimatedButton(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _edit(
+                                    id: employee.id,
+                                    employeeSalonId: employeeSalon.id,
+                                    specializationId: employeeSpecialization.id,
+                                    stars: employee.stars,
+                                    isDismiss: employee.isDismiss,
+                                    dateOfEmployment: dateOfEmployment,
+                                    birthDate: birthDate,
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal:
+                                      MediaQuery.sizeOf(context).width / 8,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                backgroundColor: context.colorScheme.primary,
+                              ),
+                              child: Text(
+                                'Сохранить изменения',
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  color: context.colorScheme.onBackground,
+                                  fontFamily: FontFamily.geologica,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
 
   /// Dismiss employee by [id].
   Future<void> _edit({
@@ -513,29 +338,30 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     required int employeeSalonId,
     required int specializationId,
   }) async {
-    employeeBloc.add(
-      EmployeeEvent.edit(
-        employee: Employee$Edit(
-          id: id,
-          address: _addressController.text,
-          jobId: specializationId,
-          salonId: employeeSalonId,
-          description: _descriptionController.text,
-          dateOfEmployment: dateOfEmployment,
-          contractNumber: _contractNumberController.text,
-          percentageOfSales: double.parse(_salesController.text),
-          stars: stars,
-          isDismiss: isDismiss,
-          userModel: UserModel$Edit(
-            email: _emailController.text,
-            firstName: _firstNameController.text,
-            lastName: _lastNameController.text,
-            phone: _phoneController.text,
-            birthDate: birthDate,
+    context.read<EmployeeBloc>().add(
+          EmployeeEvent.edit(
+            employee: Employee$Edit(
+              id: id,
+              address: _addressController.text,
+              jobId: specializationId,
+              salonId: employeeSalonId,
+              description: _descriptionController.text,
+              dateOfEmployment: dateOfEmployment,
+              contractNumber: _contractNumberController.text,
+              percentageOfSales: double.parse(_salesController.text),
+              stars: stars,
+              isDismiss: isDismiss,
+              userModel: UserModel$Edit(
+                email: _emailController.text,
+                firstName: _firstNameController.text,
+                lastName: _lastNameController.text,
+                phone: _phoneController.text,
+                birthDate: birthDate,
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        );
+    context.pop();
   }
 
   /// Phone number FocusNode condition.
@@ -560,32 +386,5 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
     } else {
       return null;
     }
-  }
-
-  /// Dismiss employee by [id].
-  Future<void> _dismiss(int id) async {
-    employeeBloc.add(EmployeeEvent.dismiss(id: id));
-  }
-
-  /// Dismiss employee by [id].
-  void _reinstatement(int id) =>
-      employeeBloc.add(EmployeeEvent.reinstatement(id: id));
-
-  /// Fetch employee by [id].
-  Future<void> _fetch(int id) async {
-    employeeBloc.add(EmployeeEvent.fetch(id: id));
-  }
-
-  /// Refresh all employee's.
-  Future<void> _refreshStaff() async {
-    final block = widget.staffBloc.stream.first;
-    final salonBloc = context.read<SalonBLoC>();
-    final staffBloc = widget.staffBloc;
-    if (salonBloc.state.currentSalon != null) {
-      staffBloc.add(
-        StaffEvent.fetchSalonEmployees(salonBloc.state.currentSalon!.id),
-      );
-    }
-    await block;
   }
 }

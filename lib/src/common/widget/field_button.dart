@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'custom_text_field.dart';
 
-class FieldButton extends StatefulWidget {
+class FieldButton extends StatelessWidget {
   const FieldButton({
     super.key,
     required this.label,
@@ -11,30 +11,27 @@ class FieldButton extends StatefulWidget {
     this.validator,
   });
 
+  ///
   final TextEditingController controller;
 
   /// Label of this [FieldButton].
   final String label;
 
+  ///
   final void Function()? onTap;
 
   ///
   final String? Function(String?)? validator;
 
   @override
-  State<FieldButton> createState() => _FieldButtonState();
-}
-
-class _FieldButtonState extends State<FieldButton> {
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: CustomTextField(
         enabled: false,
-        controller: widget.controller,
-        label: widget.label,
-        validator: widget.validator,
+        controller: controller,
+        label: label,
+        validator: validator,
       ),
     );
   }
