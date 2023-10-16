@@ -1,3 +1,4 @@
+import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,9 @@ abstract interface class Dependencies {
 
   /// [RestClient] instance.
   abstract final RestClient restClient;
+
+  /// Auth repository.
+  abstract final AuthRepository authRepository;
 
   /// Timetable repository.
   abstract final TimetableRepository timetableRepository;
@@ -43,6 +47,9 @@ final class Dependencies$Mutable implements Dependencies {
   late RestClient restClient;
 
   @override
+  late AuthRepository authRepository;
+
+  @override
   late TimetableRepository timetableRepository;
 
   @override
@@ -58,6 +65,7 @@ final class Dependencies$Mutable implements Dependencies {
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
+        authRepository: authRepository,
         timetableRepository: timetableRepository,
         employeeRepository: employeeRepository,
         salonRepository: salonRepository,
@@ -72,6 +80,7 @@ final class _Dependencies$Immutable implements Dependencies {
   const _Dependencies$Immutable({
     required this.sharedPreferences,
     required this.restClient,
+    required this.authRepository,
     required this.timetableRepository,
     required this.employeeRepository,
     required this.salonRepository,
@@ -83,6 +92,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final RestClient restClient;
+
+  @override
+  final AuthRepository authRepository;
 
   @override
   final TimetableRepository timetableRepository;

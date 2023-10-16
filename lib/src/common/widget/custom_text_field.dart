@@ -12,6 +12,7 @@ class CustomTextField extends StatelessWidget {
     this.focusNode,
     this.textInputAction,
     this.label,
+    this.labelStyle,
     this.errorText,
     this.inputFormatters,
     this.maxLength,
@@ -19,6 +20,8 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.onChanged,
     this.suffix,
+    this.hintText,
+    this.onTapOutside,
     this.dense = true,
     this.enabled = true,
   });
@@ -37,6 +40,9 @@ class CustomTextField extends StatelessWidget {
 
   /// Optional text that describes this input field.
   final String? label;
+
+  ///
+  final TextStyle? labelStyle;
 
   /// Text that appears below the [InputDecorator.child] and the border.
   final String? errorText;
@@ -59,7 +65,12 @@ class CustomTextField extends StatelessWidget {
   /// Callback that validates the input text.
   final String? Function(String?)? validator;
 
+  ///
   final Widget? suffix;
+
+  final String? hintText;
+
+  final void Function(PointerDownEvent)? onTapOutside;
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +89,15 @@ class CustomTextField extends StatelessWidget {
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,
         onChanged: onChanged,
+        onTapOutside: onTapOutside,
         decoration: InputDecoration(
-          labelStyle: context.textTheme.bodyMedium!.copyWith(
-            color: context.colorScheme.primary,
-            fontFamily: FontFamily.geologica,
-            fontWeight: FontWeight.bold,
-          ),
+          labelStyle: labelStyle ??
+              context.textTheme.bodyMedium!.copyWith(
+                color: context.colorScheme.primary,
+                fontFamily: FontFamily.geologica,
+                fontWeight: FontWeight.bold,
+              ),
+          hintText: hintText,
           filled: true,
           fillColor: context.colorScheme.background,
           errorBorder: const OutlineInputBorder(

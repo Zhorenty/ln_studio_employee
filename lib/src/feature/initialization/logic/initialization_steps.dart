@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/auth/data/auth_data_provider.dart';
+import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
+import 'package:ln_employee/src/feature/auth/logic/oauth_interceptor.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,6 +19,8 @@ import '/src/feature/specialization/data/specialization_repository.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 
+const _baseUrl = 'http://31.129.104.75';
+
 /// Handles initialization steps.
 mixin InitializationSteps {
   final initializationSteps = <String, StepAction>{
@@ -23,11 +28,26 @@ mixin InitializationSteps {
       final sharedPreferences = await SharedPreferences.getInstance();
       progress.dependencies.sharedPreferences = sharedPreferences;
     },
-    'Rest Client': (progress) async {
+    'Auth Repository & Rest Client': (progress) async {
+      final authDataProvider = AuthDataProviderImpl(
+        baseUrl: _baseUrl,
+        sharedPreferences: progress.dependencies.sharedPreferences,
+      );
       final restClient = RestClient(
-        Dio(BaseOptions(baseUrl: 'http://31.129.104.75')),
+        Dio(BaseOptions(baseUrl: _baseUrl))
+          ..interceptors.add(
+            OAuthInterceptor(
+              refresh: authDataProvider.refreshTokenPair,
+              loadTokens: authDataProvider.getTokenPair,
+              clearTokens: authDataProvider.signOut,
+            ),
+          ),
       );
       progress.dependencies.restClient = restClient;
+      final authRepository = AuthRepositoryImpl(
+        authDataProvider: authDataProvider,
+      );
+      progress.dependencies.authRepository = authRepository;
     },
     'Timetable repository': (progress) async {
       final timetableDatasource = TimetableDatasourceImpl(
