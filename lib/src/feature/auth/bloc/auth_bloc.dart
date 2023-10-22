@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/utils/error_util.dart';
 import 'package:ln_employee/src/common/utils/mixin/set_state_mixin.dart';
@@ -16,9 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     on<AuthEvent>(
       (event, emit) => event.map(
         sendCode: (e) => _sendCode(e, emit),
-        // signInWithPhone: (e) => _signInWithPhone(e, emit),
-        // signUpWithPhone: (e) => _signUpWithPhone(e, emit),
-        // signInAnonymously: (e) => _signInAnonymously(e, emit),
+        signInWithPhone: (e) => _signInWithPhone(e, emit),
         signOut: (e) => _signOut(e, emit),
       ),
     );
@@ -30,75 +29,81 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     AuthEvent$SendCode event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(user: state.user));
+    emit(AuthState.processing(
+      user: state.user,
+      phone: event.phone,
+      smsCode: null,
+    ));
     try {
       await authRepository.sendCode(phone: event.phone);
-      emit(const AuthState.idle());
+      emit(AuthState.successful(
+        user: state.user,
+        phone: event.phone,
+        smsCode: null,
+      ));
     } on Object catch (e) {
       emit(
         AuthState.idle(error: ErrorUtil.formatError(e)),
       );
       rethrow;
+    } finally {
+      emit(AuthState.idle(user: state.user, phone: state.phone));
     }
   }
 
-  // Future<void> _signUpWithPhone(
-  //   AuthEventSignUpWithPhone event,
-  //   Emitter<AuthState> emit,
-  // ) async {
-  //   emit(AuthState.processing(user: state.user));
-  //   try {
-  //     final user = await authRepository.signUpWithPhone(
-  //       phone: event.phone,
-  //     );
-  //     emit(AuthState.idle(user: user));
-  //   } on Object catch (e) {
-  //     emit(
-  //       AuthState.idle(error: ErrorUtil.formatError(e)),
-  //     );
-  //     rethrow;
-  //   }
-  // }
+  Future<void> _signInWithPhone(
+    AuthEventSignInWithPhone event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthState.processing(
+      user: state.user,
+      phone: state.phone,
+      smsCode: event.smsCode,
+    ));
+    try {
+      final user = await authRepository.signInWithPhone(
+        phone: state.phone!,
+        smsCode: event.smsCode,
+      );
+      emit(AuthState.successful(
+        user: user,
+        phone: state.phone,
+        smsCode: state.smsCode,
+      ));
+    } on Object catch (e) {
+      if (e is DioException && e.response!.statusCode == 400) {
+        emit(AuthState.notRegistered(
+          user: state.user,
+          phone: state.phone,
+          smsCode: state.smsCode,
+        ));
 
-  // Future<void> _signInWithPhone(
-  //   AuthEventSignInWithPhone event,
-  //   Emitter<AuthState> emit,
-  // ) async {
-  //   emit(AuthState.processing(user: state.user));
-  //   try {
-  //     final user = await authRepository.signInWithPhone(phone: event.phone);
-  //     emit(AuthState.idle(user: user));
-  //   } on Object catch (e) {
-  //     emit(
-  //       AuthState.idle(error: ErrorUtil.formatError(e)),
-  //     );
-  //     rethrow;
-  //   }
-  // }
-
-  // Future<void> _signInAnonymously(
-  //   AuthEventSignInAnonymously event,
-  //   Emitter<AuthState> emit,
-  // ) async {
-  //   emit(AuthState.processing(user: state.user));
-  //   try {
-  //     final user = await authRepository.signInAnonymously();
-  //     emit(
-  //       AuthState.idle(user: user),
-  //     );
-  //   } on Object catch (e) {
-  //     emit(
-  //       AuthState.idle(error: ErrorUtil.formatError(e)),
-  //     );
-  //     rethrow;
-  //   }
-  // }
+        // TODO: Убрать дублирование
+        // emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+        // rethrow;
+      } else {
+        emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+        rethrow;
+      }
+    }
+    // finally {
+    //   emit(AuthState.idle(
+    //     user: state.user,
+    //     phone: state.phone,
+    //     smsCode: state.smsCode,
+    //   ));
+    // }
+  }
 
   Future<void> _signOut(
     AuthEventSignOut event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(user: state.user));
+    emit(AuthState.processing(
+      user: state.user,
+      phone: null,
+      smsCode: null,
+    ));
     try {
       await authRepository.signOut();
       emit(

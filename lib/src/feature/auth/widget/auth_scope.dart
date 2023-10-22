@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/router/app_router_scope.dart';
 
 import '../bloc/auth_event.dart';
-import '/src/common/router/app_router_scope.dart';
 import '/src/common/utils/mixin/scope_mixin.dart';
 import '/src/feature/auth/bloc/auth_bloc.dart';
 import '/src/feature/auth/bloc/auth_state.dart';
@@ -13,7 +13,10 @@ abstract mixin class AuthenticationController {
   void sendCode(String phone);
 
   /// Sign in with [phone].
-  // void signInWithPhone(String phone);
+  void signInWithPhone(int smsCode);
+
+  /// Sign up
+  void signUp(String? phone);
 
   /// Sign in as a guest
   // void signInAnonymously();
@@ -27,6 +30,9 @@ abstract mixin class AuthenticationController {
   /// The current user
   User? get user;
 
+  ///
+  String? get phone;
+
   /// Whether the current user is being processed
   bool get isProcessing;
 
@@ -34,7 +40,7 @@ abstract mixin class AuthenticationController {
   String? get error;
 
   /// Whether the current user is authenticated
-  bool get isAuthenticated => user?.phone != null;
+  bool get isAuthenticated => user != null;
 }
 
 ///
@@ -80,13 +86,23 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
 
   void _onAuthStateChanged(AuthState state) {
     if (!identical(state, _state)) {
-      setState(() => _state = state);
+      // Если надо сравнивать states
       final router = AppRouterScope.of(context, listen: false);
+      if (state is AuthState$Successful &&
+          _state?.smsCode != null &&
+          _state?.phone != null) {
+        router.go('/timetable');
+      } else if (state is AuthState$Successful && _state?.phone != null) {
+        router.goNamed('verify');
+      } else if (state is AuthState$NotRegistered) {
+        router.goNamed('register');
+      }
+      setState(() => _state = state);
 
       // TODO: Возможно, надо поменять
-      isAuthenticated
-          ? router.replaceNamed('timetable')
-          : router.replaceNamed('auth');
+      // isAuthenticated
+      //     ? router.replaceNamed('home')
+      //     : router.replaceNamed('auth');
     }
   }
 
@@ -94,25 +110,26 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   User? get user => _state?.user;
 
   @override
+  String? get phone => _state?.phone;
+
+  @override
   String? get error => _state?.error;
 
   @override
   bool get isProcessing => _state?.isProcessing ?? false;
 
-  // @override
-  // void signInAnonymously() => _authBloc.add(
-  //       const AuthEvent.signInAnonymously(),
-  //     );
+  @override
+  void sendCode(String phone) => _authBloc.add(
+        AuthEvent.sendCode(phone: phone),
+      );
 
-  // @override
-  // void signInWithPhone(String phone) => _authBloc.add(
-  //       AuthEvent.signInWithPhone(phone: phone),
-  //     );
+  @override
+  void signInWithPhone(int smsCode) => _authBloc.add(
+        AuthEvent.signInWithPhone(smsCode),
+      );
 
-  // @override
-  // void signUpWithPhone(String phone) => _authBloc.add(
-  //       AuthEvent.signUpWithPhone(phone: phone),
-  //     );
+  @override
+  void signUp(String? phone) => _authBloc.add(AuthEvent.signUp(phone));
 
   @override
   void signOut() => _authBloc.add(const AuthEvent.signOut());
@@ -123,11 +140,6 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
         state: _state,
         child: widget.child,
       );
-
-  @override
-  void sendCode(String phone) {
-    // TODO: implement sendCode
-  }
 }
 
 ///

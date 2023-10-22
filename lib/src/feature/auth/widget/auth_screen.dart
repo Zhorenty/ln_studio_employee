@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/common/utils/phone_input_formatter.dart';
 
 import '/src/common/assets/generated/assets.gen.dart';
@@ -30,6 +29,10 @@ class _AuthScreenState extends State<AuthScreen> {
   ///
   late final FocusNode phoneFocusNode;
 
+  bool visible = false;
+
+  bool isAgree = false;
+
   @override
   void initState() {
     super.initState();
@@ -46,11 +49,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
     final auth = AuthenticationScope.of(context);
     return Scaffold(
       backgroundColor: context.colorScheme.onBackground,
-      body: Container(
+      body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
@@ -62,12 +64,15 @@ class _AuthScreenState extends State<AuthScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Добро пожаловать',
-                  style: context.textTheme.headlineMedium,
+                  style: context.textTheme.headlineMedium!.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
               Center(
                 child: CustomTextField(
+                  controller: phoneController,
                   focusNode: phoneFocusNode,
                   label: 'Укажите номер телефона',
                   labelStyle: context.textTheme.bodyMedium?.copyWith(
@@ -86,62 +91,67 @@ class _AuthScreenState extends State<AuthScreen> {
                   onChanged: _checkPhoneNumber,
                 ),
               ),
+              Row(
+                children: [
+                  Checkbox(
+                    splashRadius: 0,
+                    value: isAgree,
+                    onChanged: (_) => setState(() => isAgree = !isAgree),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Я соглашаюсь с политикой конфиденциальности и условиями сервиса',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                      ),
+                    ),
+                  )
+                ],
+              ),
               const SizedBox(height: 16),
-              // const Spacer(),
-              // Padding(
-              //   padding: const EdgeInsets.only(bottom: 8.0),
-              //   child: ElevatedButton(
-              //     style: ElevatedButton.styleFrom(
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(16),
-              //       ),
-              //       fixedSize: Size(MediaQuery.sizeOf(context).width, 50),
-              //       backgroundColor: context.colorScheme.primary,
-              //     ),
-              //     onPressed: () {
-              //       if (_formKey.currentState!.validate()) {
-              //         auth.signInWithPhone(phoneController.text);
-              //         // TODO: Implement auth logic
-              //         context.goNamed('home');
-              //       }
-              //     },
-              //     child: Text(
-              //       'Продолжить',
-              //       style: context.textTheme.bodyLarge?.copyWith(
-              //         fontFamily: FontFamily.geologica,
-              //         color: context.colorScheme.onBackground,
-              //       ),
-              //     ),
-              //   ),
-              // ),
+              const Spacer(),
+              AnimatedOpacity(
+                opacity: visible ? 1 : 0,
+                duration: const Duration(milliseconds: 300),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      fixedSize: Size(
+                        MediaQuery.sizeOf(context).width - 50,
+                        50,
+                      ),
+                      backgroundColor: context.colorScheme.primary,
+                    ),
+                    onPressed: () => _formKey.currentState!.validate()
+                        ? auth.sendCode(phoneController.text)
+                        : null,
+                    child: Text(
+                      'Продолжить',
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.onBackground,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text(
-          'Продолжить',
-          style: context.textTheme.bodyLarge?.copyWith(
-            fontFamily: FontFamily.geologica,
-            color: context.colorScheme.onBackground,
-          ),
-        ),
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            // auth.signInWithPhone(phoneController.text);
-            // TODO: Implement auth logic
-            context.goNamed('timetable');
-          }
-        },
-      ),
     );
   }
 
-  /// Phone number FocusNode condition.
+  /// Phone number [FocusNode] condition.
   void _checkPhoneNumber(String value) {
     if ((value.length == 18 && value.startsWith('+')) ||
         (value.length == 17 && value.startsWith('8'))) {
       phoneFocusNode.unfocus();
+      setState(() => visible = true);
     }
   }
 }

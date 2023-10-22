@@ -50,13 +50,20 @@ abstract interface class AuthDataProvider {
   Future<bool> sendCode({required String phone});
 
   // /// Attempts to sign in with the given [phone].
-  // Future<User> signInWithPhone({required String phone});
+  Future<User> signInWithPhone({
+    required String phone,
+    required int smsCode,
+  });
 
-  // /// Attempts to sign up with the given [phone].
-  // Future<User> signUpWithPhone({required String phone});
-
-  // /// Attempts to sign in anonymously.
-  // Future<User> signInAnonymously();
+  Future<void> signUp({
+    required String phone,
+    required String firstName,
+    required String lastName,
+    // TODO: make nullable.
+    required DateTime birthDate,
+    // TODO: make nullable.
+    required String email,
+  });
 }
 
 final class AuthDataProviderImpl implements AuthDataProvider {
@@ -73,29 +80,38 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   final _tokenPairController = StreamController<TokenPair?>();
   final _userController = StreamController<User?>();
 
+  ///
   Future<void> _saveTokenPair(TokenPair pair) async {
     await _sharedPreferences.setString(
       'auth.token_pair.access_token',
       pair.accessToken,
     );
-    await _sharedPreferences.setString(
-      'auth.token_pair.refresh_token',
-      pair.refreshToken,
-    );
+    if (pair.refreshToken != null) {
+      await _sharedPreferences.setString(
+        'auth.token_pair.refresh_token',
+        pair.refreshToken as String,
+      );
+    }
     _tokenPairController.add(pair);
   }
 
+  ///
   Future<void> _saveUser(User user) async {
-    if (user.phone != null) {
-      await _sharedPreferences.setString('auth.user.phone', user.phone!);
-    }
-    // await _sharedPreferences.setBool(
-    //   'auth.user.is_anonymous',
-    //   user.isAnonymous,
+    // await _sharedPreferences.setInt('auth.user.phone', user.id!);
+    await _sharedPreferences.setString('auth.user.phone', user.phone!);
+    // await _sharedPreferences.setString('auth.user.photo', user.photo!);
+    // await _sharedPreferences.setString(
+    //     'auth.user.first_name', user.firstName!);
+    // await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
+    // await _sharedPreferences.setString(
+    //   'auth.user.birth_date',
+    //   user.birthDate.toString(),
     // );
+
     _userController.add(user);
   }
 
+  ///
   TokenPair _decodeTokenPair(Response<Map<String, Object?>> response) {
     final json = response.data;
 
@@ -114,8 +130,8 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     if (json
         case {
           'data': {
-            'accessToken': final String accessToken,
-            'refreshToken': final String refreshToken,
+            'access_token': final String accessToken,
+            'refresh_token': final String? refreshToken,
           },
         }) {
       return (
@@ -135,39 +151,17 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       throw Exception('Failed to refresh token pair');
     }
 
-    final response = await client.get<Map<String, Object?>>(
-      '/api/v1/auth/refresh',
-      queryParameters: {
-        'refreshToken': tokenPair.refreshToken,
-      },
-    );
+    final response = await client.post('/api/auth/refresh');
 
     if (response.statusCode != 200) {
       throw Exception('Failed to refresh token pair');
     }
 
-    final newTokenPair = _decodeTokenPair(response);
+    final newTokenPair = _decodeTokenPair(response.data);
     await _saveTokenPair(newTokenPair);
 
     return newTokenPair;
   }
-
-  // @override
-  // Future<User> signInAnonymously() async {
-  //   final response = await client.post<Map<String, Object?>>(
-  //     '/api/v1/auth/guest',
-  //   );
-
-  //   final tokenPair = _decodeTokenPair(response);
-
-  //   await _saveTokenPair(tokenPair);
-
-  //   const user = User(isAnonymous: true);
-
-  //   await _saveUser(user);
-
-  //   return user;
-  // }
 
   @override
   Future<bool> sendCode({required String phone}) async {
@@ -175,58 +169,62 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       '/api/auth/sms/send',
       data: {'phone_number': phone},
     );
-    return response.data;
+    return response.data['data'];
   }
 
-  // @override
-  // Future<User> signInWithPhone({required String phone}) async {
-  //   final response = await client.post<Map<String, Object?>>(
-  //     '/api/auth/sign-in',
-  //     data: jsonEncode({
-  //       'phone_number': phone,
-  //       'sms_code': null,
-  //     }),
-  //   );
+  @override
+  Future<User> signInWithPhone({
+    required String phone,
+    required int smsCode,
+  }) async {
+    final response = await client.post<Map<String, Object?>>(
+      '/api/auth/sms/validate',
+      data: {
+        'phone': phone,
+        'sms_code': smsCode,
+      },
+    );
 
-  //   final tokenPair = _decodeTokenPair(response);
+    final tokenPair = _decodeTokenPair(response);
 
-  //   await _saveTokenPair(tokenPair);
+    await _saveTokenPair(tokenPair);
 
-  //   final user = User(phone: phone);
+    final user = User(phone: phone);
 
-  //   await _saveUser(user);
+    await _saveUser(user);
 
-  //   return user;
-  // }
+    return user;
+  }
 
-  // @override
-  // Future<User> signUpWithPhone({
-  //   required String phone,
-  // }) async {
-  //   final response = await client.post<Map<String, Object?>>(
-  //     '/api/v1/auth/signup',
-  //     data: jsonEncode({
-  //       'phone': phone,
-  //     }),
-  //   );
+  @override
+  Future<void> signUp({
+    required String phone,
+    required String firstName,
+    required String lastName,
+    required DateTime birthDate,
+    required String email,
+  }) async {
+    final response = await client.post<Map<String, Object?>>(
+      '/api/auth/sign-up',
+      data: {
+        'phone_number': phone,
+        "first_name": firstName,
+        "last_name": lastName,
+        "birth_date": birthDate,
+        "email": email,
+      },
+    );
 
-  //   final tokenPair = _decodeTokenPair(response);
+    final tokenPair = _decodeTokenPair(response);
 
-  //   await _saveTokenPair(tokenPair);
-
-  //   final user = User(phone: phone);
-
-  //   await _saveUser(user);
-
-  //   return user;
-  // }
+    await _saveTokenPair(tokenPair);
+  }
 
   @override
   Future<void> signOut() async {
     await _sharedPreferences.remove('auth.token_pair.access_token');
     await _sharedPreferences.remove('auth.token_pair.refresh_token');
     await _sharedPreferences.remove('auth.user.phone');
-    // await _sharedPreferences.remove('auth.user.is_anonymous');
     _tokenPairController.add(null);
     _userController.add(null);
     return;
@@ -237,11 +235,12 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     final accessToken = _sharedPreferences.getString(
       'auth.token_pair.access_token',
     );
+
     final refreshToken = _sharedPreferences.getString(
       'auth.token_pair.refresh_token',
     );
 
-    if (accessToken == null || refreshToken == null) {
+    if (accessToken == null) {
       return null;
     }
 
@@ -260,12 +259,6 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   @override
   User? getUser() {
     final phone = _sharedPreferences.getString('auth.user.phone');
-
-    // final isAnonymous = _sharedPreferences.getBool('auth.user.is_anonymous');
-
-    // if (isAnonymous == null) {
-    //   return null;
-    // }
 
     return User(phone: phone);
   }
