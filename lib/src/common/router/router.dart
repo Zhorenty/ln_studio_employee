@@ -77,6 +77,13 @@ final router = GoRouter(
                   name: 'services',
                   path: 'services',
                   builder: (context, state) => const ServicesScreen(),
+                  routes: [
+                    GoRoute(
+                      name: 'service-detail',
+                      path: 'service-detail',
+                      builder: (context, state) => const ServicesScreen(),
+                    ),
+                  ],
                 ),
               ],
             ),

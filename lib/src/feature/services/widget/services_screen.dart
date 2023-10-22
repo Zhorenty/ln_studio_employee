@@ -59,37 +59,66 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                 vertical: 8,
                               ),
                               child: GestureDetector(
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                      color: Color(0xFF272727),
-                                    ),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: EdgeInsets.zero,
-                                  child: ExpansionTile(
-                                    backgroundColor:
-                                        context.colorScheme.background,
-                                    collapsedBackgroundColor:
-                                        context.colorScheme.background,
-                                    title: Text(
-                                      state.categoryWithServices[index].name,
-                                      style:
-                                          context.textTheme.bodyLarge?.copyWith(
-                                        fontFamily: FontFamily.geologica,
-                                      ),
-                                    ),
-                                    children: [
-                                      ...state
-                                          .categoryWithServices[index].service
-                                          .map(
-                                        (service) => ServiceCard(
-                                          service: service,
+                                child: Column(
+                                  children: [
+                                    Card(
+                                      shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                          color: Color(0xFF272727),
                                         ),
+                                        borderRadius: BorderRadius.circular(16),
                                       ),
-                                    ],
-                                  ),
+                                      clipBehavior: Clip.antiAlias,
+                                      margin: EdgeInsets.zero,
+                                      child: ExpansionTile(
+                                        backgroundColor:
+                                            context.colorScheme.background,
+                                        collapsedBackgroundColor:
+                                            context.colorScheme.background,
+                                        title: Text(
+                                          state
+                                              .categoryWithServices[index].name,
+                                          style: context.textTheme.bodyLarge
+                                              ?.copyWith(
+                                            fontFamily: FontFamily.geologica,
+                                          ),
+                                        ),
+                                        children: [
+                                          ...state.categoryWithServices[index]
+                                              .service
+                                              .map(
+                                            (service) => ServiceCard(
+                                              service: service,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        ElevatedButton.icon(
+                                          icon: const Icon(Icons.edit),
+                                          label: const Text('Редаутировать'),
+                                          onPressed: () {},
+                                        ),
+                                        const SizedBox(width: 8),
+                                        ElevatedButton.icon(
+                                          icon: const Icon(Icons.delete),
+                                          label: const Text('Удалить'),
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                              Colors.redAccent
+                                                  .withOpacity(0.75),
+                                            ),
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                        const SizedBox(width: 8),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
@@ -112,6 +141,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
               ],
             );
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.plus_one),
+          onPressed: () {},
         ),
       ),
     );
@@ -158,96 +191,99 @@ class _ServiceCardState extends State<ServiceCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(color: context.colorScheme.background),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8).add(
-        const EdgeInsets.only(right: 16),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // AnimatedButton(
-              //   padding: const EdgeInsets.only(right: 4, top: 2),
-              //   onPressed: () {},
-              //   child: const Icon(Icons.edit, size: 20),
-              // ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.service.name,
-                      style: context.textTheme.titleMedium?.copyWith(
-                        fontFamily: FontFamily.geologica,
+    return GestureDetector(
+      onTap: () => context.goNamed('service-detail'),
+      child: Container(
+        decoration: BoxDecoration(color: context.colorScheme.background),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8).add(
+          const EdgeInsets.only(right: 16),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // AnimatedButton(
+                //   padding: const EdgeInsets.only(right: 4, top: 2),
+                //   onPressed: () {},
+                //   child: const Icon(Icons.edit, size: 20),
+                // ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.service.name,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
                       ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Стоимость: ',
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colorScheme.primaryContainer,
-                              fontFamily: FontFamily.geologica,
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Стоимость: ',
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: context.colorScheme.primaryContainer,
+                                fontFamily: FontFamily.geologica,
+                              ),
                             ),
-                          ),
-                          TextSpan(
-                            text: widget.service.price.toString(),
-                            style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colorScheme.secondary,
-                              fontFamily: FontFamily.geologica,
+                            TextSpan(
+                              text: widget.service.price.toString(),
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: context.colorScheme.secondary,
+                                fontFamily: FontFamily.geologica,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              AnimatedButton(
-                padding: const EdgeInsets.only(right: 4, top: 2),
-                onPressed: () => setState(() => expanded = !expanded),
-                child: const Icon(Icons.info_outline, size: 20),
-              ),
-            ],
-          ),
-          AnimatedSize(
-            duration: const Duration(milliseconds: 750),
-            curve: Curves.linearToEaseOut,
-            alignment: Alignment.topCenter,
-            clipBehavior: Clip.none,
-            child: expanded
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 4, left: 10),
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: widget.service.description,
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontFamily: FontFamily.geologica,
-                              color: context.colorScheme.primaryContainer,
+                AnimatedButton(
+                  padding: const EdgeInsets.only(right: 4, top: 2),
+                  onPressed: () => setState(() => expanded = !expanded),
+                  child: const Icon(Icons.info_outline, size: 20),
+                ),
+              ],
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 750),
+              curve: Curves.linearToEaseOut,
+              alignment: Alignment.topCenter,
+              clipBehavior: Clip.none,
+              child: expanded
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 4, left: 10),
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: widget.service.description,
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: context.colorScheme.primaryContainer,
+                              ),
                             ),
-                          ),
-                          TextSpan(
-                            text: '\nДлительность процедуры: '
-                                '${widget.service.duration} минут',
-                            style: context.textTheme.bodyMedium!.copyWith(
-                              fontFamily: FontFamily.geologica,
-                              color: context.colorScheme.primaryContainer,
+                            TextSpan(
+                              text: '\nДлительность процедуры: '
+                                  '${widget.service.duration} минут',
+                              style: context.textTheme.bodyMedium!.copyWith(
+                                fontFamily: FontFamily.geologica,
+                                color: context.colorScheme.primaryContainer,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ),
-        ],
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ],
+        ),
       ),
     );
   }
