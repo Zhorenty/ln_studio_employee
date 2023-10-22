@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/router/app_router_scope.dart';
+import 'package:ln_employee/src/common/router/router.dart';
 
 import '../bloc/auth_event.dart';
 import '/src/common/utils/mixin/scope_mixin.dart';
@@ -40,7 +40,7 @@ abstract mixin class AuthenticationController {
   String? get error;
 
   /// Whether the current user is authenticated
-  bool get isAuthenticated => user != null;
+  bool get isAuthenticated => user?.phone != null;
 }
 
 ///
@@ -87,19 +87,21 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
   void _onAuthStateChanged(AuthState state) {
     if (!identical(state, _state)) {
       // Если надо сравнивать states
-      final router = AppRouterScope.of(context, listen: false);
-      if (state is AuthState$Successful &&
-          _state?.smsCode != null &&
-          _state?.phone != null) {
-        router.go('/timetable');
-      } else if (state is AuthState$Successful && _state?.phone != null) {
-        router.goNamed('verify');
-      } else if (state is AuthState$NotRegistered) {
-        router.goNamed('register');
-      }
       setState(() => _state = state);
 
-      // TODO: Возможно, надо поменять
+      if (isAuthenticated) {
+        router.go('/timetable');
+      } else {
+        if (state.smsCode != null && state is AuthState$NotRegistered) {
+          router.goNamed('register');
+        } else {
+          if (state.phone != null) {
+            router.goNamed('verify');
+          } else {
+            router.replaceNamed('auth');
+          }
+        }
+      }
       // isAuthenticated
       //     ? router.replaceNamed('home')
       //     : router.replaceNamed('auth');

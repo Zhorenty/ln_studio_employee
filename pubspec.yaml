@@ -47,6 +47,7 @@ dependencies:
 
   # Widgets
   table_calendar: ^3.0.9
+  image_picker: ^1.0.4
 
 dev_dependencies:
   # Testing

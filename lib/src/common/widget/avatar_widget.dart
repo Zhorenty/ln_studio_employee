@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -14,16 +15,20 @@ import '/src/common/utils/extensions/string_extension.dart';
 class AvatarWidget extends StatelessWidget {
   const AvatarWidget({
     super.key,
+    this.avatar,
     this.radius,
     this.maxRadius,
     this.minRadius,
     this.title,
     this.color,
     this.opacity = 1,
-    this.isOnline = false,
-    this.isAway = false,
+    this.isLabelVisible = false,
     this.label,
+    this.onBadgeTap,
   });
+
+  ///
+  final File? avatar;
 
   /// Size of the avatar, expressed as the radius (half the diameter).
   ///
@@ -62,16 +67,12 @@ class AvatarWidget extends StatelessWidget {
 
   /// Indicator whether to display an online [Badge] in the bottom-right corner
   /// of this [AvatarWidget].
-  final bool isOnline;
-
-  /// Indicator whether to display an away [Badge] in the bottom-right corner
-  /// of this [AvatarWidget].
-  ///
-  /// [Badge] is displayed only if [isOnline] is `true` as well.
-  final bool isAway;
+  final bool isLabelVisible;
 
   /// Optional label to show inside this [AvatarWidget].
   final Widget? label;
+
+  final void Function()? onBadgeTap;
 
   /// Returns minimum diameter of the avatar.
   double get _minDiameter {
@@ -113,87 +114,72 @@ class AvatarWidget extends StatelessWidget {
         final double badgeSize =
             maxWidth >= 40 ? maxWidth / 5 : maxWidth / 3.75;
 
-        return Badge(
-          largeSize: badgeSize * 1.16,
-          isLabelVisible: isOnline,
-          alignment: Alignment.bottomRight,
-          backgroundColor: context.colorScheme.secondary,
-          padding: EdgeInsets.all(badgeSize / 12),
-          offset:
-              maxWidth >= 40 ? const Offset(-2.5, -2.5) : const Offset(0, 0),
-          label: SizedBox(
-            width: badgeSize,
-            height: badgeSize,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isAway ? Colors.orange : Colors.green,
+        return GestureDetector(
+          onTap: onBadgeTap,
+          child: Badge(
+            largeSize: badgeSize * 1.5,
+            isLabelVisible: isLabelVisible,
+            alignment: Alignment.bottomRight,
+            backgroundColor: context.colorScheme.primaryContainer,
+            padding: EdgeInsets.all(badgeSize / 12),
+            offset:
+                maxWidth >= 40 ? const Offset(-2.5, -2.5) : const Offset(0, 0),
+            label: SizedBox(
+              width: badgeSize * 1.4,
+              child: Icon(
+                Icons.photo_camera_rounded,
+                color: context.colorScheme.onBackground,
               ),
             ),
-          ),
-          child: Stack(
-            children: [
-              Container(
-                margin: const EdgeInsets.all(0.5),
-                constraints: BoxConstraints(
-                  minHeight: minHeight,
-                  minWidth: minWidth,
-                  maxWidth: maxWidth,
-                  maxHeight: maxHeight,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [gradient.lighten(), gradient],
+            child: Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(0.5),
+                  constraints: BoxConstraints(
+                    minHeight: minHeight,
+                    minWidth: minWidth,
+                    maxWidth: maxWidth,
+                    maxHeight: maxHeight,
                   ),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: label ??
-                      SelectionContainer.disabled(
-                        child: Text(
-                          (title ?? '??').initials(),
-                          style: context.textTheme.titleSmall!.copyWith(
-                            fontSize: 16 * (maxWidth / 40.0),
-                            color: context.colorScheme.secondary,
-                            fontFamily: FontFamily.geologica,
-                          ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [gradient.lighten(), gradient],
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: label ??
+                        SelectionContainer.disabled(
+                          child: Text(
+                            (title ?? '??').initials(),
+                            style: context.textTheme.titleSmall!.copyWith(
+                              fontSize: 16 * (maxWidth / 40.0),
+                              color: context.colorScheme.secondary,
+                              fontFamily: FontFamily.geologica,
+                            ),
 
-                          // Disable the accessibility size settings for
-                          // this [Text].
-                          textScaleFactor: 1,
+                            // Disable the accessibility size settings for
+                            // this [Text].
+                            textScaleFactor: 1,
+                          ),
                         ),
-                      ),
+                  ),
                 ),
-              ),
-              // TODO(zhorenty): Implement avatar from backend
-              // if (avatar != null)
-              //   Positioned.fill(
-              //     child: ClipOval(
-              //       child: RetryImage(
-              //         maxWidth > 250
-              //             ? avatar!.full.url
-              //             : maxWidth > 100
-              //                 ? avatar!.big.url
-              //                 : maxWidth > 46
-              //                     ? avatar!.medium.url
-              //                     : avatar!.small.url,
-              //         checksum: maxWidth > 250
-              //             ? avatar!.full.checksum
-              //             : maxWidth > 100
-              //                 ? avatar!.big.checksum
-              //                 : maxWidth > 46
-              //                     ? avatar!.medium.checksum
-              //                     : avatar!.small.checksum,
-              //         fit: BoxFit.cover,
-              //         height: double.infinity,
-              //         width: double.infinity,
-              //         displayProgress: false,
-              //       ),
-              //     ),
-              //   ),
-            ],
+                if (avatar != null)
+                  Positioned.fill(
+                    child: ClipOval(
+                      child: Image.file(
+                        avatar!,
+                        fit: BoxFit.cover,
+                        height: double.infinity,
+                        width: double.infinity,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         );
       },
