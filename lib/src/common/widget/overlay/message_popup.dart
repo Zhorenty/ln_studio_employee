@@ -10,7 +10,7 @@ import 'modal_popup.dart';
 class MessagePopup {
   /// Shows an error popup with the provided argument.
   static Future<void> error(BuildContext context, dynamic e) async {
-    var message = e.toString();
+    final message = e.toString();
 
     await showDialog(
       context: context,

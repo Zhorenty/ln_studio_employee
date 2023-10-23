@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ln_employee/src/common/exception/error_code.dart';
 import 'package:ln_employee/src/common/utils/error_util.dart';
+import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user.dart';
@@ -55,15 +56,7 @@ abstract interface class AuthDataProvider {
     required int smsCode,
   });
 
-  Future<void> signUp({
-    required String phone,
-    required String firstName,
-    required String lastName,
-    // TODO: make nullable.
-    required DateTime birthDate,
-    // TODO: make nullable.
-    required String email,
-  });
+  Future<User> signUp({required User userModel});
 }
 
 final class AuthDataProviderImpl implements AuthDataProvider {
@@ -100,13 +93,13 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     // await _sharedPreferences.setInt('auth.user.phone', user.id!);
     await _sharedPreferences.setString('auth.user.phone', user.phone!);
     // await _sharedPreferences.setString('auth.user.photo', user.photo!);
-    // await _sharedPreferences.setString(
-    //     'auth.user.first_name', user.firstName!);
+    // await _sharedPreferences.setString('auth.user.first_name', user.firstName!);
     // await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
     // await _sharedPreferences.setString(
     //   'auth.user.birth_date',
     //   user.birthDate.toString(),
     // );
+    // await _sharedPreferences.setString('auth.user.email', user.email!);
 
     _userController.add(user);
   }
@@ -167,7 +160,10 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   Future<bool> sendCode({required String phone}) async {
     final response = await client.post(
       '/api/auth/sms/send',
-      data: {'phone_number': phone},
+      data: {
+        'is_employee': true,
+        'phone_number': phone,
+      },
     );
     return response.data['data'];
   }
@@ -197,27 +193,25 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   }
 
   @override
-  Future<void> signUp({
-    required String phone,
-    required String firstName,
-    required String lastName,
-    required DateTime birthDate,
-    required String email,
-  }) async {
+  Future<User> signUp({required User userModel}) async {
     final response = await client.post<Map<String, Object?>>(
       '/api/auth/sign-up',
       data: {
-        'phone_number': phone,
-        "first_name": firstName,
-        "last_name": lastName,
-        "birth_date": birthDate,
-        "email": email,
+        "phone_number": userModel.phone,
+        "first_name": userModel.firstName,
+        "last_name": userModel.lastName,
+        "birth_date": userModel.birthDate?.jsonFormat(),
+        "email": userModel.email,
       },
     );
 
     final tokenPair = _decodeTokenPair(response);
 
     await _saveTokenPair(tokenPair);
+
+    await _saveUser(userModel);
+
+    return userModel;
   }
 
   @override
@@ -225,6 +219,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     await _sharedPreferences.remove('auth.token_pair.access_token');
     await _sharedPreferences.remove('auth.token_pair.refresh_token');
     await _sharedPreferences.remove('auth.user.phone');
+    // TODO: remove remaining variables
     _tokenPairController.add(null);
     _userController.add(null);
     return;

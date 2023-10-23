@@ -16,13 +16,7 @@ abstract mixin class AuthenticationController {
   void signInWithPhone(int smsCode);
 
   /// Sign up
-  void signUp(String? phone);
-
-  /// Sign in as a guest
-  // void signInAnonymously();
-
-  /// Sign up with [phone].
-  // void signUpWithPhone(String phone);
+  void signUp({required User user});
 
   /// Sign out the current user
   void signOut();
@@ -89,22 +83,20 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       // Если надо сравнивать states
       setState(() => _state = state);
 
+      // НОМЕР: 8 (960) 487-53-22
       if (isAuthenticated) {
         router.go('/timetable');
       } else {
         if (state.smsCode != null && state is AuthState$NotRegistered) {
-          router.goNamed('register');
+          router.goNamed('unregistered');
         } else {
           if (state.phone != null) {
             router.goNamed('verify');
           } else {
-            router.replaceNamed('auth');
+            router.goNamed('auth');
           }
         }
       }
-      // isAuthenticated
-      //     ? router.replaceNamed('home')
-      //     : router.replaceNamed('auth');
     }
   }
 
@@ -131,7 +123,9 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       );
 
   @override
-  void signUp(String? phone) => _authBloc.add(AuthEvent.signUp(phone));
+  void signUp({required User user}) => _authBloc.add(
+        AuthEvent.signUp(user: user),
+      );
 
   @override
   void signOut() => _authBloc.add(const AuthEvent.signOut());

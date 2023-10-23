@@ -12,16 +12,16 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/launcher_black.png
-  AssetGenImage get launcherBlack =>
-      const AssetGenImage('assets/images/launcher_black.png');
-
   /// File path: assets/images/logo_black.png
   AssetGenImage get logoBlack =>
       const AssetGenImage('assets/images/logo_black.png');
 
+  /// File path: assets/images/logo_white.png
+  AssetGenImage get logoWhite =>
+      const AssetGenImage('assets/images/logo_white.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [launcherBlack, logoBlack];
+  List<AssetGenImage> get values => [logoBlack, logoWhite];
 }
 
 class Assets {

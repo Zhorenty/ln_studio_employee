@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -10,6 +12,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = AuthenticationScope.of(context);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -83,7 +87,47 @@ class ProfileScreen extends StatelessWidget {
                 size: 23,
               ),
               const Divider(),
-              const CategoryListTile(
+              CategoryListTile(
+                onTap: () =>
+                    // TODO: make prettiest
+                    showAdaptiveDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      backgroundColor: context.colorScheme.onBackground,
+                      titlePadding: const EdgeInsets.all(16),
+                      title: Text(
+                        'Вы точно хотите выйти из аккаунта?',
+                        style: context.textTheme.titleLarge?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
+                      ),
+                      actionsAlignment: MainAxisAlignment.spaceBetween,
+                      actionsPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
+                      actions: <Widget>[
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: context.textTheme.bodyLarge?.copyWith(
+                              fontFamily: FontFamily.geologica,
+                            ),
+                          ),
+                          child: const Text('Нет'),
+                          onPressed: () => context.pop(),
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: context.textTheme.bodyLarge?.copyWith(
+                              fontFamily: FontFamily.geologica,
+                            ),
+                          ),
+                          child: const Text('Да, выйти'),
+                          onPressed: () => auth.signOut(),
+                        ),
+                      ],
+                    );
+                  },
+                ),
                 icon: Icons.exit_to_app,
                 title: 'Выйти',
                 size: 23,

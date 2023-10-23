@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
 import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/utils/extensions/date_time_extension.dart';
@@ -13,6 +14,7 @@ class DatePickerField extends StatefulWidget {
     this.controller,
     this.onDateSelected,
     this.validator,
+    this.suffix,
   });
 
   ///
@@ -26,6 +28,9 @@ class DatePickerField extends StatefulWidget {
 
   /// Label of this [DatePickerField].
   final String label;
+
+  ///
+  final Widget? suffix;
 
   ///
   final String? Function(String?)? validator;
@@ -53,6 +58,11 @@ class DatePickerFieldState extends State<DatePickerField> {
         controller: widget.controller,
         label: widget.label,
         validator: widget.validator,
+        suffix: widget.suffix,
+        labelStyle: context.textTheme.bodyLarge!.copyWith(
+          color: context.colorScheme.primaryContainer,
+          fontFamily: FontFamily.geologica,
+        ),
       ),
     );
   }

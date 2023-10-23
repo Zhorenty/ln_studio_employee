@@ -89,7 +89,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   @override
   Future<Employee> editEmployee(Employee$Edit employee) async {
     final result = await restClient.put(
-      '/api/v1/employee/edit/${employee.id}',
+      '/api/v1/employee/${employee.id}/edit',
       body: {
         'address': employee.address,
         'job_id': employee.jobId,
@@ -113,9 +113,9 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
 
   @override
   Future<void> dismissEmployee(int id) async =>
-      await restClient.patch('/api/v1/employee/dismiss/$id');
+      await restClient.patch('/api/v1/employee/$id/dismiss');
 
   @override
   Future<void> reinstatementEmployee(int id) async =>
-      await restClient.patch('/api/v1/employee/reinstatement/$id');
+      await restClient.patch('/api/v1/employee/$id/reinstatement');
 }
