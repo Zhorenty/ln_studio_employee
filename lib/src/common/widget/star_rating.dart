@@ -52,8 +52,9 @@ class StarRatingState extends State<StarRating> {
       children: List.generate(
         5,
         (index) => GestureDetector(
-          onTap: () =>
-              widget.onRatingChanged != null ? _updateRating(index + 1) : null,
+          onTap: widget.onRatingChanged != null
+              ? () => _updateRating(index + 1)
+              : null,
           child: Icon(
             index < _currentRating
                 ? Icons.star_rounded
