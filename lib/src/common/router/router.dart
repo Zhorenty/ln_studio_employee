@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/feature/auth/widget/auth_screen.dart';
-import 'package:ln_employee/src/feature/auth/widget/unregistered_screen.dart';
 import 'package:ln_employee/src/feature/auth/widget/verification_screen.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
@@ -32,13 +31,6 @@ final router = GoRouter(
           name: 'verify',
           path: 'verify',
           builder: (context, state) => const VerificationScreen(),
-          routes: [
-            GoRoute(
-              name: 'unregistered',
-              path: 'unregistered',
-              builder: (context, state) => const UnregisteredScreen(),
-            ),
-          ],
         ),
       ],
     ),

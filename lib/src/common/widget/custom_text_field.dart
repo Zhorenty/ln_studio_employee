@@ -97,6 +97,7 @@ class CustomTextField extends StatelessWidget {
                 fontFamily: FontFamily.geologica,
                 fontWeight: FontWeight.bold,
               ),
+          errorText: errorText,
           hintText: hintText,
           filled: true,
           fillColor: context.colorScheme.background,

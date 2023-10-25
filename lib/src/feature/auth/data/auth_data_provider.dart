@@ -90,6 +90,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
   ///
   Future<void> _saveUser(User user) async {
+    // TODO: uncomment remaining variables
     // await _sharedPreferences.setInt('auth.user.phone', user.id!);
     await _sharedPreferences.setString('auth.user.phone', user.phone!);
     // await _sharedPreferences.setString('auth.user.photo', user.photo!);
@@ -123,8 +124,10 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     if (json
         case {
           'data': {
-            'access_token': final String accessToken,
-            'refresh_token': final String? refreshToken,
+            'tokens': {
+              'access_token': final String accessToken,
+              'refresh_token': final String? refreshToken,
+            }
           },
         }) {
       return (
@@ -165,6 +168,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
         'phone_number': phone,
       },
     );
+
     return response.data['data'];
   }
 

@@ -3,20 +3,17 @@ enum ErrorCode {
   /// Represents an unknown error.
   unknown(1),
 
-  /// Error where the phone number already exists.
-  phoneExists(2),
+  ///
+  phoneNotFound(400),
 
   ///
-  phoneNotFound(3),
+  tokenExpired(3),
 
   ///
-  tokenExpired(5),
+  tokenMalformed(4),
 
   ///
-  tokenMalformed(6),
-
-  ///
-  invalidBody(7);
+  invalidBody(5);
 
   const ErrorCode(this.code);
 

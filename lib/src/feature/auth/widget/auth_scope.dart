@@ -87,14 +87,10 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       if (isAuthenticated) {
         router.go('/timetable');
       } else {
-        if (state.smsCode != null && state is AuthState$NotRegistered) {
-          router.goNamed('unregistered');
+        if (state.phone != null) {
+          router.goNamed('verify');
         } else {
-          if (state.phone != null) {
-            router.goNamed('verify');
-          } else {
-            router.goNamed('auth');
-          }
+          router.goNamed('auth');
         }
       }
     }

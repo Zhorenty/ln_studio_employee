@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/common/exception/error_code.dart';
 import 'package:ln_employee/src/common/utils/error_util.dart';
 import 'package:ln_employee/src/common/utils/mixin/set_state_mixin.dart';
 
@@ -43,10 +44,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         smsCode: null,
       ));
     } on Object catch (e) {
-      emit(
-        AuthState.idle(error: ErrorUtil.formatError(e)),
-      );
-      rethrow;
+      if (e is DioException && e.response!.statusCode == 400) {
+        // TODO: Еще не хендлится, а надо
+        emit(
+          AuthState.idle(
+            error: ErrorUtil.throwAuthException(
+              ErrorCode.phoneNotFound,
+              'Пользователь с таким номером не найден',
+            ),
+          ),
+        );
+      } else {
+        emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+        rethrow;
+      }
     } finally {
       emit(AuthState.idle(user: state.user, phone: state.phone));
     }
@@ -72,20 +83,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         smsCode: state.smsCode,
       ));
     } on Object catch (e) {
-      if (e is DioException && e.response!.statusCode == 400) {
-        emit(AuthState.notRegistered(
-          user: state.user,
-          phone: state.phone,
-          smsCode: state.smsCode,
-        ));
-
-        // TODO: Убрать дублирование
-        // emit(AuthState.idle(error: ErrorUtil.formatError(e)));
-        // rethrow;
-      } else {
-        emit(AuthState.idle(error: ErrorUtil.formatError(e)));
-        rethrow;
-      }
+      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+      rethrow;
     }
   }
 
@@ -111,20 +110,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     AuthEventSignOut event,
     Emitter<AuthState> emit,
   ) async {
-    emit(AuthState.processing(
-      user: state.user,
-      phone: null,
-      smsCode: null,
-    ));
+    emit(AuthState.processing(user: state.user, phone: null, smsCode: null));
     try {
       await authRepository.signOut();
-      emit(
-        const AuthState.idle(),
-      );
+      emit(const AuthState.idle());
     } on Object catch (e) {
-      emit(
-        AuthState.idle(error: ErrorUtil.formatError(e)),
-      );
+      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }

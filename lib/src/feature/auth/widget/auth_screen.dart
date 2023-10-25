@@ -79,6 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   inputFormatters: [RuPhoneInputFormatter()],
                   validator: _phoneValidator,
                   onChanged: _checkPhoneNumber,
+                  errorText: auth.error,
                 ),
               ),
               GestureDetector(
@@ -171,9 +172,10 @@ class _AuthScreenState extends State<AuthScreen> {
                       backgroundColor: context.colorScheme.primary,
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        auth.sendCode(phoneController.text);
-                      }
+                      print(auth.error);
+                      _formKey.currentState!.validate() && auth.error != null
+                          ? auth.sendCode(phoneController.text)
+                          : null;
                     },
                     child: Text(
                       'Продолжить',

@@ -25,15 +25,9 @@ final class AuthException$Unknown extends AuthException {
       : super(code: ErrorCode.unknown);
 }
 
-final class AuthException$UserNotFound extends AuthException {
-  const AuthException$UserNotFound()
+final class AuthException$PhoneNotFound extends AuthException {
+  const AuthException$PhoneNotFound()
       : super(message: 'Phone not found', code: ErrorCode.phoneNotFound);
-}
-
-/// Phone already exists exception.
-final class AuthException$PhoneExists extends AuthException {
-  const AuthException$PhoneExists({super.message = 'Phone exists'})
-      : super(code: ErrorCode.phoneExists);
 }
 
 final class AuthException$InvalidBody extends AuthException {

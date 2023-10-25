@@ -21,8 +21,8 @@ sealed class ErrorUtil {
   /// Formats an `EmployeeException` error message based on its type.
   static String _localizeEmployeeException(AuthException exception) =>
       switch (exception) {
-        final AuthException$PhoneExists _ => _localizeError(
-            'Phone exists',
+        final AuthException$PhoneNotFound _ => _localizeError(
+            'Phone not found',
             (l) => l.phoneExists,
           ),
         _ => _localizeError(
@@ -46,8 +46,7 @@ sealed class ErrorUtil {
   /// `Never` returns as it always throws an exception.
   static Never throwAuthException(ErrorCode code, String message) =>
       throw switch (code) {
-        ErrorCode.phoneNotFound => const AuthException$UserNotFound(),
-        ErrorCode.phoneExists => const AuthException$PhoneExists(),
+        ErrorCode.phoneNotFound => const AuthException$PhoneNotFound(),
         ErrorCode.tokenMalformed => const AuthException$TokenMalformed(),
         ErrorCode.tokenExpired => const AuthException$RefreshTokenExpired(),
         ErrorCode.invalidBody => const AuthException$InvalidBody(),
