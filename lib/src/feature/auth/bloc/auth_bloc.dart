@@ -45,7 +45,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       ));
     } on Object catch (e) {
       if (e is DioException && e.response!.statusCode == 400) {
-        // TODO: Еще не хендлится, а надо
         emit(
           AuthState.idle(
             error: ErrorUtil.throwAuthException(

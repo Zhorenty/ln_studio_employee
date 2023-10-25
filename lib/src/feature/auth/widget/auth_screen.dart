@@ -171,12 +171,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       backgroundColor: context.colorScheme.primary,
                     ),
-                    onPressed: () {
-                      print(auth.error);
-                      _formKey.currentState!.validate() && auth.error != null
-                          ? auth.sendCode(phoneController.text)
-                          : null;
-                    },
+                    onPressed: () => _formKey.currentState!.validate()
+                        ? auth.sendCode(phoneController.text)
+                        : null,
                     child: Text(
                       'Продолжить',
                       style: context.textTheme.bodyLarge?.copyWith(
