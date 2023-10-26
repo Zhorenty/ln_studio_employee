@@ -36,11 +36,6 @@ class ProfileScreen extends StatelessWidget {
                 title: 'Личная информация',
                 size: 25,
               ),
-              // Divider(),
-              // CategoryListTile(
-              //   icon: Icons.people_rounded,
-              //   title: 'Сотрудники',
-              // ),
               const Divider(),
               const CategoryListTile(
                 icon: Icons.extension_rounded,
@@ -57,15 +52,10 @@ class ProfileScreen extends StatelessWidget {
                 title: 'Клиенты',
               ),
               const Divider(),
-              // TODO: Move into separated screen in NavBar
-              // CategoryListTile(
-              //   icon: Icons.chat_rounded,
-              //   title: 'Чаты',
-              // ),
-              // Divider(),
-              const CategoryListTile(
-                icon: Icons.account_balance_rounded,
-                title: 'Финансы',
+              CategoryListTile(
+                onTap: () => context.goNamed('news'),
+                icon: Icons.article_rounded,
+                title: 'Новости',
                 size: 23,
               ),
               const Divider(),
@@ -88,46 +78,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               const Divider(),
               CategoryListTile(
-                onTap: () =>
-                    // TODO: make prettiest
-                    showAdaptiveDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      backgroundColor: context.colorScheme.onBackground,
-                      titlePadding: const EdgeInsets.all(16),
-                      title: Text(
-                        'Вы точно хотите выйти из аккаунта?',
-                        style: context.textTheme.titleLarge?.copyWith(
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                      actionsAlignment: MainAxisAlignment.spaceBetween,
-                      actionsPadding:
-                          const EdgeInsets.symmetric(horizontal: 16),
-                      actions: <Widget>[
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: context.textTheme.bodyLarge?.copyWith(
-                              fontFamily: FontFamily.geologica,
-                            ),
-                          ),
-                          child: const Text('Нет'),
-                          onPressed: () => context.pop(),
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: context.textTheme.bodyLarge?.copyWith(
-                              fontFamily: FontFamily.geologica,
-                            ),
-                          ),
-                          child: const Text('Да, выйти'),
-                          onPressed: () => auth.signOut(),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                onTap: () => showExit(context, auth.signOut),
                 icon: Icons.exit_to_app,
                 title: 'Выйти',
                 size: 23,
@@ -140,4 +91,46 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+
+  Future<dynamic> showExit(
+    BuildContext context,
+    void Function()? onPressed,
+  ) =>
+      showAdaptiveDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: context.colorScheme.onBackground,
+            titlePadding: const EdgeInsets.all(16),
+            title: Text(
+              'Вы точно хотите выйти из аккаунта?',
+              style: context.textTheme.titleLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
+              ),
+            ),
+            actionsAlignment: MainAxisAlignment.spaceBetween,
+            actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: context.textTheme.bodyLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
+                ),
+                child: const Text('Нет'),
+                onPressed: () => context.pop(),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: context.textTheme.bodyLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                  ),
+                ),
+                onPressed: onPressed,
+                child: const Text('Да, выйти'),
+              ),
+            ],
+          );
+        },
+      );
 }

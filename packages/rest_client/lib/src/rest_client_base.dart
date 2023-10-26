@@ -209,6 +209,7 @@ base class RestClientBase implements RestClient {
     Map<String, Object?>? queryParams,
     Map<String, Object?>? body,
     Map<String, Object?>? headers,
+    dynamic data,
   }) {
     final request = RequestOptions(
       method: method,

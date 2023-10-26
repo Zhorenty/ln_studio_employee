@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_data_provider.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_employee/src/feature/auth/logic/oauth_interceptor.dart';
+import 'package:ln_employee/src/feature/profile/data/profile_data_provider.dart';
+import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,7 +21,7 @@ import '/src/feature/specialization/data/specialization_repository.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 
-const _baseUrl = 'http://31.129.104.75';
+const kBaseUrl = 'http://31.129.104.75';
 
 /// Handles initialization steps.
 mixin InitializationSteps {
@@ -30,11 +32,11 @@ mixin InitializationSteps {
     },
     'Auth Repository & Rest Client': (progress) async {
       final authDataProvider = AuthDataProviderImpl(
-        baseUrl: _baseUrl,
+        baseUrl: kBaseUrl,
         sharedPreferences: progress.dependencies.sharedPreferences,
       );
       final restClient = RestClient(
-        Dio(BaseOptions(baseUrl: _baseUrl))
+        Dio(BaseOptions(baseUrl: kBaseUrl))
           ..interceptors.add(
             OAuthInterceptor(
               refresh: authDataProvider.refreshTokenPair,
@@ -48,6 +50,14 @@ mixin InitializationSteps {
         authDataProvider: authDataProvider,
       );
       progress.dependencies.authRepository = authRepository;
+    },
+    'Salon repository': (progress) async {
+      final salonDataProvider = SalonDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+        prefs: progress.dependencies.sharedPreferences,
+      );
+      final salonRepository = SalonRepositoryImpl(salonDataProvider);
+      progress.dependencies.salonRepository = salonRepository;
     },
     'Timetable repository': (progress) async {
       final timetableDatasource = TimetableDatasourceImpl(
@@ -63,13 +73,12 @@ mixin InitializationSteps {
       final employeeRepository = EmployeeRepositoryImpl(employeeDatasource);
       progress.dependencies.employeeRepository = employeeRepository;
     },
-    'Salon repository': (progress) async {
-      final salonDataProvider = SalonDataProviderImpl(
+    'Profile repository': (progress) async {
+      final profileDataProvider = ProfileDataProviderImpl(
         restClient: progress.dependencies.restClient,
-        prefs: progress.dependencies.sharedPreferences,
       );
-      final salonRepository = SalonRepositoryImpl(salonDataProvider);
-      progress.dependencies.salonRepository = salonRepository;
+      final profileRepository = ProfileRepositoryImpl(profileDataProvider);
+      progress.dependencies.profileRepository = profileRepository;
     },
     'Specialization repository': (progress) async {
       final specializationDataProvider = SpecializationDataProviderImpl(

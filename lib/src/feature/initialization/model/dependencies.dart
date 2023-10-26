@@ -1,4 +1,5 @@
 import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
+import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,14 +19,17 @@ abstract interface class Dependencies {
   /// Auth repository.
   abstract final AuthRepository authRepository;
 
+  /// Salon  repository.
+  abstract final SalonRepository salonRepository;
+
   /// Timetable repository.
   abstract final TimetableRepository timetableRepository;
 
   /// Employee  repository.
   abstract final EmployeeRepository employeeRepository;
 
-  /// Salon  repository.
-  abstract final SalonRepository salonRepository;
+  /// Employee  repository.
+  abstract final ProfileRepository profileRepository;
 
   /// Salon  repository.
   abstract final SpecializationRepository specializationRepository;
@@ -50,13 +54,16 @@ final class Dependencies$Mutable implements Dependencies {
   late AuthRepository authRepository;
 
   @override
+  late SalonRepository salonRepository;
+
+  @override
   late TimetableRepository timetableRepository;
 
   @override
   late EmployeeRepository employeeRepository;
 
   @override
-  late SalonRepository salonRepository;
+  late ProfileRepository profileRepository;
 
   @override
   late SpecializationRepository specializationRepository;
@@ -66,9 +73,10 @@ final class Dependencies$Mutable implements Dependencies {
         sharedPreferences: sharedPreferences,
         restClient: restClient,
         authRepository: authRepository,
+        salonRepository: salonRepository,
         timetableRepository: timetableRepository,
         employeeRepository: employeeRepository,
-        salonRepository: salonRepository,
+        profileRepository: profileRepository,
         specializationRepository: specializationRepository,
       );
 }
@@ -81,9 +89,10 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.sharedPreferences,
     required this.restClient,
     required this.authRepository,
+    required this.salonRepository,
     required this.timetableRepository,
     required this.employeeRepository,
-    required this.salonRepository,
+    required this.profileRepository,
     required this.specializationRepository,
   });
 
@@ -97,13 +106,16 @@ final class _Dependencies$Immutable implements Dependencies {
   final AuthRepository authRepository;
 
   @override
+  final SalonRepository salonRepository;
+
+  @override
   final TimetableRepository timetableRepository;
 
   @override
   final EmployeeRepository employeeRepository;
 
   @override
-  final SalonRepository salonRepository;
+  final ProfileRepository profileRepository;
 
   @override
   final SpecializationRepository specializationRepository;
