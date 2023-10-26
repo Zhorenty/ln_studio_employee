@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 import '../../model/news.dart';
@@ -17,6 +19,7 @@ sealed class NewsState extends _$NewsStateBase {
   const factory NewsState.idle({
     required NewsEntity news,
     required NewsModel? currentNews,
+    required File? photo,
     String message,
   }) = NewsState$Idle;
 
@@ -25,6 +28,7 @@ sealed class NewsState extends _$NewsStateBase {
   const factory NewsState.processing({
     required NewsEntity news,
     required NewsModel? currentNews,
+    required File? photo,
     String message,
   }) = NewsState$Processing;
 
@@ -33,6 +37,7 @@ sealed class NewsState extends _$NewsStateBase {
   const factory NewsState.successful({
     required NewsEntity news,
     required NewsModel? currentNews,
+    required File? photo,
     String message,
   }) = NewsState$Successful;
 
@@ -41,6 +46,7 @@ sealed class NewsState extends _$NewsStateBase {
   const factory NewsState.error({
     required NewsEntity news,
     required NewsModel? currentNews,
+    required File? photo,
     String message,
   }) = NewsState$Error;
 
@@ -48,6 +54,7 @@ sealed class NewsState extends _$NewsStateBase {
   const NewsState({
     required super.news,
     required super.currentNews,
+    required super.photo,
     required super.message,
   });
 }
@@ -59,6 +66,7 @@ final class NewsState$Idle extends NewsState with _$NewsState {
   const NewsState$Idle({
     required super.news,
     required super.currentNews,
+    required super.photo,
     super.message = 'Idling',
   });
 }
@@ -70,6 +78,7 @@ final class NewsState$Processing extends NewsState with _$NewsState {
   const NewsState$Processing({
     required super.news,
     required super.currentNews,
+    required super.photo,
     super.message = 'Processing',
   });
 }
@@ -81,6 +90,7 @@ final class NewsState$Successful extends NewsState with _$NewsState {
   const NewsState$Successful({
     required super.news,
     required super.currentNews,
+    required super.photo,
     super.message = 'Successful',
   });
 }
@@ -92,6 +102,7 @@ final class NewsState$Error extends NewsState with _$NewsState {
   const NewsState$Error({
     required super.news,
     required super.currentNews,
+    required super.photo,
     super.message = 'An error has occurred.',
   });
 }
@@ -106,6 +117,7 @@ abstract base class _$NewsStateBase {
   const _$NewsStateBase({
     required this.news,
     required this.currentNews,
+    required this.photo,
     required this.message,
   });
 
@@ -116,6 +128,10 @@ abstract base class _$NewsStateBase {
   /// Data entity payload.
   @nonVirtual
   final NewsModel? currentNews;
+
+  /// Data entity payload.
+  @nonVirtual
+  final File? photo;
 
   /// Message or state description.
   @nonVirtual

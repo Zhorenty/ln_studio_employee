@@ -138,7 +138,11 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
                       ),
                     ),
                   );
-              if (image != null) {}
+              if (image != null) {
+                context.read<NewsBLoC>().add(
+                      NewsEvent.uploadPhoto(id: widget.news.id, photo: image!),
+                    );
+              }
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(

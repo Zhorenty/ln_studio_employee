@@ -15,6 +15,7 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
               const NewsState.idle(
                 news: [],
                 currentNews: null,
+                photo: null,
                 message: 'Initial idle state',
               ),
         ) {
@@ -22,6 +23,7 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
       (event, emit) => switch (event) {
         NewsEvent$FetchAll() => _fetchAll(event, emit),
         NewsEvent$Edit() => _edit(event, emit),
+        NewsEvent$UploadPhoto() => _uploadPhoto(event, emit),
       },
     );
   }
@@ -35,16 +37,32 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
     Emitter<NewsState> emit,
   ) async {
     emit(
-      NewsState.processing(news: state.news, currentNews: state.currentNews),
+      NewsState.processing(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ),
     );
     try {
       final news = await _repository.getNews();
-      emit(NewsState.successful(news: news, currentNews: state.currentNews));
+      emit(NewsState.successful(
+        news: news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
     } on Object catch (err, _) {
-      emit(NewsState.error(news: state.news, currentNews: state.currentNews));
+      emit(NewsState.error(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
       rethrow;
     } finally {
-      emit(NewsState.idle(news: state.news, currentNews: state.currentNews));
+      emit(NewsState.idle(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
     }
   }
 
@@ -54,16 +72,67 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
     Emitter<NewsState> emit,
   ) async {
     emit(
-      NewsState.processing(currentNews: state.currentNews, news: state.news),
+      NewsState.processing(
+        currentNews: state.currentNews,
+        news: state.news,
+        photo: state.photo,
+      ),
     );
     try {
       final news = await _repository.editNews(event.news);
-      emit(NewsState.successful(news: state.news, currentNews: news));
+      emit(NewsState.successful(
+        news: state.news,
+        currentNews: news,
+        photo: state.photo,
+      ));
     } on Object catch (err, _) {
-      emit(NewsState.error(news: state.news, currentNews: state.currentNews));
+      emit(NewsState.error(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
       rethrow;
     } finally {
-      emit(NewsState.idle(news: state.news, currentNews: state.currentNews));
+      emit(NewsState.idle(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
+    }
+  }
+
+  /// Fetch event handler
+  Future<void> _uploadPhoto(
+    NewsEvent$UploadPhoto event,
+    Emitter<NewsState> emit,
+  ) async {
+    emit(
+      NewsState.processing(
+        currentNews: state.currentNews,
+        news: state.news,
+        photo: state.photo,
+      ),
+    );
+    try {
+      await _repository.uploadPhoto(event.id, event.photo);
+      emit(NewsState.successful(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: event.photo,
+      ));
+    } on Object catch (err, _) {
+      emit(NewsState.error(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
+      rethrow;
+    } finally {
+      emit(NewsState.idle(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
     }
   }
 }

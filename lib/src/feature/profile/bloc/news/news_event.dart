@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ln_employee/src/feature/profile/model/news.dart';
 
 /// Business Logic Component News_event Events
@@ -8,6 +10,11 @@ sealed class NewsEvent {
   const factory NewsEvent.fetchAll() = NewsEvent$FetchAll;
 
   const factory NewsEvent.edit({required NewsModel news}) = NewsEvent$Edit;
+
+  const factory NewsEvent.uploadPhoto({
+    required int id,
+    required File photo,
+  }) = NewsEvent$UploadPhoto;
 }
 
 /// Fetch all News.
@@ -21,4 +28,14 @@ class NewsEvent$Edit extends NewsEvent {
 
   ///
   final NewsModel news;
+}
+
+///
+class NewsEvent$UploadPhoto extends NewsEvent {
+  const NewsEvent$UploadPhoto({required this.photo, required this.id});
+
+  final int id;
+
+  ///
+  final File photo;
 }
