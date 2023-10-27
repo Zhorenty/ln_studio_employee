@@ -106,9 +106,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   }
 
   ///
-  TokenPair _decodeTokenPair(Map<String, Object?>? response) {
-    final json = response;
-
+  TokenPair _decodeTokenPair(Map<String, Object?>? json) {
     if (json
         case {
           'error': {
@@ -121,11 +119,28 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       ErrorUtil.throwAuthException(errorCode, message);
     }
 
+    // For refresh tokens
     if (json
         case {
           'data': {
             'access_token': final String accessToken,
             'refresh_token': final String refreshToken,
+          },
+        }) {
+      return (
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+    }
+
+    // For auth tokens
+    if (json
+        case {
+          'data': {
+            'tokens': {
+              'access_token': final String accessToken,
+              'refresh_token': final String refreshToken,
+            }
           },
         }) {
       return (
