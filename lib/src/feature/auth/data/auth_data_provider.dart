@@ -106,8 +106,8 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   }
 
   ///
-  TokenPair _decodeTokenPair(Response<Map<String, Object?>> response) {
-    final json = response.data;
+  TokenPair _decodeTokenPair(Map<String, Object?>? response) {
+    final json = response;
 
     if (json
         case {
@@ -124,10 +124,8 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     if (json
         case {
           'data': {
-            'tokens': {
-              'access_token': final String accessToken,
-              'refresh_token': final String refreshToken,
-            }
+            'access_token': final String accessToken,
+            'refresh_token': final String refreshToken,
           },
         }) {
       return (
@@ -150,7 +148,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
     final response = await client.post(
       '/api/auth/refresh',
       data: {
-        'refresh_token': tokenPair.refreshToken,
+        'token': tokenPair.refreshToken,
       },
     );
 
@@ -190,7 +188,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       },
     );
 
-    final tokenPair = _decodeTokenPair(response);
+    final tokenPair = _decodeTokenPair(response.data);
 
     await _saveTokenPair(tokenPair);
 
@@ -214,7 +212,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       },
     );
 
-    final tokenPair = _decodeTokenPair(response);
+    final tokenPair = _decodeTokenPair(response.data);
 
     await _saveTokenPair(tokenPair);
 
