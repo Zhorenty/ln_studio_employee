@@ -6,7 +6,7 @@ import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_employee/src/feature/auth/logic/oauth_interceptor.dart';
 import 'package:ln_employee/src/feature/profile/data/profile_data_provider.dart';
 import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
-import 'package:rest_client/rest_client.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/employee/data/employee_data_provider.dart';
@@ -30,22 +30,23 @@ mixin InitializationSteps {
       final sharedPreferences = await SharedPreferences.getInstance();
       progress.dependencies.sharedPreferences = sharedPreferences;
     },
-    'Auth Repository & Rest Client': (progress) async {
+    'Rest Client': (progress) async {
+      progress.dependencies.restClient = Dio(BaseOptions(baseUrl: kBaseUrl));
+    },
+    'Auth Repository': (progress) async {
       final authDataProvider = AuthDataProviderImpl(
         baseUrl: kBaseUrl,
         sharedPreferences: progress.dependencies.sharedPreferences,
       );
-      final restClient = RestClient(
-        Dio(BaseOptions(baseUrl: kBaseUrl))
-          ..interceptors.add(
-            OAuthInterceptor(
-              refresh: authDataProvider.refreshTokenPair,
-              loadTokens: authDataProvider.getTokenPair,
-              clearTokens: authDataProvider.signOut,
-            ),
+      // Добавляем OAuthInterceptor
+      progress.dependencies.restClient = progress.dependencies.restClient
+        ..interceptors.add(
+          OAuthInterceptor(
+            refresh: authDataProvider.refreshTokenPair,
+            loadTokens: authDataProvider.getTokenPair,
+            clearTokens: authDataProvider.signOut,
           ),
-      );
-      progress.dependencies.restClient = restClient;
+        );
       final authRepository = AuthRepositoryImpl(
         authDataProvider: authDataProvider,
       );

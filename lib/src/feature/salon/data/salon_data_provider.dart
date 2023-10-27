@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:rest_client/rest_client.dart';
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/salon/models/salon.dart';
@@ -27,23 +27,22 @@ abstract class SalonDataProvider {
 class SalonDataProviderImpl implements SalonDataProvider {
   /// Constructs a SalonDataProviderImpl instance.
   ///
-  /// Requires a RestClient and SharedPreferences instance.
+  /// Requires a Dio and SharedPreferences instance.
   const SalonDataProviderImpl({
-    required RestClient restClient,
+    required Dio restClient,
     required SharedPreferences prefs,
   })  : _restClient = restClient,
         _prefs = prefs;
 
-  final RestClient _restClient;
+  final Dio _restClient;
   final SharedPreferences _prefs;
   final currentSalonIdDBKey = 'currentSalon';
 
   @override
   Future<List<Salon>> fetchSalons() async {
     final response = await _restClient.get('/api/v1/salon');
-    final salons = List.from(response['data'] as List)
-        .map((e) => Salon.fromJson(e))
-        .toList();
+    final salons =
+        List.from(response.data['data']).map((e) => Salon.fromJson(e)).toList();
     return salons;
   }
 

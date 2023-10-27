@@ -41,15 +41,9 @@ dependencies:
   path_provider: ^2.0.12
   cached_network_image: ^3.3.0
 
-
-  # Local packages
-  rest_client:
-    path: packages/rest_client
-
   # Widgets
   table_calendar: ^3.0.9
   image_picker: ^1.0.4
-
 
 dev_dependencies:
   # Testing

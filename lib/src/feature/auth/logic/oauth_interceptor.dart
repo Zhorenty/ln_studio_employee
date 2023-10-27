@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:rest_client/rest_client.dart';
 
 import '../model/user.dart';
 
@@ -40,13 +39,6 @@ base class OAuthInterceptor extends QueuedInterceptor {
           handler.reject(e);
         } else {
           handler.next(e);
-        }
-      } on RestClientException catch (e) {
-        if (e.statusCode == 401) {
-          // await clearTokens();
-          handler.reject(e as DioException);
-        } else {
-          handler.next(e as DioException);
         }
       }
     } else {

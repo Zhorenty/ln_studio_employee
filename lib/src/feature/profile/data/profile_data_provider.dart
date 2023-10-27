@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:rest_client/rest_client.dart';
 
 import '../model/news.dart';
 
@@ -20,13 +19,13 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
   ProfileDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
-  final RestClient restClient;
+  final Dio restClient;
 
   @override
   Future<List<NewsModel>> fetchNews() async {
     final response = await restClient.get('/api/v1/news');
 
-    final news = List.from((response['data'] as List))
+    final news = List.from((response.data['data']))
         .map((e) => NewsModel.fromJson(e))
         .toList();
 
@@ -37,13 +36,13 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
   Future<NewsModel> editNews(NewsModel news) async {
     final response = await restClient.put(
       '/api/v1/news/${news.id}/edit',
-      body: {
+      data: {
         'title': news.title,
         'description': news.description,
       },
     );
 
-    return NewsModel.fromJson(response);
+    return NewsModel.fromJson(response.data['data']);
   }
 
   @override
@@ -56,13 +55,9 @@ class ProfileDataProviderImpl implements ProfileDataProvider {
       },
     );
 
-    /// TODO: doesn't work
     await restClient.patch(
       '/api/v1/news/$id/photo',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      body: formData as Map<String, dynamic>,
+      data: formData,
     );
   }
 }

@@ -18,7 +18,7 @@ abstract interface class SalonRepository {
 
 /// Concrete implementation of the SalonRepository interface.
 ///
-/// Implementation fetches salon information from a RestClient and
+/// Implementation fetches salon information from a Dio and
 /// stores/retrieves the currently selected salon ID using SharedPreferences.
 class SalonRepositoryImpl implements SalonRepository {
   const SalonRepositoryImpl(SalonDataProvider dataProvider)

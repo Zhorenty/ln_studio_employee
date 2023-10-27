@@ -1,6 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
-import 'package:rest_client/rest_client.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/employee/data/employee_repository.dart';
@@ -13,8 +14,8 @@ abstract interface class Dependencies {
   /// [SharedPreferences] instanse.
   abstract final SharedPreferences sharedPreferences;
 
-  /// [RestClient] instance.
-  abstract final RestClient restClient;
+  /// [Dio] instance.
+  abstract final Dio restClient;
 
   /// Auth repository.
   abstract final AuthRepository authRepository;
@@ -48,7 +49,7 @@ final class Dependencies$Mutable implements Dependencies {
   late SharedPreferences sharedPreferences;
 
   @override
-  late RestClient restClient;
+  late Dio restClient;
 
   @override
   late AuthRepository authRepository;
@@ -100,7 +101,7 @@ final class _Dependencies$Immutable implements Dependencies {
   final SharedPreferences sharedPreferences;
 
   @override
-  final RestClient restClient;
+  final Dio restClient;
 
   @override
   final AuthRepository authRepository;
