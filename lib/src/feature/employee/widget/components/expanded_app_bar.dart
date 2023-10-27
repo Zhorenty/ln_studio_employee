@@ -62,15 +62,47 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
             isLabelVisible: true,
             onBadgeTap: () => MessagePopup.bottomSheet(
               context,
-              'hello',
+              'Выберите источник фото',
               additional: [
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    fixedSize: Size(
+                      MediaQuery.sizeOf(context).width - 75,
+                      35,
+                    ),
+                    backgroundColor: context.colorScheme.primary,
+                  ),
                   onPressed: () => pickImage(ImageSource.camera),
-                  child: const Text('Снять на камеру'),
+                  child: Text(
+                    'Снять на камеру',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.onBackground,
+                    ),
+                  ),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    fixedSize: Size(
+                      MediaQuery.sizeOf(context).width - 75,
+                      35,
+                    ),
+                    backgroundColor: context.colorScheme.primary,
+                  ),
                   onPressed: () => pickImage(ImageSource.gallery),
-                  child: const Text('Выбрать из галереи'),
+                  child: Text(
+                    'Выбрать из галереи',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.onBackground,
+                    ),
+                  ),
                 ),
               ],
             ),

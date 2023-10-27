@@ -79,12 +79,12 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       'auth.token_pair.access_token',
       pair.accessToken,
     );
-    if (pair.refreshToken != null) {
-      await _sharedPreferences.setString(
-        'auth.token_pair.refresh_token',
-        pair.refreshToken as String,
-      );
-    }
+
+    await _sharedPreferences.setString(
+      'auth.token_pair.refresh_token',
+      pair.refreshToken,
+    );
+
     _tokenPairController.add(pair);
   }
 
@@ -126,7 +126,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
           'data': {
             'tokens': {
               'access_token': final String accessToken,
-              'refresh_token': final String? refreshToken,
+              'refresh_token': final String refreshToken,
             }
           },
         }) {
@@ -147,7 +147,12 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       throw Exception('Failed to refresh token pair');
     }
 
-    final response = await client.post('/api/auth/refresh');
+    final response = await client.post(
+      '/api/auth/refresh',
+      data: {
+        'refresh_token': tokenPair.refreshToken,
+      },
+    );
 
     if (response.statusCode != 200) {
       throw Exception('Failed to refresh token pair');
@@ -239,7 +244,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       'auth.token_pair.refresh_token',
     );
 
-    if (accessToken == null) {
+    if (accessToken == null || refreshToken == null) {
       return null;
     }
 

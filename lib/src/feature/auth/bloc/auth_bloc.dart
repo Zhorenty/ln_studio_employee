@@ -112,7 +112,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
     emit(AuthState.processing(user: state.user, phone: null, smsCode: null));
     try {
       await authRepository.signOut();
-      emit(const AuthState.idle());
+      emit(const AuthState.successful(user: null, phone: null, smsCode: null));
     } on Object catch (e) {
       emit(AuthState.idle(error: ErrorUtil.formatError(e)));
       rethrow;

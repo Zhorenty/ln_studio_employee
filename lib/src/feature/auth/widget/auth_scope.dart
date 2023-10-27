@@ -83,14 +83,19 @@ class _AuthenticationScopeState extends State<AuthenticationScope>
       // Если надо сравнивать states
       setState(() => _state = state);
 
+      // TODO: Возможно, надо поменять
       // НОМЕР: 8 (960) 487-53-22
+      final isNeedToVerify =
+          state.phone != null && state is AuthState$Successful;
+      final isLogOuted = !isAuthenticated && state is AuthState$Successful;
+
       if (isAuthenticated) {
-        router.go('/timetable');
+        return router.go('/timetable');
       } else {
-        if (state.phone != null) {
-          router.goNamed('verify');
-        } else {
-          router.goNamed('auth');
+        if (isNeedToVerify) {
+          return router.goNamed('verify');
+        } else if (isLogOuted) {
+          return router.goNamed('auth');
         }
       }
     }

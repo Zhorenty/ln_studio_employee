@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_employee/src/common/widget/custom_text_field.dart';
+import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
 import 'package:ln_employee/src/feature/profile/bloc/news/news_bloc.dart';
 import 'package:ln_employee/src/feature/profile/bloc/news/news_event.dart';
@@ -68,9 +69,19 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
               title: Text(
                 'Редактирование новости',
                 style: context.textTheme.titleLarge?.copyWith(
+                  fontSize: 19,
                   fontFamily: FontFamily.geologica,
                 ),
               ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: IconButton(
+                    icon: const Icon(Icons.more_horiz_rounded),
+                    onPressed: showNewsActions,
+                  ),
+                ),
+              ],
             ),
             SliverPadding(
               padding: const EdgeInsets.all(16),
@@ -164,6 +175,46 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Future<dynamic> showNewsActions() async {
+    await ModalPopup.show(
+      context: context,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Действия с новостью',
+            style: context.textTheme.bodyLarge?.copyWith(
+              fontFamily: FontFamily.geologica,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            onPressed: () {
+              // TODO: Implement deleting news
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              fixedSize: Size(
+                MediaQuery.sizeOf(context).width - 75,
+                35,
+              ),
+              backgroundColor: context.colorScheme.primary,
+            ),
+            child: Text(
+              'Удалить новость',
+              style: context.textTheme.bodyLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
+                color: context.colorScheme.onBackground,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
