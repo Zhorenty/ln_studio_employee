@@ -95,7 +95,7 @@ class NewsContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            height: 115,
+            height: 120,
             width: 175,
             child: ClipRRect(
               borderRadius: const BorderRadius.horizontal(

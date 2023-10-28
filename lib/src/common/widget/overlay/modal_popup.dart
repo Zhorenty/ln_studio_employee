@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 
 /// Stylized modal popup.
@@ -112,6 +111,49 @@ abstract class ModalPopup {
       );
     }
   }
+
+  /// Opens a new [ModalPopup] wrapping the provided [child].
+  static Future<T?> dialog<T>({
+    required BuildContext context,
+    required Widget child,
+    BoxConstraints desktopConstraints = const BoxConstraints(
+      maxWidth: double.infinity,
+      maxHeight: double.infinity,
+    ),
+    AnimationController? transitionAnimationController,
+    BoxConstraints modalConstraints = const BoxConstraints(maxWidth: 280),
+    BoxConstraints mobileConstraints = const BoxConstraints(
+      maxWidth: double.infinity,
+      maxHeight: double.infinity,
+    ),
+    EdgeInsets mobilePadding = const EdgeInsets.symmetric(horizontal: 10),
+    EdgeInsets desktopPadding = const EdgeInsets.all(10),
+    bool isDismissible = true,
+  }) {
+    return showDialog(
+      context: context,
+      // barrierColor: context.colorScheme.secondaryContainer,
+      barrierDismissible: true,
+      builder: (context) {
+        return Center(
+          child: Container(
+            constraints: modalConstraints,
+            width: modalConstraints.maxWidth,
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: desktopPadding,
+            decoration: BoxDecoration(
+              color: context.colorScheme.onBackground,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: ConstrainedBox(
+              constraints: desktopConstraints,
+              child: child,
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 /// [Row] with [text] and [WidgetButton] stylized to be a [ModalPopup] header.
@@ -140,33 +182,8 @@ class ModalPopupHeader extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 30),
       child: Row(
         children: [
-          if (onBack != null)
-            WidgetButton(
-              onPressed: onBack,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Icon(
-                  Icons.arrow_back_ios_new,
-                  size: 14,
-                  color: context.colorScheme.primary,
-                ),
-              ),
-            )
-          else
-            const SizedBox(width: 40),
-          if (text != null)
-            Expanded(
-              child: Center(
-                child: Text(
-                  text!,
-                  style: context.textTheme.titleMedium?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
-                ),
-              ),
-            )
-          else
-            const Spacer(),
+          const SizedBox(width: 40),
+          const Spacer(),
           if (kIsWeb && close)
             WidgetButton(
               key: const Key('CloseButton'),
