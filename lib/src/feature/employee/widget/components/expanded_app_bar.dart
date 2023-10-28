@@ -1,4 +1,9 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -6,7 +11,7 @@ import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/overlay/message_popup.dart';
 
 /// Custom-styled expanded [SliverAppBar].
-class ExpandedAppBar extends StatelessWidget {
+class ExpandedAppBar extends StatefulWidget {
   const ExpandedAppBar({
     super.key,
     required this.title,
@@ -36,6 +41,13 @@ class ExpandedAppBar extends StatelessWidget {
   final void Function()? onExit;
 
   @override
+  State<ExpandedAppBar> createState() => _ExpandedAppBarState();
+}
+
+class _ExpandedAppBarState extends State<ExpandedAppBar> {
+  File? image;
+
+  @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       backgroundColor: context.colorScheme.background,
@@ -44,9 +56,59 @@ class ExpandedAppBar extends StatelessWidget {
       centerTitle: true,
       title: Column(
         children: [
-          AvatarWidget(radius: 60, title: label),
+          AvatarWidget(
+            avatar: image,
+            radius: 60,
+            isLabelVisible: true,
+            onBadgeTap: () => MessagePopup.bottomSheet(
+              context,
+              'Выберите источник фото',
+              additional: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    fixedSize: Size(
+                      MediaQuery.sizeOf(context).width - 75,
+                      35,
+                    ),
+                    backgroundColor: context.colorScheme.primary,
+                  ),
+                  onPressed: () => pickImage(ImageSource.camera),
+                  child: Text(
+                    'Снять на камеру',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.onBackground,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    fixedSize: Size(
+                      MediaQuery.sizeOf(context).width - 75,
+                      35,
+                    ),
+                    backgroundColor: context.colorScheme.primary,
+                  ),
+                  onPressed: () => pickImage(ImageSource.gallery),
+                  child: Text(
+                    'Выбрать из галереи',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                      color: context.colorScheme.onBackground,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 8),
-          title,
+          widget.title,
         ],
       ),
       floating: true,
@@ -55,7 +117,7 @@ class ExpandedAppBar extends StatelessWidget {
         alignment: Alignment.topLeft,
         child: IconButton(
           padding: const EdgeInsets.only(top: 28),
-          onPressed: onExit,
+          onPressed: widget.onExit,
           icon: Icon(
             Icons.arrow_back_ios_new_outlined,
             color: context.colorScheme.secondary,
@@ -75,7 +137,7 @@ class ExpandedAppBar extends StatelessWidget {
               context,
               scrolled: false,
               'Действия с сотрудником',
-              additional: additionalTrailing,
+              additional: widget.additionalTrailing,
             ),
           ),
         )
@@ -89,7 +151,7 @@ class ExpandedAppBar extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  leading,
+                  widget.leading,
                   Text(
                     context.stringOf().amountOfClients,
                     style: context.textTheme.titleSmall!.copyWith(
@@ -101,7 +163,7 @@ class ExpandedAppBar extends StatelessWidget {
               ),
               Column(
                 children: [
-                  trailing,
+                  widget.trailing,
                   Text(
                     context.stringOf().daysWorkedOut,
                     style: context.textTheme.titleSmall!.copyWith(
@@ -116,5 +178,17 @@ class ExpandedAppBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      setState(() => this.image = imageTemporary);
+    } on PlatformException catch (e) {
+      log('Failed to pick image: $e');
+    }
   }
 }

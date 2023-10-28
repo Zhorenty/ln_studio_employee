@@ -1,4 +1,7 @@
-import 'package:rest_client/rest_client.dart';
+import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
+import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '/src/feature/employee/data/employee_repository.dart';
@@ -11,8 +14,14 @@ abstract interface class Dependencies {
   /// [SharedPreferences] instanse.
   abstract final SharedPreferences sharedPreferences;
 
-  /// [RestClient] instance.
-  abstract final RestClient restClient;
+  /// [Dio] instance.
+  abstract final Dio restClient;
+
+  /// Auth repository.
+  abstract final AuthRepository authRepository;
+
+  /// Salon  repository.
+  abstract final SalonRepository salonRepository;
 
   /// Timetable repository.
   abstract final TimetableRepository timetableRepository;
@@ -20,8 +29,8 @@ abstract interface class Dependencies {
   /// Employee  repository.
   abstract final EmployeeRepository employeeRepository;
 
-  /// Salon  repository.
-  abstract final SalonRepository salonRepository;
+  /// Employee  repository.
+  abstract final ProfileRepository profileRepository;
 
   /// Salon  repository.
   abstract final SpecializationRepository specializationRepository;
@@ -40,7 +49,13 @@ final class Dependencies$Mutable implements Dependencies {
   late SharedPreferences sharedPreferences;
 
   @override
-  late RestClient restClient;
+  late Dio restClient;
+
+  @override
+  late AuthRepository authRepository;
+
+  @override
+  late SalonRepository salonRepository;
 
   @override
   late TimetableRepository timetableRepository;
@@ -49,7 +64,7 @@ final class Dependencies$Mutable implements Dependencies {
   late EmployeeRepository employeeRepository;
 
   @override
-  late SalonRepository salonRepository;
+  late ProfileRepository profileRepository;
 
   @override
   late SpecializationRepository specializationRepository;
@@ -58,9 +73,11 @@ final class Dependencies$Mutable implements Dependencies {
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
+        authRepository: authRepository,
+        salonRepository: salonRepository,
         timetableRepository: timetableRepository,
         employeeRepository: employeeRepository,
-        salonRepository: salonRepository,
+        profileRepository: profileRepository,
         specializationRepository: specializationRepository,
       );
 }
@@ -72,9 +89,11 @@ final class _Dependencies$Immutable implements Dependencies {
   const _Dependencies$Immutable({
     required this.sharedPreferences,
     required this.restClient,
+    required this.authRepository,
+    required this.salonRepository,
     required this.timetableRepository,
     required this.employeeRepository,
-    required this.salonRepository,
+    required this.profileRepository,
     required this.specializationRepository,
   });
 
@@ -82,7 +101,13 @@ final class _Dependencies$Immutable implements Dependencies {
   final SharedPreferences sharedPreferences;
 
   @override
-  final RestClient restClient;
+  final Dio restClient;
+
+  @override
+  final AuthRepository authRepository;
+
+  @override
+  final SalonRepository salonRepository;
 
   @override
   final TimetableRepository timetableRepository;
@@ -91,7 +116,7 @@ final class _Dependencies$Immutable implements Dependencies {
   final EmployeeRepository employeeRepository;
 
   @override
-  final SalonRepository salonRepository;
+  final ProfileRepository profileRepository;
 
   @override
   final SpecializationRepository specializationRepository;

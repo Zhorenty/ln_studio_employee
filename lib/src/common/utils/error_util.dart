@@ -1,4 +1,5 @@
-import '/src/common/exception/employee_exception.dart';
+import '../exception/auth_exception.dart';
+
 import '/src/common/exception/error_code.dart';
 import '/src/common/localization/app_localization.dart';
 
@@ -6,7 +7,7 @@ import '/src/common/localization/app_localization.dart';
 sealed class ErrorUtil {
   /// Formats an `EmployeeException` error message based on its type.
   static String formatError(Object error) => switch (error) {
-        final EmployeeException e => _localizeEmployeeException(e),
+        final AuthException e => _localizeEmployeeException(e),
         final Exception e => _localizeError(
             'Exception occured: $e',
             (l) => l.exceptionOccurred(e.toString()),
@@ -18,10 +19,10 @@ sealed class ErrorUtil {
       };
 
   /// Formats an `EmployeeException` error message based on its type.
-  static String _localizeEmployeeException(EmployeeException exception) =>
+  static String _localizeEmployeeException(AuthException exception) =>
       switch (exception) {
-        final EmployeeException$PhoneExists _ => _localizeError(
-            'Phone exists',
+        final AuthException$PhoneNotFound _ => _localizeError(
+            'Phone not found',
             (l) => l.phoneExists,
           ),
         _ => _localizeError(
@@ -43,9 +44,12 @@ sealed class ErrorUtil {
   }
 
   /// `Never` returns as it always throws an exception.
-  static Never throwEmployeeException(ErrorCode code, String message) =>
+  static Never throwAuthException(ErrorCode code, String message) =>
       throw switch (code) {
-        ErrorCode.phoneExists => const EmployeeException$PhoneExists(),
-        ErrorCode.unknown => EmployeeException$Unknown(message: message),
+        ErrorCode.phoneNotFound => const AuthException$PhoneNotFound(),
+        ErrorCode.tokenMalformed => const AuthException$TokenMalformed(),
+        ErrorCode.tokenExpired => const AuthException$RefreshTokenExpired(),
+        ErrorCode.invalidBody => const AuthException$InvalidBody(),
+        ErrorCode.unknown => AuthException$Unknown(message: message),
       };
 }

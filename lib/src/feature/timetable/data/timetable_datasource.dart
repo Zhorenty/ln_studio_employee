@@ -1,4 +1,4 @@
-import 'package:rest_client/rest_client.dart';
+import 'package:dio/dio.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
 import '/src/feature/timetable/model/employee_timetable.dart';
@@ -23,17 +23,16 @@ abstract interface class TimetableDatasource {
 
 /// Implementation of timetable datasource.
 class TimetableDatasourceImpl implements TimetableDatasource {
-  TimetableDatasourceImpl({required RestClient restClient})
-      : _restClient = restClient;
+  TimetableDatasourceImpl({required Dio restClient}) : _restClient = restClient;
 
   /// REST client to call API.
-  final RestClient _restClient;
+  final Dio _restClient;
 
   @override
   Future<List<EmployeeTimetable>> fetchTimetables() async {
     final response = await _restClient.get('/api/v1/timetable');
 
-    final timetables = List.from((response['data'] as List))
+    final timetables = List.from((response.data['data']))
         .map((e) => EmployeeTimetable.fromJson(e))
         .toList();
 
@@ -46,7 +45,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
       '/api/v1/salon/$salonId/timetables',
     );
 
-    final timetables = List.from((response['data'] as List))
+    final timetables = List.from((response.data['data']))
         .map((e) => EmployeeTimetable.fromJson(e))
         .toList();
 
@@ -61,7 +60,7 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   }) =>
       _restClient.post(
         '/api/v1/timetable/fill',
-        body: {
+        data: {
           'employee_id': employeeId,
           'salon_id': salonId,
           'date_at': dateAt.jsonFormat(),

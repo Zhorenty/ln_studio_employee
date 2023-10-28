@@ -1,4 +1,4 @@
-import 'package:rest_client/rest_client.dart';
+import 'package:dio/dio.dart';
 
 import '/src/feature/specialization/model/specialization.dart';
 
@@ -13,12 +13,12 @@ class SpecializationDataProviderImpl implements SpecializationDataProvider {
   SpecializationDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
-  final RestClient restClient;
+  final Dio restClient;
 
   @override
   Future<List<Specialization>> fetchSpecializations() async {
     final response = await restClient.get('/api/v1/job');
-    final specializations = List.from(response['data'] as List)
+    final specializations = List.from(response.data as List)
         .map((e) => Specialization.fromJson(e))
         .toList();
     return specializations;

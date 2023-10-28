@@ -1,4 +1,4 @@
-import 'package:rest_client/rest_client.dart';
+import 'package:dio/dio.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
 import '/src/feature/employee/model/employee/employee.dart';
@@ -34,19 +34,19 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   EmployeeDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
-  final RestClient restClient;
+  final Dio restClient;
 
   @override
   Future<Employee> fetchEmployee(int id) async {
     final response = await restClient.get('/api/v1/employee/$id');
-    return Employee.fromJson(response);
+    return Employee.fromJson(response.data['data']);
   }
 
   @override
   Future<List<Employee>> fetchAllEmployee() async {
     final response = await restClient.get('/api/v1/employee');
 
-    final staff = List.from((response['data'] as List))
+    final staff = List.from((response.data['data']))
         .map((e) => Employee.fromJson(e))
         .toList();
     return staff;
@@ -56,7 +56,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   Future<List<Employee>> fetchSalonEmployees(int salonId) async {
     final response = await restClient.get('/api/v1/salon/$salonId/employees');
 
-    final staff = List.from((response['data'] as List))
+    final staff = List.from((response.data['data']))
         .map((e) => Employee.fromJson(e))
         .toList();
 
@@ -67,7 +67,7 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   Future<void> createEmployee(Employee$Create employee) async =>
       await restClient.post(
         '/api/v1/employee/create',
-        body: {
+        data: {
           "address": employee.address,
           "job_id": employee.jobId,
           "salon_id": employee.salonId,
@@ -89,8 +89,8 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   @override
   Future<Employee> editEmployee(Employee$Edit employee) async {
     final result = await restClient.put(
-      '/api/v1/employee/edit/${employee.id}',
-      body: {
+      '/api/v1/employee/${employee.id}/edit',
+      data: {
         'address': employee.address,
         'job_id': employee.jobId,
         'salon_id': employee.salonId,
@@ -108,14 +108,14 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
         },
       },
     );
-    return Employee.fromJson(result);
+    return Employee.fromJson(result.data['data']);
   }
 
   @override
   Future<void> dismissEmployee(int id) async =>
-      await restClient.patch('/api/v1/employee/dismiss/$id');
+      await restClient.patch('/api/v1/employee/$id/dismiss');
 
   @override
   Future<void> reinstatementEmployee(int id) async =>
-      await restClient.patch('/api/v1/employee/reinstatement/$id');
+      await restClient.patch('/api/v1/employee/$id/reinstatement');
 }

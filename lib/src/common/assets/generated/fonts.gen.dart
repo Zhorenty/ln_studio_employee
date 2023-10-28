@@ -13,9 +13,6 @@ class FontFamily {
   /// Font family: Geologica
   static const String geologica = 'Geologica';
 
-  /// Font family: Outfit
-  static const String outfit = 'Outfit';
-
   /// Font family: Playfair
   static const String playfair = 'Playfair';
 }
