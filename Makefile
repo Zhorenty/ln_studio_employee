@@ -1,8 +1,6 @@
 get:
 	flutter pub get
 
-	cd packages/rest_client && flutter pub get
-
 analyze:
 	flutter analyze
 
@@ -14,12 +12,8 @@ runner:
 
 	dart run build_runner build --delete-conflicting-outputs
 
-	cd packages/rest_client && flutter pub get
-
 clean:
 	flutter clean
-
-	cd packages/rest_client && flutter clean
 
 watch:
 	dart run build_runner watch
