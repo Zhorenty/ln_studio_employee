@@ -47,18 +47,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       if (e is DioException && e.response!.statusCode == 400) {
         emit(
           AuthState.idle(
-            error: ErrorUtil.throwAuthException(
-              ErrorCode.phoneNotFound,
-              'Пользователь с таким номером не найден',
-            ),
+            error: e.response?.data['detail'],
           ),
+        );
+        ErrorUtil.throwAuthException(
+          ErrorCode.phoneNotFound,
+          'Пользователь с таким номером не найден',
         );
       } else {
         emit(AuthState.idle(error: ErrorUtil.formatError(e)));
         rethrow;
       }
-    } finally {
-      emit(AuthState.idle(user: state.user, phone: state.phone));
     }
   }
 
@@ -82,7 +81,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         smsCode: state.smsCode,
       ));
     } on Object catch (e) {
-      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+      emit(AuthState.idle(phone: state.phone, error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }

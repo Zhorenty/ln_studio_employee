@@ -59,6 +59,16 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 int.parse(verificationController.text),
               ),
             ),
+            if (auth.error != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  auth.error!,
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                ),
+              ),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
