@@ -158,6 +158,11 @@ abstract base class _$NewsStateBase {
         processing: (_) => true,
       );
 
+  bool get isSuccessful => maybeMap<bool>(
+        orElse: () => false,
+        successful: (_) => true,
+      );
+
   /// Is in idle state?
   bool get isIdling => !isProcessing;
 

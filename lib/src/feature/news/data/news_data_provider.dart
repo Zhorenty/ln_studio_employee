@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -12,6 +13,8 @@ abstract interface class NewsDataProvider {
   Future<NewsModel> editNews(NewsModel news);
 
   Future<void> uploadPhoto(int id, File file);
+
+  Future<void> deleteNews(int id);
 }
 
 /// Implementation of Record RecordDataProvider.
@@ -60,4 +63,8 @@ class NewsDataProviderImpl implements NewsDataProvider {
       data: formData,
     );
   }
+
+  @override
+  Future<void> deleteNews(int id) async =>
+      await restClient.delete('/api/v1/news/$id/delete');
 }

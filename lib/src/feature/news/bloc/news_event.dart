@@ -15,6 +15,8 @@ sealed class NewsEvent {
     required int id,
     required File photo,
   }) = NewsEvent$UploadPhoto;
+
+  const factory NewsEvent.delete({required int id}) = NewsEvent$Delete;
 }
 
 /// Fetch all News.
@@ -38,4 +40,11 @@ class NewsEvent$UploadPhoto extends NewsEvent {
 
   ///
   final File photo;
+}
+
+///
+class NewsEvent$Delete extends NewsEvent {
+  const NewsEvent$Delete({required this.id});
+
+  final int id;
 }

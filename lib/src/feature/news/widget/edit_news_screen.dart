@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
@@ -60,115 +61,122 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
     _titleController.text = widget.news.title;
     _descriptionController.text = widget.news.description;
 
-    return Form(
-      key: _formKey,
-      child: Scaffold(
-        backgroundColor: context.colorScheme.onBackground,
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text(
-                'Редактирование новости',
-                style: context.textTheme.titleLarge?.copyWith(
-                  fontSize: 19,
-                  fontFamily: FontFamily.geologica,
-                ),
-              ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: IconButton(
-                    icon: const Icon(Icons.more_horiz_rounded),
-                    onPressed: showNewsActions,
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<NewsBLoC>().add(const NewsEvent.fetchAll());
+        return true;
+      },
+      child: Form(
+        key: _formKey,
+        child: Scaffold(
+          backgroundColor: context.colorScheme.onBackground,
+          body: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                title: Text(
+                  'Редактирование новости',
+                  style: context.textTheme.titleLarge?.copyWith(
+                    fontSize: 19,
+                    fontFamily: FontFamily.geologica,
                   ),
                 ),
-              ],
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(16),
-              sliver: SliverList.list(
-                children: [
-                  GestureDetector(
-                    onTap: () => pickImage(ImageSource.gallery),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Stack(
-                        children: [
-                          CustomNetworkImage(
-                            hasPhoto: widget.news.photo != null,
-                            imageUrl: '$kBaseUrl/${widget.news.photo!}',
-                          ),
-                          if (image != null)
-                            Positioned.fill(
-                              child: Image.file(
-                                image!,
-                                fit: BoxFit.cover,
-                                height: double.infinity,
-                                width: double.infinity,
-                              ),
-                            ),
-                        ],
-                      ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: IconButton(
+                      icon: const Icon(Icons.more_horiz_rounded),
+                      onPressed: showNewsActions,
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Название',
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                    ),
-                  ),
-                  CustomTextField(controller: _titleController),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Содержание',
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                    ),
-                  ),
-                  HugeTextField(
-                    controller: _descriptionController,
-                    focusNode: _descriptionFocusNode,
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 22),
-          child: ElevatedButton(
-            onPressed: () {
-              context.read<NewsBLoC>().add(
-                    NewsEvent.edit(
-                      news: NewsModel(
-                        id: widget.news.id,
-                        photo: widget.news.photo,
-                        title: _titleController.text,
-                        description: _descriptionController.text,
-                        isDeleted: widget.news.isDeleted,
+              SliverPadding(
+                padding: const EdgeInsets.all(16),
+                sliver: SliverList.list(
+                  children: [
+                    GestureDetector(
+                      onTap: () => pickImage(ImageSource.gallery),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Stack(
+                          children: [
+                            CustomNetworkImage(
+                              hasPhoto: widget.news.photo != null,
+                              imageUrl: '$kBaseUrl/${widget.news.photo!}',
+                            ),
+                            if (image != null)
+                              Positioned.fill(
+                                child: Image.file(
+                                  image!,
+                                  fit: BoxFit.cover,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-              if (image != null) {
-                context.read<NewsBLoC>().add(
-                      NewsEvent.uploadPhoto(id: widget.news.id, photo: image!),
-                    );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Название',
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                      ),
+                    ),
+                    CustomTextField(controller: _titleController),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Содержание',
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                      ),
+                    ),
+                    HugeTextField(
+                      controller: _descriptionController,
+                      focusNode: _descriptionFocusNode,
+                    ),
+                  ],
+                ),
               ),
-              fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
-              backgroundColor: context.colorScheme.primary,
-            ),
-            child: Text(
-              'Сохранить',
-              style: context.textTheme.bodyLarge?.copyWith(
-                fontSize: 17.5,
-                fontFamily: FontFamily.geologica,
-                color: context.colorScheme.onBackground,
+            ],
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 22),
+            child: ElevatedButton(
+              onPressed: () {
+                context.read<NewsBLoC>().add(
+                      NewsEvent.edit(
+                        news: NewsModel(
+                          id: widget.news.id,
+                          photo: widget.news.photo,
+                          title: _titleController.text,
+                          description: _descriptionController.text,
+                          isDeleted: widget.news.isDeleted,
+                        ),
+                      ),
+                    );
+                if (image != null) {
+                  context.read<NewsBLoC>().add(
+                        NewsEvent.uploadPhoto(
+                            id: widget.news.id, photo: image!),
+                      );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
+                backgroundColor: context.colorScheme.primary,
+              ),
+              child: Text(
+                'Сохранить',
+                style: context.textTheme.bodyLarge?.copyWith(
+                  fontSize: 17.5,
+                  fontFamily: FontFamily.geologica,
+                  color: context.colorScheme.onBackground,
+                ),
               ),
             ),
           ),
@@ -192,7 +200,12 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
           const SizedBox(height: 12),
           ElevatedButton(
             onPressed: () {
-              // TODO: Implement deleting news
+              context.read<NewsBLoC>().add(
+                    NewsEvent.delete(id: widget.news.id),
+                  );
+              context.read<NewsBLoC>().add(const NewsEvent.fetchAll());
+              context.pop();
+              context.pop();
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(

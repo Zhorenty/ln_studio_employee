@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import '../model/news.dart';
@@ -11,6 +12,8 @@ abstract interface class NewsRepository {
   Future<NewsModel> editNews(NewsModel news);
 
   Future<void> uploadPhoto(int id, File file);
+
+  Future<void> deleteNews(int id);
 }
 
 /// Implementation of the Record repository.
@@ -29,4 +32,7 @@ final class NewsRepositoryImpl implements NewsRepository {
   @override
   Future<void> uploadPhoto(int id, File file) =>
       _dataProvider.uploadPhoto(id, file);
+
+  @override
+  Future<void> deleteNews(int id) => _dataProvider.deleteNews(id);
 }

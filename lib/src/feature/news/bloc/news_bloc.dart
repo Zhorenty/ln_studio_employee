@@ -24,6 +24,7 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
         NewsEvent$FetchAll() => _fetchAll(event, emit),
         NewsEvent$Edit() => _edit(event, emit),
         NewsEvent$UploadPhoto() => _uploadPhoto(event, emit),
+        NewsEvent$Delete() => _delete(event, emit),
       },
     );
   }
@@ -133,6 +134,35 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
         currentNews: state.currentNews,
         photo: state.photo,
       ));
+    }
+  }
+
+  /// Fetch event handler
+  Future<void> _delete(
+    NewsEvent$Delete event,
+    Emitter<NewsState> emit,
+  ) async {
+    emit(
+      NewsState.processing(
+        currentNews: state.currentNews,
+        news: state.news,
+        photo: state.photo,
+      ),
+    );
+    try {
+      await _repository.deleteNews(event.id);
+      emit(NewsState.successful(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
+    } on Object catch (err, _) {
+      emit(NewsState.error(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
+      rethrow;
     }
   }
 }
