@@ -9,6 +9,9 @@ abstract interface class NewsRepository {
   /// Get
   Future<List<NewsModel>> getNews();
 
+  /// Get
+  Future<void> createNews({required String title, required String description});
+
   Future<NewsModel> editNews(NewsModel news);
 
   Future<void> uploadPhoto(int id, File file);
@@ -25,6 +28,13 @@ final class NewsRepositoryImpl implements NewsRepository {
 
   @override
   Future<List<NewsModel>> getNews() => _dataProvider.fetchNews();
+
+  @override
+  Future<void> createNews({
+    required String title,
+    required String description,
+  }) =>
+      _dataProvider.createNews(title: title, description: description);
 
   @override
   Future<NewsModel> editNews(NewsModel news) => _dataProvider.editNews(news);

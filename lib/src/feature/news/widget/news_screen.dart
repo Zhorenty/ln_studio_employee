@@ -28,6 +28,10 @@ class _NewsScreenState extends State<NewsScreen> {
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  onPressed: context.pop,
+                ),
                 title: Text(
                   'Новости',
                   style: context.textTheme.titleLarge?.copyWith(
@@ -50,7 +54,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       subtitle: state.news[index].description,
                       image: CustomNetworkImage(
                         hasPhoto: state.news[index].photo != null,
-                        imageUrl: '$kBaseUrl/${state.news[index].photo!}',
+                        imageUrl: '$kBaseUrl/${state.news[index].photo ?? ''}',
                       ),
                     ),
                   ),
@@ -58,6 +62,11 @@ class _NewsScreenState extends State<NewsScreen> {
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: context.colorScheme.primary,
+          child: const Icon(Icons.add, size: 28),
+          onPressed: () => context.goNamed('news_create'),
         ),
       ),
     );
@@ -157,7 +166,7 @@ class CustomNetworkImage extends StatelessWidget {
             ),
           )
         : Assets.images.logoWhite.image(
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
           );
   }
 }

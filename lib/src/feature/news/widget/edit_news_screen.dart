@@ -102,7 +102,7 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
                           children: [
                             CustomNetworkImage(
                               hasPhoto: widget.news.photo != null,
-                              imageUrl: '$kBaseUrl/${widget.news.photo!}',
+                              imageUrl: '$kBaseUrl/${widget.news.photo ?? ''}',
                             ),
                             if (image != null)
                               Positioned.fill(
@@ -118,23 +118,33 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'Название',
-                      style: context.textTheme.bodyLarge?.copyWith(
-                        fontFamily: FontFamily.geologica,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Text(
+                        'Название',
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
                       ),
                     ),
-                    CustomTextField(controller: _titleController),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Содержание',
-                      style: context.textTheme.bodyLarge?.copyWith(
-                        fontFamily: FontFamily.geologica,
+                    CustomTextField(
+                      controller: _titleController,
+                      validator: _emptyValidator,
+                    ),
+                    const SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Text(
+                        'Содержание',
+                        style: context.textTheme.bodyLarge?.copyWith(
+                          fontFamily: FontFamily.geologica,
+                        ),
                       ),
                     ),
                     HugeTextField(
                       controller: _descriptionController,
                       focusNode: _descriptionFocusNode,
+                      validator: _emptyValidator,
                     ),
                   ],
                 ),
@@ -159,7 +169,9 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
                 if (image != null) {
                   context.read<NewsBLoC>().add(
                         NewsEvent.uploadPhoto(
-                            id: widget.news.id, photo: image!),
+                          id: widget.news.id,
+                          photo: image!,
+                        ),
                       );
                 }
               },
@@ -241,17 +253,28 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
       log('Failed to pick image: $e');
     }
   }
+
+  /// Empty value validator.
+  String? _emptyValidator(String? value) =>
+      value!.isEmpty ? 'Обязательное поле' : null;
 }
 
 /// Large text field for comments.
 class HugeTextField extends StatelessWidget {
-  const HugeTextField({super.key, this.controller, this.focusNode});
+  const HugeTextField({
+    super.key,
+    this.controller,
+    this.focusNode,
+    this.validator,
+  });
 
   ///
   final TextEditingController? controller;
 
   ///
   final FocusNode? focusNode;
+
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {

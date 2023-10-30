@@ -9,6 +9,11 @@ sealed class NewsEvent {
   /// Fetch
   const factory NewsEvent.fetchAll() = NewsEvent$FetchAll;
 
+  const factory NewsEvent.create({
+    required String title,
+    required String description,
+  }) = NewsEvent$Create;
+
   const factory NewsEvent.edit({required NewsModel news}) = NewsEvent$Edit;
 
   const factory NewsEvent.uploadPhoto({
@@ -22,6 +27,17 @@ sealed class NewsEvent {
 /// Fetch all News.
 class NewsEvent$FetchAll extends NewsEvent {
   const NewsEvent$FetchAll();
+}
+
+///
+class NewsEvent$Create extends NewsEvent {
+  const NewsEvent$Create({required this.title, required this.description});
+
+  ///
+  final String title;
+
+  ///
+  final String description;
 }
 
 ///

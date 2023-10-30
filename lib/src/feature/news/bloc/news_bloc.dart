@@ -22,6 +22,7 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
     on<NewsEvent>(
       (event, emit) => switch (event) {
         NewsEvent$FetchAll() => _fetchAll(event, emit),
+        NewsEvent$Create() => _create(event, emit),
         NewsEvent$Edit() => _edit(event, emit),
         NewsEvent$UploadPhoto() => _uploadPhoto(event, emit),
         NewsEvent$Delete() => _delete(event, emit),
@@ -58,12 +59,38 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
         photo: state.photo,
       ));
       rethrow;
-    } finally {
-      emit(NewsState.idle(
+    }
+  }
+
+  /// Fetch event handler
+  Future<void> _create(
+    NewsEvent$Create event,
+    Emitter<NewsState> emit,
+  ) async {
+    emit(
+      NewsState.processing(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ),
+    );
+    try {
+      await _repository.createNews(
+        title: event.title,
+        description: event.description,
+      );
+      emit(NewsState.successful(
         news: state.news,
         currentNews: state.currentNews,
         photo: state.photo,
       ));
+    } on Object catch (err, _) {
+      emit(NewsState.error(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
+      rethrow;
     }
   }
 
@@ -93,12 +120,6 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
         photo: state.photo,
       ));
       rethrow;
-    } finally {
-      emit(NewsState.idle(
-        news: state.news,
-        currentNews: state.currentNews,
-        photo: state.photo,
-      ));
     }
   }
 
@@ -128,12 +149,6 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
         photo: state.photo,
       ));
       rethrow;
-    } finally {
-      emit(NewsState.idle(
-        news: state.news,
-        currentNews: state.currentNews,
-        photo: state.photo,
-      ));
     }
   }
 

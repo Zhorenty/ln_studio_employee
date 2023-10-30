@@ -10,6 +10,8 @@ abstract interface class NewsDataProvider {
   /// Fetch RecordHomeDataProvider
   Future<List<NewsModel>> fetchNews();
 
+  Future<void> createNews({required String title, required String description});
+
   Future<NewsModel> editNews(NewsModel news);
 
   Future<void> uploadPhoto(int id, File file);
@@ -34,6 +36,19 @@ class NewsDataProviderImpl implements NewsDataProvider {
 
     return news;
   }
+
+  @override
+  Future<void> createNews({
+    required String title,
+    required String description,
+  }) async =>
+      await restClient.post(
+        '/api/v1/news/create',
+        data: {
+          "title": title,
+          "description": description,
+        },
+      );
 
   @override
   Future<NewsModel> editNews(NewsModel news) async {

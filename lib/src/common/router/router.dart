@@ -10,6 +10,7 @@ import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope
 import 'package:ln_employee/src/feature/news/bloc/news_bloc.dart';
 import 'package:ln_employee/src/feature/news/bloc/news_event.dart';
 import 'package:ln_employee/src/feature/news/model/news.dart';
+import 'package:ln_employee/src/feature/news/widget/create_news_screen.dart';
 import 'package:ln_employee/src/feature/news/widget/edit_news_screen.dart';
 import 'package:ln_employee/src/feature/news/widget/news_screen.dart';
 
@@ -128,6 +129,12 @@ final router = GoRouter(
                           builder: (context, state) => EditNewsScreen(
                             news: state.extra as NewsModel,
                           ),
+                        ),
+                        GoRoute(
+                          parentNavigatorKey: _shellKey,
+                          name: 'news_create',
+                          path: 'create',
+                          builder: (context, state) => const CreateNewsScreen(),
                         ),
                       ],
                     ),
