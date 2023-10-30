@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ln_employee/src/feature/profile/model/news.dart';
+import '../model/news.dart';
 
 /// Business Logic Component News_event Events
 sealed class NewsEvent {

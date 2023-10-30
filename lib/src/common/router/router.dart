@@ -7,11 +7,11 @@ import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dar
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
 import 'package:ln_employee/src/feature/employee/widget/employee_screen.dart';
 import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
-import 'package:ln_employee/src/feature/profile/bloc/news/news_bloc.dart';
-import 'package:ln_employee/src/feature/profile/bloc/news/news_event.dart';
-import 'package:ln_employee/src/feature/profile/model/news.dart';
-import 'package:ln_employee/src/feature/profile/widget/edit_news_screen.dart';
-import 'package:ln_employee/src/feature/profile/widget/news_screen.dart';
+import 'package:ln_employee/src/feature/news/bloc/news_bloc.dart';
+import 'package:ln_employee/src/feature/news/bloc/news_event.dart';
+import 'package:ln_employee/src/feature/news/model/news.dart';
+import 'package:ln_employee/src/feature/news/widget/edit_news_screen.dart';
+import 'package:ln_employee/src/feature/news/widget/news_screen.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '/src/feature/employee/widget/edit_employee_screen.dart';

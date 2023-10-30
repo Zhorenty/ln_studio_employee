@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_data_provider.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_employee/src/feature/auth/logic/oauth_interceptor.dart';
-import 'package:ln_employee/src/feature/profile/data/profile_data_provider.dart';
-import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
+import 'package:ln_employee/src/feature/news/data/news_data_provider.dart';
+import 'package:ln_employee/src/feature/news/data/news_repository.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -75,10 +75,10 @@ mixin InitializationSteps {
       progress.dependencies.employeeRepository = employeeRepository;
     },
     'Profile repository': (progress) async {
-      final profileDataProvider = ProfileDataProviderImpl(
+      final profileDataProvider = NewsDataProviderImpl(
         restClient: progress.dependencies.restClient,
       );
-      final profileRepository = ProfileRepositoryImpl(profileDataProvider);
+      final profileRepository = NewsRepositoryImpl(profileDataProvider);
       progress.dependencies.profileRepository = profileRepository;
     },
     'Specialization repository': (progress) async {

@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import '../model/news.dart';
-import 'profile_data_provider.dart';
+import 'news_data_provider.dart';
 
 /// Repository for Record data.
-abstract interface class ProfileRepository {
+abstract interface class NewsRepository {
   /// Get
   Future<List<NewsModel>> getNews();
 
@@ -14,11 +14,11 @@ abstract interface class ProfileRepository {
 }
 
 /// Implementation of the Record repository.
-final class ProfileRepositoryImpl implements ProfileRepository {
-  ProfileRepositoryImpl(this._dataProvider);
+final class NewsRepositoryImpl implements NewsRepository {
+  NewsRepositoryImpl(this._dataProvider);
 
   /// Record data source.
-  final ProfileDataProvider _dataProvider;
+  final NewsDataProvider _dataProvider;
 
   @override
   Future<List<NewsModel>> getNews() => _dataProvider.fetchNews();

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
-import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
+import 'package:ln_employee/src/feature/news/data/news_repository.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,7 +30,7 @@ abstract interface class Dependencies {
   abstract final EmployeeRepository employeeRepository;
 
   /// Employee  repository.
-  abstract final ProfileRepository profileRepository;
+  abstract final NewsRepository profileRepository;
 
   /// Salon  repository.
   abstract final SpecializationRepository specializationRepository;
@@ -64,7 +64,7 @@ final class Dependencies$Mutable implements Dependencies {
   late EmployeeRepository employeeRepository;
 
   @override
-  late ProfileRepository profileRepository;
+  late NewsRepository profileRepository;
 
   @override
   late SpecializationRepository specializationRepository;
@@ -116,7 +116,7 @@ final class _Dependencies$Immutable implements Dependencies {
   final EmployeeRepository employeeRepository;
 
   @override
-  final ProfileRepository profileRepository;
+  final NewsRepository profileRepository;
 
   @override
   final SpecializationRepository specializationRepository;

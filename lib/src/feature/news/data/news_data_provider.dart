@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 
 import '../model/news.dart';
 
-/// Datasource for Record ProfileDataProvider.
-abstract interface class ProfileDataProvider {
+/// Datasource for Record NewsDataProvider.
+abstract interface class NewsDataProvider {
   /// Fetch RecordHomeDataProvider
   Future<List<NewsModel>> fetchNews();
 
@@ -15,8 +15,8 @@ abstract interface class ProfileDataProvider {
 }
 
 /// Implementation of Record RecordDataProvider.
-class ProfileDataProviderImpl implements ProfileDataProvider {
-  ProfileDataProviderImpl({required this.restClient});
+class NewsDataProviderImpl implements NewsDataProvider {
+  NewsDataProviderImpl({required this.restClient});
 
   /// REST client to call API.
   final Dio restClient;

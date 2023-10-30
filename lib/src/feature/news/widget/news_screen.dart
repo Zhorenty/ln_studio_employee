@@ -7,10 +7,8 @@ import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_employee/src/common/widget/animated_button.dart';
 import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
-
-import 'package:ln_employee/src/feature/profile/bloc/news/news_bloc.dart';
-
-import 'package:ln_employee/src/feature/profile/bloc/news/news_state.dart';
+import '../bloc/news_bloc.dart';
+import '../bloc/news_state.dart';
 
 ///
 class NewsScreen extends StatefulWidget {

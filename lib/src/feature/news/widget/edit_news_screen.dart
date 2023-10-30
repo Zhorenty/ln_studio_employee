@@ -10,10 +10,11 @@ import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_employee/src/common/widget/custom_text_field.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
-import 'package:ln_employee/src/feature/profile/bloc/news/news_bloc.dart';
-import 'package:ln_employee/src/feature/profile/bloc/news/news_event.dart';
-import 'package:ln_employee/src/feature/profile/model/news.dart';
-import 'package:ln_employee/src/feature/profile/widget/news_screen.dart';
+
+import '../bloc/news_bloc.dart';
+import '../bloc/news_event.dart';
+import '../model/news.dart';
+import 'news_screen.dart';
 
 class EditNewsScreen extends StatefulWidget {
   const EditNewsScreen({super.key, required this.news});
@@ -159,10 +160,7 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              fixedSize: Size(
-                MediaQuery.sizeOf(context).width - 50,
-                50,
-              ),
+              fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
               backgroundColor: context.colorScheme.primary,
             ),
             child: Text(

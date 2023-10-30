@@ -114,14 +114,12 @@ class ProfileScreen extends StatelessWidget {
             Assets.images.exit.image(scale: 8),
             const SizedBox(height: 16),
             ElevatedButton(
+              onPressed: () => context.pop(),
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                fixedSize: Size(
-                  MediaQuery.sizeOf(context).width - 50,
-                  50,
-                ),
+                fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
                 backgroundColor: context.colorScheme.primary,
               ),
               child: Text(
@@ -131,21 +129,17 @@ class ProfileScreen extends StatelessWidget {
                   color: context.colorScheme.onBackground,
                 ),
               ),
-              onPressed: () => context.pop(),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
+              onPressed: onPressed,
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                fixedSize: Size(
-                  MediaQuery.sizeOf(context).width - 50,
-                  50,
-                ),
+                fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
                 backgroundColor: context.colorScheme.onBackground,
               ),
-              onPressed: onPressed,
               child: Text(
                 'Выйти',
                 style: context.textTheme.bodyLarge?.copyWith(
@@ -156,41 +150,4 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       );
-  // showAdaptiveDialog(
-  //   context: context,
-  //   builder: (context) {
-  //     return AlertDialog(
-  //       backgroundColor: context.colorScheme.onBackground,
-  //       titlePadding: const EdgeInsets.all(16),
-  // title: Text(
-  //   'Вы точно хотите выйти из аккаунта?',
-  //   style: context.textTheme.titleLarge?.copyWith(
-  //     fontFamily: FontFamily.geologica,
-  //   ),
-  // ),
-  //       actionsAlignment: MainAxisAlignment.spaceBetween,
-  //       actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
-  //       actions: <Widget>[
-  //         TextButton(
-  //           style: TextButton.styleFrom(
-  //             textStyle: context.textTheme.bodyLarge?.copyWith(
-  //               fontFamily: FontFamily.geologica,
-  //             ),
-  //           ),
-  //           child: const Text('Нет'),
-  //           onPressed: () => context.pop(),
-  //         ),
-  //         TextButton(
-  //           style: TextButton.styleFrom(
-  //             textStyle: context.textTheme.bodyLarge?.copyWith(
-  //               fontFamily: FontFamily.geologica,
-  //             ),
-  //           ),
-  //           onPressed: onPressed,
-  //           child: const Text('Да, выйти'),
-  //         ),
-  //       ],
-  //     );
-  //   },
-  // );
 }

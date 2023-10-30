@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
+import 'package:ln_employee/src/feature/news/data/news_repository.dart';
 
 import 'news_event.dart';
 import 'news_state.dart';
@@ -7,7 +7,7 @@ import 'news_state.dart';
 /// Business Logic Component NewsBLoC
 class NewsBLoC extends Bloc<NewsEvent, NewsState> {
   NewsBLoC({
-    required final ProfileRepository repository,
+    required final NewsRepository repository,
     final NewsState? initialState,
   })  : _repository = repository,
         super(
@@ -29,7 +29,7 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
   }
 
   ///
-  final ProfileRepository _repository;
+  final NewsRepository _repository;
 
   /// Fetch event handler
   Future<void> _fetchAll(
