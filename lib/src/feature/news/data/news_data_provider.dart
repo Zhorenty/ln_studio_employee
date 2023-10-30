@@ -49,7 +49,7 @@ class NewsDataProviderImpl implements NewsDataProvider {
       '/api/v1/news/create',
       data: {
         "title": title,
-        "description": description,
+        "description": description.replaceAll('\n', '\\n'),
       },
     );
 
@@ -62,7 +62,7 @@ class NewsDataProviderImpl implements NewsDataProvider {
       '/api/v1/news/${news.id}/edit',
       data: {
         'title': news.title,
-        'description': news.description,
+        'description': news.description.replaceAll('\n', '\\n'),
       },
     );
 

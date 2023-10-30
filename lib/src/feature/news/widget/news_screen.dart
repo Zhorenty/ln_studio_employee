@@ -120,7 +120,7 @@ class NewsContainer extends StatelessWidget {
                     TextSpan(text: title),
                     const TextSpan(text: '\n'),
                     TextSpan(
-                      text: subtitle,
+                      text: subtitle.replaceAll('\\n', '\n'),
                       style: context.textTheme.bodySmall?.copyWith(
                         fontFamily: FontFamily.geologica,
                       ),

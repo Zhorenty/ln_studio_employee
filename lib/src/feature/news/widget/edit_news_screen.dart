@@ -59,7 +59,8 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
   @override
   Widget build(BuildContext context) {
     _titleController.text = widget.news.title;
-    _descriptionController.text = widget.news.description;
+    _descriptionController.text =
+        widget.news.description.replaceAll('\\n', '\n');
 
     return WillPopScope(
       onWillPop: () async {
