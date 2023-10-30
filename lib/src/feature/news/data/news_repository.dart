@@ -10,7 +10,10 @@ abstract interface class NewsRepository {
   Future<List<NewsModel>> getNews();
 
   /// Get
-  Future<void> createNews({required String title, required String description});
+  FutureOr<int> createNews({
+    required String title,
+    required String description,
+  });
 
   Future<NewsModel> editNews(NewsModel news);
 
@@ -30,7 +33,7 @@ final class NewsRepositoryImpl implements NewsRepository {
   Future<List<NewsModel>> getNews() => _dataProvider.fetchNews();
 
   @override
-  Future<void> createNews({
+  FutureOr<int> createNews({
     required String title,
     required String description,
   }) =>

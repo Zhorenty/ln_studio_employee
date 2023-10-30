@@ -163,7 +163,11 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                               NewsEvent.create(
                                 title: _titleController.text,
                                 description: _descriptionController.text,
+                                photo: image!,
                               ),
+                            );
+                        context.read<NewsBLoC>().add(
+                              const NewsEvent.fetchAll(),
                             );
                         context.pop();
                       }

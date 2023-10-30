@@ -12,6 +12,7 @@ sealed class NewsEvent {
   const factory NewsEvent.create({
     required String title,
     required String description,
+    required File photo,
   }) = NewsEvent$Create;
 
   const factory NewsEvent.edit({required NewsModel news}) = NewsEvent$Edit;
@@ -31,13 +32,19 @@ class NewsEvent$FetchAll extends NewsEvent {
 
 ///
 class NewsEvent$Create extends NewsEvent {
-  const NewsEvent$Create({required this.title, required this.description});
+  const NewsEvent$Create({
+    required this.title,
+    required this.description,
+    required this.photo,
+  });
 
   ///
   final String title;
 
   ///
   final String description;
+
+  final File photo;
 }
 
 ///

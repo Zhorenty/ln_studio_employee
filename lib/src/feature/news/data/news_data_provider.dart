@@ -10,7 +10,10 @@ abstract interface class NewsDataProvider {
   /// Fetch RecordHomeDataProvider
   Future<List<NewsModel>> fetchNews();
 
-  Future<void> createNews({required String title, required String description});
+  FutureOr<int> createNews({
+    required String title,
+    required String description,
+  });
 
   Future<NewsModel> editNews(NewsModel news);
 
@@ -38,17 +41,20 @@ class NewsDataProviderImpl implements NewsDataProvider {
   }
 
   @override
-  Future<void> createNews({
+  FutureOr<int> createNews({
     required String title,
     required String description,
-  }) async =>
-      await restClient.post(
-        '/api/v1/news/create',
-        data: {
-          "title": title,
-          "description": description,
-        },
-      );
+  }) async {
+    final response = await restClient.post(
+      '/api/v1/news/create',
+      data: {
+        "title": title,
+        "description": description,
+      },
+    );
+
+    return response.data['data']['id'];
+  }
 
   @override
   Future<NewsModel> editNews(NewsModel news) async {

@@ -75,10 +75,14 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
       ),
     );
     try {
-      await _repository.createNews(
+      final response = await _repository.createNews(
         title: event.title,
         description: event.description,
       );
+      add(NewsEvent.uploadPhoto(
+        id: response,
+        photo: event.photo,
+      ));
       emit(NewsState.successful(
         news: state.news,
         currentNews: state.currentNews,
