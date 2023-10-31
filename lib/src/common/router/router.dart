@@ -19,12 +19,14 @@ import '/src/feature/employee/widget/edit_employee_screen.dart';
 import '/src/feature/employee/widget/staff_screen.dart';
 import '/src/feature/profile/widget/profile_screen.dart';
 import '/src/feature/timetable/widget/timetable_screen.dart';
+import 'observer.dart';
 
 final _parentKey = GlobalKey<NavigatorState>();
 final _shellKey = GlobalKey<NavigatorState>();
 
 /// Router of this application.
 final router = GoRouter(
+  observers: [RouterObserver()],
   initialLocation: '/auth',
   navigatorKey: _parentKey,
   routes: [

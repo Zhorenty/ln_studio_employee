@@ -10,10 +10,12 @@ import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
   AuthBloc(this.authRepository) : super(const AuthState$Idle()) {
-    authRepository.userStream
-        .map((user) => AuthState$Idle(user: user))
-        .where(($state) => !identical($state, state))
-        .listen(setState);
+    if (!authRepository.userStream.isBroadcast) {
+      authRepository.userStream
+          .map((user) => AuthState$Idle(user: user))
+          .where(($state) => !identical($state, state))
+          .listen(setState);
+    }
 
     on<AuthEvent>(
       (event, emit) => event.map(
@@ -47,18 +49,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
       if (e is DioException && e.response!.statusCode == 400) {
         emit(
           AuthState.idle(
-            error: ErrorUtil.throwAuthException(
-              ErrorCode.phoneNotFound,
-              'Пользователь с таким номером не найден',
-            ),
+            error: e.response?.data['detail'],
           ),
+        );
+        ErrorUtil.throwAuthException(
+          ErrorCode.phoneNotFound,
+          'Пользователь с таким номером не найден',
         );
       } else {
         emit(AuthState.idle(error: ErrorUtil.formatError(e)));
         rethrow;
       }
-    } finally {
-      emit(AuthState.idle(user: state.user, phone: state.phone));
     }
   }
 
@@ -82,7 +83,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with SetStateMixin {
         smsCode: state.smsCode,
       ));
     } on Object catch (e) {
-      emit(AuthState.idle(error: ErrorUtil.formatError(e)));
+      emit(AuthState.idle(phone: state.phone, error: ErrorUtil.formatError(e)));
       rethrow;
     }
   }

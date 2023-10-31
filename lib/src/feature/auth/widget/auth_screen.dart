@@ -75,7 +75,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     color: context.colorScheme.primaryContainer,
                   ),
                   keyboardType: TextInputType.phone,
-                  hintText: '8 (123) 456-78-90',
+                  hintText: '+7 (123) 456-78-90',
                   inputFormatters: [RuPhoneInputFormatter()],
                   validator: _phoneValidator,
                   onChanged: _checkPhoneNumber,
