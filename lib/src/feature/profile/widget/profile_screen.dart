@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -96,41 +98,56 @@ class ProfileScreen extends StatelessWidget {
     BuildContext context,
     void Function()? onPressed,
   ) =>
-      showAdaptiveDialog(
+      ModalPopup.show(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: context.colorScheme.onBackground,
-            titlePadding: const EdgeInsets.all(16),
-            title: Text(
-              'Вы точно хотите выйти из аккаунта?',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Уже уходите?',
               style: context.textTheme.titleLarge?.copyWith(
                 fontFamily: FontFamily.geologica,
               ),
             ),
-            actionsAlignment: MainAxisAlignment.spaceBetween,
-            actionsPadding: const EdgeInsets.symmetric(horizontal: 16),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
+            const SizedBox(height: 16),
+            Assets.images.exit.image(scale: 8),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => context.pop(),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Text('Нет'),
-                onPressed: () => context.pop(),
+                fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
+                backgroundColor: context.colorScheme.primary,
               ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                  ),
+              child: Text(
+                'Я остаюсь',
+                style: context.textTheme.bodyLarge?.copyWith(
+                  fontFamily: FontFamily.geologica,
+                  color: context.colorScheme.onBackground,
                 ),
-                onPressed: onPressed,
-                child: const Text('Да, выйти'),
               ),
-            ],
-          );
-        },
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onPressed,
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
+                backgroundColor: context.colorScheme.onBackground,
+              ),
+              child: Text(
+                'Выйти',
+                style: context.textTheme.bodyLarge?.copyWith(
+                  fontFamily: FontFamily.geologica,
+                ),
+              ),
+            ),
+          ],
+        ),
       );
 }

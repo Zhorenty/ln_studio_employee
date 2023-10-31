@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
-import '../../model/news.dart';
+import '../model/news.dart';
 import '/src/common/utils/pattern_match.dart';
 
 /// {@template News_state_placeholder}
@@ -156,6 +156,11 @@ abstract base class _$NewsStateBase {
   bool get isProcessing => maybeMap<bool>(
         orElse: () => false,
         processing: (_) => true,
+      );
+
+  bool get isSuccessful => maybeMap<bool>(
+        orElse: () => false,
+        successful: (_) => true,
       );
 
   /// Is in idle state?

@@ -12,6 +12,9 @@ import 'package:flutter/widgets.dart';
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/exit.png
+  AssetGenImage get exit => const AssetGenImage('assets/images/exit.png');
+
   /// File path: assets/images/logo_black.png
   AssetGenImage get logoBlack =>
       const AssetGenImage('assets/images/logo_black.png');
@@ -21,7 +24,7 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/logo_white.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [logoBlack, logoWhite];
+  List<AssetGenImage> get values => [exit, logoBlack, logoWhite];
 }
 
 class Assets {

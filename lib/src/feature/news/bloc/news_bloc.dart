@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ln_employee/src/feature/profile/data/profile_repository.dart';
+import 'package:ln_employee/src/feature/news/data/news_repository.dart';
 
 import 'news_event.dart';
 import 'news_state.dart';
@@ -7,7 +7,7 @@ import 'news_state.dart';
 /// Business Logic Component NewsBLoC
 class NewsBLoC extends Bloc<NewsEvent, NewsState> {
   NewsBLoC({
-    required final ProfileRepository repository,
+    required final NewsRepository repository,
     final NewsState? initialState,
   })  : _repository = repository,
         super(
@@ -22,14 +22,16 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
     on<NewsEvent>(
       (event, emit) => switch (event) {
         NewsEvent$FetchAll() => _fetchAll(event, emit),
+        NewsEvent$Create() => _create(event, emit),
         NewsEvent$Edit() => _edit(event, emit),
         NewsEvent$UploadPhoto() => _uploadPhoto(event, emit),
+        NewsEvent$Delete() => _delete(event, emit),
       },
     );
   }
 
   ///
-  final ProfileRepository _repository;
+  final NewsRepository _repository;
 
   /// Fetch event handler
   Future<void> _fetchAll(
@@ -57,12 +59,42 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
         photo: state.photo,
       ));
       rethrow;
-    } finally {
-      emit(NewsState.idle(
+    }
+  }
+
+  /// Fetch event handler
+  Future<void> _create(
+    NewsEvent$Create event,
+    Emitter<NewsState> emit,
+  ) async {
+    emit(
+      NewsState.processing(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ),
+    );
+    try {
+      final response = await _repository.createNews(
+        title: event.title,
+        description: event.description,
+      );
+      add(NewsEvent.uploadPhoto(
+        id: response,
+        photo: event.photo,
+      ));
+      emit(NewsState.successful(
         news: state.news,
         currentNews: state.currentNews,
         photo: state.photo,
       ));
+    } on Object catch (err, _) {
+      emit(NewsState.error(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
+      rethrow;
     }
   }
 
@@ -92,12 +124,6 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
         photo: state.photo,
       ));
       rethrow;
-    } finally {
-      emit(NewsState.idle(
-        news: state.news,
-        currentNews: state.currentNews,
-        photo: state.photo,
-      ));
     }
   }
 
@@ -127,12 +153,35 @@ class NewsBLoC extends Bloc<NewsEvent, NewsState> {
         photo: state.photo,
       ));
       rethrow;
-    } finally {
-      emit(NewsState.idle(
+    }
+  }
+
+  /// Fetch event handler
+  Future<void> _delete(
+    NewsEvent$Delete event,
+    Emitter<NewsState> emit,
+  ) async {
+    emit(
+      NewsState.processing(
+        currentNews: state.currentNews,
+        news: state.news,
+        photo: state.photo,
+      ),
+    );
+    try {
+      await _repository.deleteNews(event.id);
+      emit(NewsState.successful(
         news: state.news,
         currentNews: state.currentNews,
         photo: state.photo,
       ));
+    } on Object catch (err, _) {
+      emit(NewsState.error(
+        news: state.news,
+        currentNews: state.currentNews,
+        photo: state.photo,
+      ));
+      rethrow;
     }
   }
 }

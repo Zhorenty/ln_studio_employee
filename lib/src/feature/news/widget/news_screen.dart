@@ -2,15 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/assets/generated/assets.gen.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
-import 'package:ln_employee/src/common/widget/animated_button.dart';
-import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
 
-import 'package:ln_employee/src/feature/profile/bloc/news/news_bloc.dart';
-
-import 'package:ln_employee/src/feature/profile/bloc/news/news_state.dart';
+import '../bloc/news_bloc.dart';
+import '../bloc/news_state.dart';
+import '/src/common/assets/generated/assets.gen.dart';
+import '/src/common/assets/generated/fonts.gen.dart';
+import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/animated_button.dart';
+import '/src/feature/initialization/logic/initialization_steps.dart';
 
 ///
 class NewsScreen extends StatefulWidget {
@@ -30,6 +29,10 @@ class _NewsScreenState extends State<NewsScreen> {
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  onPressed: context.pop,
+                ),
                 title: Text(
                   'Новости',
                   style: context.textTheme.titleLarge?.copyWith(
@@ -52,7 +55,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       subtitle: state.news[index].description,
                       image: CustomNetworkImage(
                         hasPhoto: state.news[index].photo != null,
-                        imageUrl: '$kBaseUrl/${state.news[index].photo!}',
+                        imageUrl: '$kBaseUrl/${state.news[index].photo ?? ''}',
                       ),
                     ),
                   ),
@@ -60,6 +63,11 @@ class _NewsScreenState extends State<NewsScreen> {
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: context.colorScheme.primary,
+          child: const Icon(Icons.add, size: 28),
+          onPressed: () => context.goNamed('news_create'),
         ),
       ),
     );
@@ -95,7 +103,7 @@ class NewsContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            height: 115,
+            height: 120,
             width: 175,
             child: ClipRRect(
               borderRadius: const BorderRadius.horizontal(
@@ -113,7 +121,7 @@ class NewsContainer extends StatelessWidget {
                     TextSpan(text: title),
                     const TextSpan(text: '\n'),
                     TextSpan(
-                      text: subtitle,
+                      text: subtitle.replaceAll('\\n', '\n'),
                       style: context.textTheme.bodySmall?.copyWith(
                         fontFamily: FontFamily.geologica,
                       ),
@@ -159,7 +167,7 @@ class CustomNetworkImage extends StatelessWidget {
             ),
           )
         : Assets.images.logoWhite.image(
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
           );
   }
 }
