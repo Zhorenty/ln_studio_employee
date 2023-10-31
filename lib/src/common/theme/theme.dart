@@ -63,7 +63,7 @@ final $darkThemeData = ThemeData(
 
 const darkColorScheme = ColorScheme.dark(
   brightness: Brightness.dark,
-  primary: Color.fromRGBO(236, 216, 189, 1),
+  primary: Color(0xFFECD8BD),
   secondary: Color(0xFFFFFFFF),
   primaryContainer: Color(0xFF9E9E9E),
   secondaryContainer: Color(0xFFD9D9D9),
