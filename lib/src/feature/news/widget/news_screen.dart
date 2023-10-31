@@ -2,13 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ln_employee/src/common/assets/generated/assets.gen.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
-import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
-import 'package:ln_employee/src/common/widget/animated_button.dart';
-import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
+
 import '../bloc/news_bloc.dart';
 import '../bloc/news_state.dart';
+import '/src/common/assets/generated/assets.gen.dart';
+import '/src/common/assets/generated/fonts.gen.dart';
+import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/widget/animated_button.dart';
+import '/src/feature/initialization/logic/initialization_steps.dart';
 
 ///
 class NewsScreen extends StatefulWidget {
