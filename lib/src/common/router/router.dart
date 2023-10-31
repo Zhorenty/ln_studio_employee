@@ -18,28 +18,7 @@ import '/src/feature/employee/widget/edit_employee_screen.dart';
 import '/src/feature/employee/widget/staff_screen.dart';
 import '/src/feature/profile/widget/profile_screen.dart';
 import '/src/feature/timetable/widget/timetable_screen.dart';
-
-class RouterObserver extends NavigatorObserver {
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    print('New route pushed: ${route.settings.name}');
-  }
-
-  @override
-  void didReplace({Route? newRoute, Route? oldRoute}) {
-    print('Route replaced: ${newRoute?.settings.name}');
-  }
-
-  @override
-  void didPop(Route route, Route? previousRoute) {
-    print('Route popped: ${route.settings.name}');
-  }
-
-  @override
-  void didRemove(Route route, Route? previousRoute) {
-    print('Route removed: ${route.settings.name}');
-  }
-}
+import 'observer.dart';
 
 final _parentKey = GlobalKey<NavigatorState>();
 final _shellKey = GlobalKey<NavigatorState>();

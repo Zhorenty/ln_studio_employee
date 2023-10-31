@@ -8,7 +8,7 @@ class AppBlocObserver extends BlocObserver {
   void onCreate(BlocBase bloc) {
     final buffer = StringBuffer()
       ..write('Bloc ${bloc.runtimeType} has been created');
-    logger.info(buffer.toString());
+    logger.info(buffer);
     super.onCreate(bloc);
   }
 
@@ -22,7 +22,7 @@ class AppBlocObserver extends BlocObserver {
       ..write('Transition: ${transition.currentState.runtimeType}')
       ..writeln(' -> ${transition.nextState.runtimeType}')
       ..writeln('New State: ${transition.nextState.toString()}');
-    logger.info(buffer.toString());
+    logger.info(buffer);
     super.onTransition(bloc, transition);
   }
 
@@ -31,7 +31,7 @@ class AppBlocObserver extends BlocObserver {
     final buffer = StringBuffer()
       ..writeln('Bloc: ${bloc.runtimeType} | ${event.runtimeType}')
       ..writeln('Event: ${event.toString()}');
-    logger.info(buffer.toString());
+    logger.info(buffer);
     super.onEvent(bloc, event);
   }
 
@@ -39,7 +39,7 @@ class AppBlocObserver extends BlocObserver {
   void onClose(BlocBase bloc) {
     final buffer = StringBuffer()
       ..writeln('Bloc: ${bloc.runtimeType} has been closed');
-    logger.info(buffer.toString());
+    logger.info(buffer);
     super.onClose(bloc);
   }
 
