@@ -10,6 +10,7 @@ import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_employee/src/common/widget/custom_text_field.dart';
 import 'package:ln_employee/src/common/widget/overlay/message_popup.dart';
+import 'package:ln_employee/src/common/widget/picker_popup.dart';
 import 'package:ln_employee/src/feature/news/bloc/news_bloc.dart';
 import 'package:ln_employee/src/feature/news/bloc/news_event.dart';
 
@@ -85,7 +86,17 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                           Icons.add_rounded,
                           color: context.colorScheme.onBackground,
                         ),
-                        onPressed: () => pickImage(ImageSource.gallery),
+                        onPressed: () => MessagePopup.bottomSheet(
+                          context,
+                          'Выберите источник фото',
+                          additional: [
+                            PickerPopup(
+                              onPickCamera: () => pickImage(ImageSource.camera),
+                              onPickGallery: () =>
+                                  pickImage(ImageSource.gallery),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

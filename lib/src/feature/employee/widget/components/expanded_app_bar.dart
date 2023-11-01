@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ln_employee/src/common/widget/picker_popup.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -57,52 +58,17 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
       title: Column(
         children: [
           AvatarWidget(
-            avatar: image,
             radius: 60,
+            avatar: image,
+            title: widget.label,
             isLabelVisible: true,
             onBadgeTap: () => MessagePopup.bottomSheet(
               context,
               'Выберите источник фото',
               additional: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    fixedSize: Size(
-                      MediaQuery.sizeOf(context).width - 75,
-                      35,
-                    ),
-                    backgroundColor: context.colorScheme.primary,
-                  ),
-                  onPressed: () => pickImage(ImageSource.camera),
-                  child: Text(
-                    'Снять на камеру',
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.onBackground,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    fixedSize: Size(
-                      MediaQuery.sizeOf(context).width - 75,
-                      35,
-                    ),
-                    backgroundColor: context.colorScheme.primary,
-                  ),
-                  onPressed: () => pickImage(ImageSource.gallery),
-                  child: Text(
-                    'Выбрать из галереи',
-                    style: context.textTheme.bodyLarge?.copyWith(
-                      fontFamily: FontFamily.geologica,
-                      color: context.colorScheme.onBackground,
-                    ),
-                  ),
+                PickerPopup(
+                  onPickCamera: () => pickImage(ImageSource.camera),
+                  onPickGallery: () => pickImage(ImageSource.gallery),
                 ),
               ],
             ),
@@ -135,8 +101,8 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
             highlightColor: context.colorScheme.scrim,
             onPressed: () => MessagePopup.bottomSheet(
               context,
-              scrolled: false,
               'Действия с сотрудником',
+              scrolled: false,
               additional: widget.additionalTrailing,
             ),
           ),

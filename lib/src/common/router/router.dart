@@ -6,6 +6,7 @@ import 'package:ln_employee/src/feature/auth/widget/verification_screen.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
 import 'package:ln_employee/src/feature/employee/widget/employee_screen.dart';
+import 'package:ln_employee/src/feature/employee/widget/timetable_employee_screen.dart';
 import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_employee/src/feature/news/bloc/news_bloc.dart';
 import 'package:ln_employee/src/feature/news/bloc/news_event.dart';
@@ -89,7 +90,14 @@ final router = GoRouter(
                           parentNavigatorKey: _shellKey,
                           name: 'employee_edit',
                           path: 'edit',
-                          builder: (context, state) => EditEmployeeScreen(
+                          builder: (context, state) =>
+                              const EditEmployeeScreen(),
+                        ),
+                        GoRoute(
+                          parentNavigatorKey: _shellKey,
+                          name: 'employee_timetable',
+                          path: 'timetable',
+                          builder: (context, state) => TimetableEmployeeScreen(
                             id: int.parse(state.pathParameters['id'] as String),
                           ),
                         ),

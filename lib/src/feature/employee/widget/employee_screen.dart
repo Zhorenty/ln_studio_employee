@@ -9,7 +9,6 @@ import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/field_button.dart';
 import '/src/common/widget/header.dart';
 import '/src/common/widget/overlay/message_popup.dart';
-import '/src/common/widget/star_rating.dart';
 import '/src/feature/employee/bloc/employee/employee_bloc.dart';
 import '/src/feature/employee/bloc/employee/employee_event.dart';
 import '/src/feature/employee/bloc/employee/employee_state.dart';
@@ -57,10 +56,6 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                         clientsCount = employee.clients;
                         workedDaysCount = employee.workedDays;
                       }
-
-                      /// TODO: implement changing rating
-                      // ignore: unused_local_variable
-                      int stars = employee.stars;
 
                       return CustomScrollView(
                         slivers: [
@@ -140,22 +135,6 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const HeaderWidget(
-                                          label: 'Рейтинг',
-                                          showUnderscore: false,
-                                        ),
-                                        StarRating(
-                                          initialRating: employee.stars,
-                                          onRatingChanged: (rating) =>
-                                              stars = rating,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
                                     DefaultTextStyle(
                                       style:
                                           context.textTheme.bodyLarge!.copyWith(
@@ -212,7 +191,7 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(16),
                                               child: Assets.images.logoBlack
-                                                  .image(),
+                                                  .image(fit: BoxFit.cover),
                                             ),
                                           ),
                                           const PortfolioContainer(),
@@ -225,21 +204,33 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                       label: 'Редактировать',
                                       onTap: () => context.goNamed(
                                         'employee_edit',
-                                        pathParameters: {
-                                          'id': employee.id.toString(),
-                                        },
                                       ),
                                       controller: TextEditingController(),
                                     ),
                                     FieldButton(
-                                      label: 'Клиенты',
-                                      onTap: () {},
                                       controller: TextEditingController(),
+                                      label: 'График работы',
+                                      onTap: () => context.goNamed(
+                                        'employee_timetable',
+                                        pathParameters: {
+                                          'id': employee.id.toString(),
+                                        },
+                                      ),
                                     ),
                                     FieldButton(
-                                      label: 'Услуги (0)',
-                                      onTap: () {},
                                       controller: TextEditingController(),
+                                      label: 'Клиенты',
+                                      onTap: () {},
+                                    ),
+                                    FieldButton(
+                                      controller: TextEditingController(),
+                                      label: 'Услуги',
+                                      onTap: () {},
+                                    ),
+                                    FieldButton(
+                                      controller: TextEditingController(),
+                                      label: 'Написать сотруднику',
+                                      onTap: () {},
                                     ),
                                     const SizedBox(height: 16),
                                   ],

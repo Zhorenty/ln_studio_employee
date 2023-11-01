@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/news/bloc/news_event.dart';
 
 import '../bloc/news_bloc.dart';
 import '../bloc/news_state.dart';
@@ -39,6 +41,10 @@ class _NewsScreenState extends State<NewsScreen> {
                     fontFamily: FontFamily.geologica,
                   ),
                 ),
+              ),
+              CupertinoSliverRefreshControl(
+                onRefresh: () async =>
+                    context.read<NewsBLoC>()..add(const NewsEvent.fetchAll()),
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(16),

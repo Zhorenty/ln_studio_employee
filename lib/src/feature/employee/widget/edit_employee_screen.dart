@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/star_rating.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -27,10 +28,7 @@ import 'components/date_picker_field.dart';
 /// {@endtemplate}
 class EditEmployeeScreen extends StatefulWidget {
   /// {@macro employee_edit_screen}
-  const EditEmployeeScreen({super.key, required this.id});
-
-  ///
-  final int id;
+  const EditEmployeeScreen({super.key});
 
   @override
   State<EditEmployeeScreen> createState() => _EditEmployeeScreenState();
@@ -114,6 +112,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
           DateTime dateOfEmployment = employee.dateOfEmployment;
           Salon employeeSalon = employee.salon;
           Specialization employeeSpecialization = employee.jobModel;
+          int stars = employee.stars;
 
           /// User information
           _firstNameController.text = user.firstName;
@@ -152,6 +151,23 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                     ),
                     sliver: SliverList.list(
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Рейтинг',
+                              style: context.textTheme.headlineSmall?.copyWith(
+                                fontSize: 25,
+                                fontFamily: FontFamily.geologica,
+                              ),
+                            ),
+                            StarRating(
+                              initialRating: employee.stars,
+                              onRatingChanged: (rating) => stars = rating,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
                         Text(
                           'Личная информация',
                           style: context.textTheme.headlineSmall?.copyWith(
@@ -231,28 +247,26 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                         ),
                         // TODO(zhorenty): refactor
                         StatefulBuilder(
-                          builder: (context, setState) {
-                            return FieldButton(
-                              controller: _specializationController,
-                              label: 'Специализация',
-                              onTap: () => ModalPopup.show(
-                                context: context,
-                                child: SpecializationChoiceScreen(
-                                  currentSpecialization: employeeSpecialization,
-                                  onChanged: (specialization) => setState(
-                                    () {
-                                      specialization != null
-                                          ? employeeSpecialization =
-                                              specialization
-                                          : null;
-                                      _specializationController.text =
-                                          employeeSpecialization.name;
-                                    },
-                                  ),
+                          builder: (context, setState) => FieldButton(
+                            controller: _specializationController,
+                            label: 'Специализация',
+                            onTap: () => ModalPopup.show(
+                              context: context,
+                              child: SpecializationChoiceScreen(
+                                currentSpecialization: employeeSpecialization,
+                                onChanged: (specialization) => setState(
+                                  () {
+                                    specialization != null
+                                        ? employeeSpecialization =
+                                            specialization
+                                        : null;
+                                    _specializationController.text =
+                                        employeeSpecialization.name;
+                                  },
                                 ),
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
                         CustomTextField(
                           controller: _contractNumberController,
@@ -269,7 +283,8 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                           controller: _salesController,
                           label: 'Процент от продаж',
                           keyboardType: const TextInputType.numberWithOptions(
-                              signed: true),
+                            signed: true,
+                          ),
                           validator: _emptyValidator,
                         ),
                         DatePickerField(
@@ -289,7 +304,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                     id: employee.id,
                                     employeeSalonId: employeeSalon.id,
                                     specializationId: employeeSpecialization.id,
-                                    stars: employee.stars,
+                                    stars: stars,
                                     isDismiss: employee.isDismiss,
                                     dateOfEmployment: dateOfEmployment,
                                     birthDate: birthDate,
