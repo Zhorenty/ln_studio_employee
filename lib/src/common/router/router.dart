@@ -96,9 +96,12 @@ final router = GoRouter(
                         GoRoute(
                           parentNavigatorKey: _shellKey,
                           name: 'employee_timetable',
-                          path: 'timetable',
+                          path: 'timetable/:salonId',
                           builder: (context, state) => TimetableEmployeeScreen(
-                            id: int.parse(state.pathParameters['id'] as String),
+                            employeeId:
+                                int.parse(state.pathParameters['id'] as String),
+                            salonId: int.parse(
+                                state.pathParameters['salonId'] as String),
                           ),
                         ),
                       ],

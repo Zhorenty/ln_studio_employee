@@ -214,6 +214,12 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                         'employee_timetable',
                                         pathParameters: {
                                           'id': employee.id.toString(),
+                                          'salonId': context
+                                              .read<SalonBLoC>()
+                                              .state
+                                              .currentSalon!
+                                              .id
+                                              .toString()
                                         },
                                       ),
                                     ),

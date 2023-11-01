@@ -210,7 +210,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
   bool selectedDayPredicate(
     DateTime day,
     int index,
-    EmployeeTimetable employeeTimetable,
+    EmployeeTimetableModel employeeTimetable,
   ) {
     isSameDay(_selectedDays[index], day);
     return employeeTimetable.timetableItems.any(

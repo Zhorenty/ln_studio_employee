@@ -12,6 +12,10 @@ class CustomTableCalendar extends StatelessWidget {
     required this.focusedDay,
     this.selectedDayPredicate,
     this.onDaySelected,
+    this.padding,
+    this.borderRadius,
+    this.border,
+    this.color,
   });
 
   /// Focused day.
@@ -22,6 +26,14 @@ class CustomTableCalendar extends StatelessWidget {
 
   /// Called whenever any day gets tapped.
   final void Function(DateTime, DateTime)? onDaySelected;
+
+  final EdgeInsetsGeometry? padding;
+
+  final BorderRadiusGeometry? borderRadius;
+
+  final BoxBorder? border;
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +50,15 @@ class CustomTableCalendar extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
-        color: context.colorScheme.onBackground,
+        borderRadius: borderRadius ??
+            const BorderRadius.only(
+              bottomLeft: Radius.circular(16),
+              bottomRight: Radius.circular(16),
+            ),
+        border: border,
+        color: color ?? context.colorScheme.onBackground,
       ),
+      padding: padding,
       child: TableCalendar(
         locale: 'ru_RU',
         availableGestures:
