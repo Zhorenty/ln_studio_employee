@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/staff/staff_bloc.dart';
+import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_bloc.dart';
 
 import '/src/common/router/app_router_scope.dart';
 import '/src/common/widget/scope_widgets.dart';
@@ -34,6 +35,11 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => StaffBloc(
               repository: result.dependencies.employeeRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => TimetableBloc(
+              repository: result.dependencies.timetableRepository,
             ),
           ),
         ],

@@ -11,7 +11,6 @@ import '/src/common/utils/extensions/context_extension.dart';
 import '/src/common/widget/avatar_widget.dart';
 import '/src/common/widget/custom_app_bar.dart';
 import '/src/common/widget/pop_up_button.dart';
-import '/src/feature/initialization/widget/dependencies_scope.dart';
 import '/src/feature/salon/bloc/salon_bloc.dart';
 import '/src/feature/salon/bloc/salon_state.dart';
 import '/src/feature/salon/widget/salon_choice_screen.dart';
@@ -34,130 +33,123 @@ class _TimetableScreenState extends State<TimetableScreen> {
   final List<DateTime> _focusedDays = [];
 
   /// Timetable bloc.
-  late final TimetableBloc _timetableBloc;
 
   @override
   void initState() {
     super.initState();
-    _timetableBloc = TimetableBloc(
-      repository: DependenciesScope.of(context).timetableRepository,
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _timetableBloc,
-      child: BlocListener<SalonBLoC, SalonState>(
-        listener: (context, state) {},
-        listenWhen: (previous, current) {
-          if (previous.currentSalon?.id != current.currentSalon?.id) {
-            _timetableBloc.add(
-              TimetableEvent.fetchBySalonId(current.currentSalon!.id),
-            );
-          }
-          return false;
-        },
-        child: BlocBuilder<TimetableBloc, TimetableState>(
-          builder: (context, state) => CustomScrollView(
-            slivers: [
-              CustomSliverAppBar(
-                title: context.stringOf().workSchedule,
-                actions: [
-                  IconButton(
-                    // TODO: Implement notifications screen.
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.notifications,
-                      color: context.colorScheme.secondary,
-                    ),
-                  ),
-                ],
-                bottomChild: BlocBuilder<SalonBLoC, SalonState>(
-                  builder: (context, state) => PopupButton(
-                    label: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: state.currentSalon != null
-                          ? Text(state.currentSalon!.name)
-                          : const SizedBox(height: 26),
-                    ),
-                    child: SalonChoiceScreen(currentSalon: state.currentSalon),
+    return BlocListener<SalonBLoC, SalonState>(
+      listener: (context, state) {},
+      listenWhen: (previous, current) {
+        if (previous.currentSalon?.id != current.currentSalon?.id) {
+          context.read<TimetableBloc>().add(
+                TimetableEvent.fetchBySalonId(current.currentSalon!.id),
+              );
+        }
+        return false;
+      },
+      child: BlocBuilder<TimetableBloc, TimetableState>(
+        builder: (context, state) => CustomScrollView(
+          slivers: [
+            CustomSliverAppBar(
+              title: context.stringOf().workSchedule,
+              actions: [
+                IconButton(
+                  // TODO: Implement notifications screen.
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.notifications,
+                    color: context.colorScheme.secondary,
                   ),
                 ),
-              ),
-              CupertinoSliverRefreshControl(onRefresh: _refresh),
-              SliverAnimatedOpacity(
-                opacity: state.hasTimetables ? 1 : 0,
-                duration: const Duration(milliseconds: 400),
-                sliver: SliverPadding(
-                  padding: EdgeInsets.only(
-                    left: 12,
-                    right: 12,
-                    top: 12,
-                    bottom: MediaQuery.sizeOf(context).height / 8,
+              ],
+              bottomChild: BlocBuilder<SalonBLoC, SalonState>(
+                builder: (context, state) => PopupButton(
+                  label: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: state.currentSalon != null
+                        ? Text(state.currentSalon!.name)
+                        : const SizedBox(height: 26),
                   ),
-                  sliver: SliverList.separated(
-                    itemCount: state.employeeTimetable.length,
-                    itemBuilder: (context, index) {
-                      final employeeTimetable = state.employeeTimetable[index];
-                      final employee = employeeTimetable;
+                  child: SalonChoiceScreen(currentSalon: state.currentSalon),
+                ),
+              ),
+            ),
+            CupertinoSliverRefreshControl(onRefresh: _refresh),
+            SliverAnimatedOpacity(
+              opacity: state.hasTimetables ? 1 : 0,
+              duration: const Duration(milliseconds: 400),
+              sliver: SliverPadding(
+                padding: EdgeInsets.only(
+                  left: 12,
+                  right: 12,
+                  top: 12,
+                  bottom: MediaQuery.sizeOf(context).height / 8,
+                ),
+                sliver: SliverList.separated(
+                  itemCount: state.employeeTimetable.length,
+                  itemBuilder: (context, index) {
+                    final employeeTimetable = state.employeeTimetable[index];
+                    final employee = employeeTimetable;
 
-                      ///
-                      addFDaysIfNecessary(index);
+                    ///
+                    addFDaysIfNecessary(index);
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            clipBehavior: Clip.hardEdge,
-                            padding: const EdgeInsets.only(
-                              left: 12,
-                              top: 8,
-                              right: 12,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          clipBehavior: Clip.hardEdge,
+                          padding: const EdgeInsets.only(
+                            left: 12,
+                            top: 8,
+                            right: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16),
                             ),
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16),
-                              ),
-                              color: context.colorScheme.onBackground,
-                            ),
-                            child: Row(
-                              children: [
-                                AvatarWidget(title: employee.fullName),
-                                const SizedBox(width: 16),
-                                Flexible(
-                                  child: Text(
-                                    employee.fullName,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: context.textTheme.headlineSmall!
-                                        .copyWith(
-                                      fontFamily: FontFamily.geologica,
-                                    ),
+                            color: context.colorScheme.onBackground,
+                          ),
+                          child: Row(
+                            children: [
+                              AvatarWidget(title: employee.fullName),
+                              const SizedBox(width: 16),
+                              Flexible(
+                                child: Text(
+                                  employee.fullName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style:
+                                      context.textTheme.headlineSmall!.copyWith(
+                                    fontFamily: FontFamily.geologica,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          CustomTableCalendar(
-                            focusedDay: _focusedDays[index],
-                            selectedDayPredicate: (day) =>
-                                selectedDayPredicate(day, index, employee),
-                            onDaySelected: (sel, foc) =>
-                                onDaySelected(sel, foc, index, employee.id),
-                          ),
-                        ],
-                      );
-                    },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 16),
-                  ),
+                        ),
+                        CustomTableCalendar(
+                          focusedDay: _focusedDays[index],
+                          selectedDayPredicate: (day) =>
+                              selectedDayPredicate(day, index, employee),
+                          onDaySelected: (sel, foc) =>
+                              onDaySelected(sel, foc, index, employee.id),
+                        ),
+                      ],
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 16),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -165,12 +157,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
   /// Refresh timetables.
   Future<void> _refresh() async {
-    final block = _timetableBloc.stream.first;
+    final block = context.read<TimetableBloc>().stream.first;
     final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {
-      _timetableBloc.add(
-        TimetableEvent.fetchBySalonId(salonBloc.state.currentSalon!.id),
-      );
+      context.read<TimetableBloc>().add(
+            TimetableEvent.fetchBySalonId(salonBloc.state.currentSalon!.id),
+          );
     }
     await block;
   }
@@ -197,13 +189,13 @@ class _TimetableScreenState extends State<TimetableScreen> {
       _focusedDays[index] = focusedDay;
     });
 
-    _timetableBloc.add(
-      TimetableEvent.fillTimetable(
-        employeeId: employeeId,
-        salonId: BlocProvider.of<SalonBLoC>(context).state.currentSalon!.id,
-        dateAt: selectedDay,
-      ),
-    );
+    context.read<TimetableBloc>().add(
+          TimetableEvent.fillTimetable(
+            employeeId: employeeId,
+            salonId: context.read<SalonBLoC>().state.currentSalon!.id,
+            dateAt: selectedDay,
+          ),
+        );
   }
 
   ///

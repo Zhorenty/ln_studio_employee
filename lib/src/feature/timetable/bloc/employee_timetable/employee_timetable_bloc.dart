@@ -15,6 +15,7 @@ class EmployeeTimetableBloc
     on<EmployeeTimetableEvent>(
       (event, emit) => event.map(
         fetchTimetable: (e) => _fetchTimetable(e, emit),
+        fillTimetable: (event) => _fillTimetable(event, emit),
       ),
     );
   }
@@ -34,6 +35,33 @@ class EmployeeTimetableBloc
       emit(EmployeeTimetableState.successful(
         timetables: timetables,
       ));
+    } on Object catch (e) {
+      emit(EmployeeTimetableState.idle(
+        timetables: state.timetables,
+        error: ErrorUtil.formatError(e),
+      ));
+      rethrow;
+    }
+  }
+
+  /// Fill timetable items from repository.
+  Future<void> _fillTimetable(
+    EmployeeTimetableEvent$FillTimetables event,
+    Emitter<EmployeeTimetableState> emit,
+  ) async {
+    try {
+      await repository.fillTimetable(
+        employeeId: event.employeeId,
+        salonId: event.salonId,
+        dateAt: event.dateAt,
+      );
+      final timetables = await repository.fetchEmployeeTimetables(
+        event.salonId,
+        event.employeeId,
+      );
+      emit(
+        EmployeeTimetableState.successful(timetables: timetables),
+      );
     } on Object catch (e) {
       emit(EmployeeTimetableState.idle(
         timetables: state.timetables,
