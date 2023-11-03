@@ -4,8 +4,8 @@ import 'timetable_item.dart';
 
 /// Timetable for an employee.
 @immutable
-final class EmployeeTimetable {
-  const EmployeeTimetable({
+final class EmployeeTimetableModel {
+  const EmployeeTimetableModel({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -30,9 +30,9 @@ final class EmployeeTimetable {
   ///
   String get fullName => '$firstName $lastName';
 
-  /// Returns [EmployeeTimetable] from [json].
-  factory EmployeeTimetable.fromJson(Map<String, Object?> json) =>
-      EmployeeTimetable(
+  /// Returns [EmployeeTimetableModel] from [json].
+  factory EmployeeTimetableModel.fromJson(Map<String, Object?> json) =>
+      EmployeeTimetableModel(
         id: json['id'] as int,
         firstName: json['first_name'] as String,
         lastName: json['last_name'] as String,

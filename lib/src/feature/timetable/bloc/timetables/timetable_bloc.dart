@@ -41,8 +41,9 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
     Emitter<TimetableState> emit,
   ) async {
     try {
-      final employeeTimetable =
-          await repository.getTimetablesBySalonId(event.salonId);
+      final employeeTimetable = await repository.getTimetablesBySalonId(
+        event.salonId,
+      );
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
       emit(TimetableState.idle(error: ErrorUtil.formatError(e)));

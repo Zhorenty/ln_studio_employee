@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 
+import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
 import 'components/verification_field.dart';
 import 'auth_scope.dart';
@@ -80,11 +80,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   ),
                 ),
                 onPressed: () {
-                  /*
-                  TODO: Implement resend code logic
-                  Если нет аккаунта на сервере, то показываем показываем форму
-                  регистрации (имя, номер телефона, почта)
-                  */
+                  // TODO: Implement resend code logic
                 },
               ),
             ),

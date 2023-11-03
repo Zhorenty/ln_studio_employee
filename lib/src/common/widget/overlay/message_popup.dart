@@ -59,7 +59,14 @@ class MessagePopup {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 4),
-              ModalPopupHeader(text: title),
+              if (title != null)
+                Text(
+                  title,
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    color: context.colorScheme.secondary,
+                    fontFamily: FontFamily.geologica,
+                  ),
+                ),
               const SizedBox(height: 13),
               Flexible(
                 child: ListView(
@@ -75,7 +82,10 @@ class MessagePopup {
                           child: RichText(
                             text: TextSpan(
                               children: description,
-                              style: context.textTheme.bodyLarge,
+                              style: context.textTheme.bodyLarge?.copyWith(
+                                color: context.colorScheme.secondary,
+                                fontFamily: FontFamily.geologica,
+                              ),
                             ),
                           ),
                         ),

@@ -9,7 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_employee/src/common/widget/custom_text_field.dart';
+import 'package:ln_employee/src/common/widget/overlay/message_popup.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
+import 'package:ln_employee/src/common/widget/picker_popup.dart';
 import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
 
 import '../bloc/news_bloc.dart';
@@ -74,13 +76,11 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
-                title: Text(
-                  'Редактирование новости',
-                  style: context.textTheme.titleLarge?.copyWith(
-                    fontSize: 19,
-                    fontFamily: FontFamily.geologica,
-                  ),
-                ),
+                stretch: true,
+                snap: true,
+                floating: true,
+                pinned: true,
+                expandedHeight: 200,
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
@@ -90,35 +90,100 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
                     ),
                   ),
                 ],
+                flexibleSpace: FlexibleSpaceBar(
+                  // title: Align(
+                  //   alignment: Alignment.bottomRight,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(right: 8),
+                  //     child: SizedBox(
+                  //       height: 35,
+                  //       width: 35,
+                  //       child: IconButton.filled(
+                  //         // Padding for centering icon
+                  //         padding: const EdgeInsets.only(),
+                  //         icon: Icon(
+                  //           Icons.add_rounded,
+                  //           color: context.colorScheme.onBackground,
+                  //         ),
+                  //         onPressed: () => MessagePopup.bottomSheet(
+                  //           context,
+                  //           'Выберите источник фото',
+                  //           additional: [
+                  //             PickerPopup(
+                  //               onPickCamera: () {
+                  //                 pickImage(ImageSource.camera);
+                  //                 context.pop();
+                  //               },
+                  //               onPickGallery: () {
+                  //                 pickImage(ImageSource.gallery);
+                  //                 context.pop();
+                  //               },
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  background: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: CustomNetworkImage(
+                          hasPhoto: widget.news.photo != null,
+                          imageUrl: '$kBaseUrl/${widget.news.photo ?? ''}',
+                        ),
+                      ),
+                      if (image != null)
+                        Positioned.fill(
+                          child: Image.file(
+                            image!,
+                            fit: BoxFit.cover,
+                            height: double.infinity,
+                            width: double.infinity,
+                          ),
+                        ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12, bottom: 12),
+                          child: SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: IconButton.filled(
+                              // Padding for centering icon
+                              padding: const EdgeInsets.only(),
+                              icon: Icon(
+                                Icons.add_rounded,
+                                color: context.colorScheme.onBackground,
+                              ),
+                              onPressed: () => MessagePopup.bottomSheet(
+                                context,
+                                'Выберите источник фото',
+                                additional: [
+                                  PickerPopup(
+                                    onPickCamera: () {
+                                      pickImage(ImageSource.camera);
+                                      context.pop();
+                                    },
+                                    onPickGallery: () {
+                                      pickImage(ImageSource.gallery);
+                                      context.pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(16),
                 sliver: SliverList.list(
                   children: [
-                    GestureDetector(
-                      onTap: () => pickImage(ImageSource.gallery),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Stack(
-                          children: [
-                            CustomNetworkImage(
-                              hasPhoto: widget.news.photo != null,
-                              imageUrl: '$kBaseUrl/${widget.news.photo ?? ''}',
-                            ),
-                            if (image != null)
-                              Positioned.fill(
-                                child: Image.file(
-                                  image!,
-                                  fit: BoxFit.cover,
-                                  height: double.infinity,
-                                  width: double.infinity,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.only(left: 4),
                       child: Text(

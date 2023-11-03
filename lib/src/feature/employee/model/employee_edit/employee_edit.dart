@@ -84,4 +84,32 @@ final class Employee$Edit {
         'is_dismiss': isDismiss,
         'user': userModel.toJson(),
       };
+
+  Employee$Edit copyWith({
+    int? id,
+    bool? isDismiss,
+    String? address,
+    int? jobId,
+    int? salonId,
+    String? description,
+    DateTime? dateOfEmployment,
+    String? contractNumber,
+    double? percentageOfSales,
+    int? stars,
+    UserModel$Edit? userModel,
+  }) {
+    return Employee$Edit(
+      id: id ?? this.id,
+      isDismiss: isDismiss ?? this.isDismiss,
+      address: address ?? this.address,
+      jobId: jobId ?? this.jobId,
+      salonId: salonId ?? this.salonId,
+      description: description ?? this.description,
+      dateOfEmployment: dateOfEmployment ?? this.dateOfEmployment,
+      contractNumber: contractNumber ?? this.contractNumber,
+      percentageOfSales: percentageOfSales ?? this.percentageOfSales,
+      stars: stars ?? this.stars,
+      userModel: userModel ?? this.userModel,
+    );
+  }
 }

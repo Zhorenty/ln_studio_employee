@@ -1,16 +1,23 @@
 import 'package:dio/dio.dart';
 
+import '../model/timetable_item.dart';
 import '/src/common/utils/extensions/date_time_extension.dart';
 import '/src/feature/timetable/model/employee_timetable.dart';
 
 /// Datasource for timetables data.
 abstract interface class TimetableDatasource {
   /// Fetch timetables.
-  Future<List<EmployeeTimetable>> fetchTimetables();
+  Future<List<EmployeeTimetableModel>> fetchTimetables();
 
   /// Fetch timetables.
-  Future<List<EmployeeTimetable>> fetchTimetablesBySalonId(
+  Future<List<EmployeeTimetableModel>> fetchTimetablesBySalonId(
     int salonId,
+  );
+
+  /// Fetch timetables.
+  Future<List<TimetableItem>> fetchEmployeeTimetables(
+    final int salonId,
+    final int employeeId,
   );
 
   /// Fill timetable items.
@@ -29,24 +36,42 @@ class TimetableDatasourceImpl implements TimetableDatasource {
   final Dio _restClient;
 
   @override
-  Future<List<EmployeeTimetable>> fetchTimetables() async {
+  Future<List<EmployeeTimetableModel>> fetchTimetables() async {
     final response = await _restClient.get('/api/v1/timetable');
 
     final timetables = List.from((response.data['data']))
-        .map((e) => EmployeeTimetable.fromJson(e))
+        .map((e) => EmployeeTimetableModel.fromJson(e))
         .toList();
 
     return timetables;
   }
 
   @override
-  Future<List<EmployeeTimetable>> fetchTimetablesBySalonId(int salonId) async {
+  Future<List<TimetableItem>> fetchEmployeeTimetables(
+    int salonId,
+    int employeeId,
+  ) async {
+    final response = await _restClient.get(
+      '/api/v1/employee/$employeeId/timetables',
+      queryParameters: {
+        'salon_id': salonId,
+      },
+    );
+
+    return List.from((response.data['data']))
+        .map((e) => TimetableItem.fromJson(e))
+        .toList();
+  }
+
+  @override
+  Future<List<EmployeeTimetableModel>> fetchTimetablesBySalonId(
+      int salonId) async {
     final response = await _restClient.get(
       '/api/v1/salon/$salonId/timetables',
     );
 
     final timetables = List.from((response.data['data']))
-        .map((e) => EmployeeTimetable.fromJson(e))
+        .map((e) => EmployeeTimetableModel.fromJson(e))
         .toList();
 
     return timetables;
