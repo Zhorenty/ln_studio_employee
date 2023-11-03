@@ -160,6 +160,7 @@ class _BookingList extends StatelessWidget {
 
             return visible
                 ? HistoryItemCard(
+                    phone: e.client.user.phone,
                     title: e.client.user.fullName,
                     subtitle: e.service.name,
                     dateAt: e.dateAt.defaultFormat(),

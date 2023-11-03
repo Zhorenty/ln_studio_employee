@@ -4,7 +4,7 @@ import '/src/common/utils/mixin/scope_mixin.dart';
 import '/src/feature/initialization/model/dependencies.dart';
 
 /// Container for all the dependencies
-abstract class StoresContainer {
+abstract interface class StoresContainer {
   Dependencies get dependencies;
 }
 
