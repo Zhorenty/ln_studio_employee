@@ -75,6 +75,8 @@ final class Employee {
   /// Salon associated with the employee.
   final Salon salon;
 
+  String get fullName => '${userModel.firstName} ${userModel.lastName}';
+
   /// Returns [Employee] from [json].
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(

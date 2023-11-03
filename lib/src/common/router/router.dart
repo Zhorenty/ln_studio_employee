@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ln_employee/src/feature/auth/widget/auth_screen.dart';
 import 'package:ln_employee/src/feature/auth/widget/verification_screen.dart';
+import 'package:ln_employee/src/feature/book_history/widget/booking_history_screen.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
 import 'package:ln_employee/src/feature/employee/widget/employee_screen.dart';
@@ -102,6 +103,14 @@ final router = GoRouter(
                                 int.parse(state.pathParameters['id'] as String),
                             salonId: int.parse(
                                 state.pathParameters['salonId'] as String),
+                          ),
+                        ),
+                        GoRoute(
+                          parentNavigatorKey: _shellKey,
+                          name: 'employee_clients',
+                          path: 'clients',
+                          builder: (context, state) => BookingHistoryScreen(
+                            id: int.parse(state.pathParameters['id'] as String),
                           ),
                         ),
                       ],

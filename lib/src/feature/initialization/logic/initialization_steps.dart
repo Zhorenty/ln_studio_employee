@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_data_provider.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
 import 'package:ln_employee/src/feature/auth/logic/oauth_interceptor.dart';
+import 'package:ln_employee/src/feature/book_history/data/booking_history_data_provider.dart';
+import 'package:ln_employee/src/feature/book_history/data/booking_history_repository.dart';
 import 'package:ln_employee/src/feature/news/data/news_data_provider.dart';
 import 'package:ln_employee/src/feature/news/data/news_repository.dart';
 
@@ -89,6 +91,15 @@ mixin InitializationSteps {
         specializationDataProvider,
       );
       progress.dependencies.specializationRepository = specializationRepository;
+    },
+    'Booking history repository': (progress) async {
+      final bookingHistoryDataProvider = BookingHistoryDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final bookingHistoryRepository = BookingHistoryRepositoryImpl(
+        bookingHistoryDataProvider,
+      );
+      progress.dependencies.bookingHistoryRepository = bookingHistoryRepository;
     },
   };
 }

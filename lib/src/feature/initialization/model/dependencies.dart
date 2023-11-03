@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:ln_employee/src/feature/auth/data/auth_repository.dart';
+import 'package:ln_employee/src/feature/book_history/data/booking_history_repository.dart';
 import 'package:ln_employee/src/feature/news/data/news_repository.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +35,9 @@ abstract interface class Dependencies {
 
   /// Salon  repository.
   abstract final SpecializationRepository specializationRepository;
+
+  /// Salon  repository.
+  abstract final BookingHistoryRepository bookingHistoryRepository;
 
   /// Freeze dependencies, so they cannot be modified.
   Dependencies freeze();
@@ -70,6 +74,9 @@ final class Dependencies$Mutable implements Dependencies {
   late SpecializationRepository specializationRepository;
 
   @override
+  late BookingHistoryRepository bookingHistoryRepository;
+
+  @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
@@ -79,6 +86,7 @@ final class Dependencies$Mutable implements Dependencies {
         employeeRepository: employeeRepository,
         profileRepository: profileRepository,
         specializationRepository: specializationRepository,
+        bookingHistoryRepository: bookingHistoryRepository,
       );
 }
 
@@ -95,6 +103,7 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.employeeRepository,
     required this.profileRepository,
     required this.specializationRepository,
+    required this.bookingHistoryRepository,
   });
 
   @override
@@ -120,6 +129,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final SpecializationRepository specializationRepository;
+
+  @override
+  final BookingHistoryRepository bookingHistoryRepository;
 
   @override
   Dependencies freeze() => this;

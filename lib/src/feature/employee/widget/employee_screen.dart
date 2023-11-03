@@ -225,8 +225,13 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                     ),
                                     FieldButton(
                                       controller: TextEditingController(),
-                                      label: 'Клиенты',
-                                      onTap: () {},
+                                      label: 'Записи',
+                                      onTap: () => context.goNamed(
+                                        'employee_clients',
+                                        pathParameters: {
+                                          'id': employee.id.toString(),
+                                        },
+                                      ),
                                     ),
                                     FieldButton(
                                       controller: TextEditingController(),
