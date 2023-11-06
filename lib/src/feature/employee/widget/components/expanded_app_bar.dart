@@ -1,10 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:ln_employee/src/common/widget/picker_popup.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -18,10 +14,14 @@ class ExpandedAppBar extends StatefulWidget {
     required this.title,
     required this.leading,
     required this.trailing,
+    this.avatar,
     this.label,
+    this.additional = const <Widget>[],
     this.additionalTrailing = const <Widget>[],
     this.onExit,
   });
+
+  final File? avatar;
 
   ///
   final String? label;
@@ -38,6 +38,8 @@ class ExpandedAppBar extends StatefulWidget {
   /// Additional trailing widgets.
   final List<Widget> additionalTrailing;
 
+  final List<Widget> additional;
+
   /// Callback, called when icon is pressed.
   final void Function()? onExit;
 
@@ -46,8 +48,6 @@ class ExpandedAppBar extends StatefulWidget {
 }
 
 class _ExpandedAppBarState extends State<ExpandedAppBar> {
-  File? image;
-
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -59,18 +59,13 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
         children: [
           AvatarWidget(
             radius: 60,
-            avatar: image,
+            avatar: widget.avatar,
             title: widget.label,
             isLabelVisible: true,
             onBadgeTap: () => MessagePopup.bottomSheet(
               context,
               'Выберите источник фото',
-              additional: [
-                PickerPopup(
-                  onPickCamera: () => pickImage(ImageSource.camera),
-                  onPickGallery: () => pickImage(ImageSource.gallery),
-                ),
-              ],
+              additional: widget.additional,
             ),
           ),
           const SizedBox(height: 8),
@@ -144,17 +139,5 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
         ),
       ),
     );
-  }
-
-  Future pickImage(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
-
-      final imageTemporary = File(image.path);
-      setState(() => this.image = imageTemporary);
-    } on PlatformException catch (e) {
-      log('Failed to pick image: $e');
-    }
   }
 }

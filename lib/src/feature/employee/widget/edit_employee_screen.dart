@@ -28,7 +28,9 @@ import 'components/date_picker_field.dart';
 /// {@endtemplate}
 class EditEmployeeScreen extends StatefulWidget {
   /// {@macro employee_edit_screen}
-  const EditEmployeeScreen({super.key});
+  const EditEmployeeScreen({super.key, required this.id});
+
+  final int id;
 
   @override
   State<EditEmployeeScreen> createState() => _EditEmployeeScreenState();
