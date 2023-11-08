@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -16,6 +17,7 @@ class AvatarWidget extends StatelessWidget {
   const AvatarWidget({
     super.key,
     this.avatar,
+    this.imageUrl,
     this.radius,
     this.maxRadius,
     this.minRadius,
@@ -29,6 +31,9 @@ class AvatarWidget extends StatelessWidget {
 
   ///
   final File? avatar;
+
+  ///
+  final String? imageUrl;
 
   /// Size of the avatar, expressed as the radius (half the diameter).
   ///
@@ -167,15 +172,20 @@ class AvatarWidget extends StatelessWidget {
                         ),
                   ),
                 ),
-                if (avatar != null)
+                if (avatar != null || imageUrl != null)
                   Positioned.fill(
                     child: ClipOval(
-                      child: Image.file(
-                        avatar!,
-                        fit: BoxFit.cover,
-                        height: double.infinity,
-                        width: double.infinity,
-                      ),
+                      child: imageUrl != null
+                          ? CachedNetworkImage(
+                              imageUrl: imageUrl!,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.file(
+                              avatar!,
+                              fit: BoxFit.cover,
+                              height: double.infinity,
+                              width: double.infinity,
+                            ),
                     ),
                   ),
               ],

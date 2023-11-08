@@ -8,6 +8,8 @@ import 'package:ln_employee/src/feature/book_history/data/booking_history_data_p
 import 'package:ln_employee/src/feature/book_history/data/booking_history_repository.dart';
 import 'package:ln_employee/src/feature/news/data/news_data_provider.dart';
 import 'package:ln_employee/src/feature/news/data/news_repository.dart';
+import 'package:ln_employee/src/feature/portfolio/data/portfolio_data_provider.dart';
+import 'package:ln_employee/src/feature/portfolio/data/portfolio_repository.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -100,6 +102,15 @@ mixin InitializationSteps {
         bookingHistoryDataProvider,
       );
       progress.dependencies.bookingHistoryRepository = bookingHistoryRepository;
+    },
+    'Portfolio repository': (progress) async {
+      final portfolioDataProvider = PortfolioDataProviderImpl(
+        restClient: progress.dependencies.restClient,
+      );
+      final portfolioRepository = PortfolioRepositoryImpl(
+        portfolioDataProvider,
+      );
+      progress.dependencies.portfolioRepository = portfolioRepository;
     },
   };
 }

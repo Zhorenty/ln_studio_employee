@@ -91,8 +91,9 @@ final router = GoRouter(
                           parentNavigatorKey: _shellKey,
                           name: 'employee_edit',
                           path: 'edit',
-                          builder: (context, state) =>
-                              const EditEmployeeScreen(),
+                          builder: (context, state) => EditEmployeeScreen(
+                            id: int.parse(state.pathParameters['id'] as String),
+                          ),
                         ),
                         GoRoute(
                           parentNavigatorKey: _shellKey,

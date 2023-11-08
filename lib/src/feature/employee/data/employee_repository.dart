@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '/src/feature/employee/data/employee_data_provider.dart';
 import '/src/feature/employee/model/employee/employee.dart';
 import '/src/feature/employee/model/employee_create/employee_create.dart';
@@ -19,6 +21,9 @@ abstract interface class EmployeeRepository {
 
   /// Edit employee by id.
   Future<Employee> edit({required Employee$Edit employee});
+
+  /// Dismiss employee by id.
+  Future<void> uploadAvatar({required int id, required File avatar});
 
   /// Dismiss employee by id.
   Future<void> dismiss({required int id});
@@ -51,6 +56,10 @@ final class EmployeeRepositoryImpl implements EmployeeRepository {
   @override
   Future<Employee> edit({required Employee$Edit employee}) =>
       _dataSource.editEmployee(employee);
+
+  @override
+  Future<void> uploadAvatar({required int id, required File avatar}) =>
+      _dataSource.uploadAvatar(id, avatar);
 
   @override
   Future<void> dismiss({required int id}) => _dataSource.dismissEmployee(id);

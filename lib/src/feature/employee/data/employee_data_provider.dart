@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
@@ -21,6 +23,8 @@ abstract interface class EmployeeDataProvider {
 
   /// Edit employee.
   Future<Employee> editEmployee(Employee$Edit employee);
+
+  Future<void> uploadAvatar(int id, File avatar);
 
   /// Dismiss employee by id.
   Future<void> dismissEmployee(int id);
@@ -109,6 +113,19 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
       },
     );
     return Employee.fromJson(result.data['data']);
+  }
+
+  @override
+  Future<void> uploadAvatar(int id, File avatar) async {
+    String fileName = avatar.path.split('/').last;
+
+    FormData formData = FormData.fromMap(
+      {
+        'avatar': await MultipartFile.fromFile(avatar.path, filename: fileName),
+      },
+    );
+
+    await restClient.patch('/api/v1/employee/$id/avatar', data: formData);
   }
 
   @override
