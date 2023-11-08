@@ -153,11 +153,14 @@ class CustomNetworkImage extends StatelessWidget {
     super.key,
     required this.imageUrl,
     this.hasPhoto = false,
+    this.placeholder,
   });
 
   final String imageUrl;
 
   final bool hasPhoto;
+
+  final Widget Function(BuildContext, String)? placeholder;
 
   @override
   Widget build(BuildContext context) {
@@ -165,12 +168,13 @@ class CustomNetworkImage extends StatelessWidget {
         ? CachedNetworkImage(
             imageUrl: imageUrl,
             fit: BoxFit.cover,
-            placeholder: (_, __) => ColoredBox(
-              color: context.colorScheme.onBackground,
-              child: Assets.images.logoWhite.image(
-                fit: BoxFit.contain,
-              ),
-            ),
+            placeholder: placeholder ??
+                (_, __) => ColoredBox(
+                      color: context.colorScheme.onBackground,
+                      child: Assets.images.logoWhite.image(
+                        fit: BoxFit.contain,
+                      ),
+                    ),
           )
         : Assets.images.logoWhite.image(
             fit: BoxFit.cover,

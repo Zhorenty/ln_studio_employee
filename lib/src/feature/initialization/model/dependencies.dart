@@ -5,6 +5,7 @@ import 'package:ln_employee/src/feature/news/data/news_repository.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../portfolio/data/portfolio_repository.dart';
 import '/src/feature/employee/data/employee_repository.dart';
 import '/src/feature/timetable/data/timetable_repository.dart';
 import '/src/feature/salon/data/salon_repository.dart';
@@ -30,14 +31,17 @@ abstract interface class Dependencies {
   /// Employee  repository.
   abstract final EmployeeRepository employeeRepository;
 
-  /// Employee  repository.
+  ///
   abstract final NewsRepository profileRepository;
 
   /// Salon  repository.
   abstract final SpecializationRepository specializationRepository;
 
-  /// Salon  repository.
+  ///
   abstract final BookingHistoryRepository bookingHistoryRepository;
+
+  ///
+  abstract final PortfolioRepository portfolioRepository;
 
   /// Freeze dependencies, so they cannot be modified.
   Dependencies freeze();
@@ -77,6 +81,9 @@ final class Dependencies$Mutable implements Dependencies {
   late BookingHistoryRepository bookingHistoryRepository;
 
   @override
+  late PortfolioRepository portfolioRepository;
+
+  @override
   Dependencies freeze() => _Dependencies$Immutable(
         sharedPreferences: sharedPreferences,
         restClient: restClient,
@@ -87,6 +94,7 @@ final class Dependencies$Mutable implements Dependencies {
         profileRepository: profileRepository,
         specializationRepository: specializationRepository,
         bookingHistoryRepository: bookingHistoryRepository,
+        portfolioRepository: portfolioRepository,
       );
 }
 
@@ -104,6 +112,7 @@ final class _Dependencies$Immutable implements Dependencies {
     required this.profileRepository,
     required this.specializationRepository,
     required this.bookingHistoryRepository,
+    required this.portfolioRepository,
   });
 
   @override
@@ -132,6 +141,9 @@ final class _Dependencies$Immutable implements Dependencies {
 
   @override
   final BookingHistoryRepository bookingHistoryRepository;
+
+  @override
+  final PortfolioRepository portfolioRepository;
 
   @override
   Dependencies freeze() => this;

@@ -14,6 +14,7 @@ class ExpandedAppBar extends StatefulWidget {
     required this.title,
     required this.leading,
     required this.trailing,
+    this.imageUrl,
     this.avatar,
     this.label,
     this.additional = const <Widget>[],
@@ -22,6 +23,8 @@ class ExpandedAppBar extends StatefulWidget {
   });
 
   final File? avatar;
+
+  final String? imageUrl;
 
   ///
   final String? label;
@@ -60,6 +63,7 @@ class _ExpandedAppBarState extends State<ExpandedAppBar> {
           AvatarWidget(
             radius: 60,
             avatar: widget.avatar,
+            imageUrl: widget.imageUrl,
             title: widget.label,
             isLabelVisible: true,
             onBadgeTap: () => MessagePopup.bottomSheet(

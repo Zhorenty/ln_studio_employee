@@ -23,6 +23,8 @@ class TimetableEmployeeScreen extends StatefulWidget {
 
   ///
   final int employeeId;
+
+  ///
   final int salonId;
 
   @override

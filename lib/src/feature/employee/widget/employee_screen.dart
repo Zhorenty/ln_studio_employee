@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,11 @@ import 'package:ln_employee/src/common/assets/generated/assets.gen.dart';
 import 'package:ln_employee/src/common/widget/picker_popup.dart';
 import 'package:ln_employee/src/feature/employee/bloc/avatar/avatar_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/avatar/avatar_event.dart';
+import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
 import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
+import 'package:ln_employee/src/feature/portfolio/bloc/portfolio_bloc.dart';
+import 'package:ln_employee/src/feature/portfolio/bloc/portfolio_event.dart';
+import 'package:ln_employee/src/feature/portfolio/bloc/potfolio_state.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -46,13 +51,29 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
   int? clientsCount;
   int? workedDaysCount;
 
-  File? image;
+  File? avatar;
+  File? portfolio;
+
+  late EmployeeAvatarBloc avatarBloc;
+  late PortfolioBloc portfolioBloc;
 
   @override
-  Widget build(BuildContext context) => BlocProvider(
-        create: (context) => EmployeeAvatarBloc(
-          repository: DependenciesScope.of(context).employeeRepository,
-        ),
+  void initState() {
+    super.initState();
+    avatarBloc = EmployeeAvatarBloc(
+      repository: DependenciesScope.of(context).employeeRepository,
+    );
+    portfolioBloc = PortfolioBloc(
+        repository: DependenciesScope.of(context).portfolioRepository)
+      ..add(PortfolioEvent.fetch(id: widget.id));
+  }
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: avatarBloc),
+          BlocProvider.value(value: portfolioBloc),
+        ],
         child: BlocBuilder<EmployeeBloc, EmployeeState>(
           builder: (context, state) => Scaffold(
             body: AnimatedOpacity(
@@ -74,15 +95,30 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                         return CustomScrollView(
                           slivers: [
                             ExpandedAppBar(
-                              avatar: image,
+                              imageUrl: state.employee?.userModel.photo != null
+                                  ? '$kBaseUrl/${state.employee?.userModel.photo}'
+                                  : null,
+                              avatar: avatar,
                               additional: [
                                 PickerPopup(
-                                  onPickCamera: () => pickImage(
+                                  onPickCamera: () => pickAvatar(
                                     ImageSource.camera,
-                                  )..then((_) => loadImage),
-                                  onPickGallery: () => pickImage(
+                                  )..then((_) =>
+                                      context.read<EmployeeAvatarBloc>().add(
+                                            EmployeeAvatarEvent.uploadAvatar(
+                                              id: widget.id,
+                                              file: avatar!,
+                                            ),
+                                          )),
+                                  onPickGallery: () => pickAvatar(
                                     ImageSource.gallery,
-                                  )..then((_) => loadImage),
+                                  )..then((_) =>
+                                      context.read<EmployeeAvatarBloc>().add(
+                                            EmployeeAvatarEvent.uploadAvatar(
+                                              id: widget.id,
+                                              file: avatar!,
+                                            ),
+                                          )),
                                 ),
                               ],
                               label: user.fullName,
@@ -202,30 +238,136 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                             color: const Color(0xFF272727),
                                           ),
                                         ),
-                                        child: ListView(
-                                          scrollDirection: Axis.horizontal,
-                                          children: [
-                                            PortfolioContainer(
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.add_circle_rounded,
-                                                  size: 50,
-                                                  color: context.colorScheme
-                                                      .primaryContainer,
+                                        child: BlocBuilder<PortfolioBloc,
+                                            PortfolioState>(
+                                          builder: (context, state) => ListView(
+                                            scrollDirection: Axis.horizontal,
+                                            children: [
+                                              PortfolioContainer(
+                                                onTap: () =>
+                                                    MessagePopup.bottomSheet(
+                                                  context,
+                                                  'Выберите источник фото',
+                                                  additional: [
+                                                    PickerPopup(
+                                                      onPickCamera: () =>
+                                                          pickPortfolio(
+                                                        ImageSource.camera,
+                                                      )..then((_) => context
+                                                              .read<
+                                                                  PortfolioBloc>()
+                                                              .add(
+                                                                PortfolioEvent
+                                                                    .addPhoto(
+                                                                  id: widget.id,
+                                                                  photo:
+                                                                      portfolio!,
+                                                                ),
+                                                              )),
+                                                      onPickGallery: () =>
+                                                          pickPortfolio(
+                                                        ImageSource.gallery,
+                                                      )..then((_) => context
+                                                              .read<
+                                                                  PortfolioBloc>()
+                                                              .add(
+                                                                PortfolioEvent
+                                                                    .addPhoto(
+                                                                  id: widget.id,
+                                                                  photo:
+                                                                      portfolio!,
+                                                                ),
+                                                              )),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.add_circle_rounded,
+                                                    size: 50,
+                                                    color: context.colorScheme
+                                                        .primaryContainer,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            PortfolioContainer(
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                child: Assets.images.logoBlack
-                                                    .image(fit: BoxFit.cover),
-                                              ),
-                                            ),
-                                            const PortfolioContainer(),
-                                            const PortfolioContainer(),
-                                          ],
+                                              ...state.portfolio.map(
+                                                (e) => PortfolioContainer(
+                                                    onLongPress:
+                                                        () => MessagePopup
+                                                                .bottomSheet(
+                                                              context,
+                                                              'Действия с портфолио',
+                                                              additional: [
+                                                                ElevatedButton(
+                                                                  style: ElevatedButton
+                                                                      .styleFrom(
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              12),
+                                                                    ),
+                                                                    fixedSize: Size(
+                                                                        MediaQuery.sizeOf(context).width -
+                                                                            75,
+                                                                        35),
+                                                                    backgroundColor: context
+                                                                        .colorScheme
+                                                                        .primary,
+                                                                  ),
+                                                                  onPressed:
+                                                                      () {
+                                                                    context
+                                                                        .read<
+                                                                            PortfolioBloc>()
+                                                                        .add(
+                                                                          PortfolioEvent.delete(
+                                                                              id: e.id),
+                                                                        );
+                                                                    context
+                                                                        .pop();
+                                                                  },
+                                                                  child: Text(
+                                                                    'Удалить портфолио',
+                                                                    style: context
+                                                                        .textTheme
+                                                                        .bodyLarge
+                                                                        ?.copyWith(
+                                                                      fontFamily:
+                                                                          FontFamily
+                                                                              .geologica,
+                                                                      color: context
+                                                                          .colorScheme
+                                                                          .onBackground,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            '$kBaseUrl/${e.photo}',
+                                                        fit: BoxFit.cover,
+                                                        placeholder: (_, __) =>
+                                                            ColoredBox(
+                                                          color: context
+                                                              .colorScheme
+                                                              .onBackground,
+                                                          child: Assets
+                                                              .images.logoWhite
+                                                              .image(
+                                                            fit: BoxFit.contain,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(height: 16),
@@ -290,24 +432,25 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
         ),
       );
 
-  void loadImage() {
-    return image != null
-        ? context.read<EmployeeAvatarBloc>().add(
-              EmployeeAvatarEvent.uploadAvatar(
-                id: widget.id,
-                file: image!,
-              ),
-            )
-        : null;
+  Future pickAvatar(ImageSource source) async {
+    try {
+      final avatar = await ImagePicker().pickImage(source: source);
+      if (avatar == null) return;
+
+      final imageTemporary = File(avatar.path);
+      setState(() => this.avatar = imageTemporary);
+    } on PlatformException catch (e) {
+      log('Failed to pick image: $e');
+    }
   }
 
-  Future pickImage(ImageSource source) async {
+  Future pickPortfolio(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
+      final portfolio = await ImagePicker().pickImage(source: source);
+      if (portfolio == null) return;
 
-      final imageTemporary = File(image.path);
-      setState(() => this.image = imageTemporary);
+      final imageTemporary = File(portfolio.path);
+      setState(() => this.portfolio = imageTemporary);
     } on PlatformException catch (e) {
       log('Failed to pick image: $e');
     }
@@ -341,24 +484,38 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
 
 ///
 class PortfolioContainer extends StatelessWidget {
-  const PortfolioContainer({super.key, this.child});
+  const PortfolioContainer({
+    super.key,
+    this.child,
+    this.onTap,
+    this.onLongPress,
+  });
 
   ///
   final Widget? child;
 
+  ///
+  final void Function()? onTap;
+
+  final void Function()? onLongPress;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 95,
-      margin: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: context.colorScheme.onBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF272727),
+    return GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: Container(
+        width: 95,
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: context.colorScheme.onBackground,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: const Color(0xFF272727),
+          ),
         ),
+        child: child,
       ),
-      child: child,
     );
   }
 }

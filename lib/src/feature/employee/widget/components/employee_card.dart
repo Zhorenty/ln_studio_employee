@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -41,7 +42,11 @@ class EmployeeCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            AvatarWidget(radius: 40, title: user.fullName),
+            AvatarWidget(
+              radius: 40,
+              title: user.fullName,
+              imageUrl: user.photo != null ? '$kBaseUrl/${user.photo}' : null,
+            ),
             const SizedBox(width: 10),
             Flexible(
               child: Column(
