@@ -251,33 +251,15 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                                   additional: [
                                                     PickerPopup(
                                                       onPickCamera: () =>
-                                                          pickPortfolio(
+                                                          onPick(
+                                                        context,
                                                         ImageSource.camera,
-                                                      )..then((_) => context
-                                                              .read<
-                                                                  PortfolioBloc>()
-                                                              .add(
-                                                                PortfolioEvent
-                                                                    .addPhoto(
-                                                                  id: widget.id,
-                                                                  photo:
-                                                                      portfolio!,
-                                                                ),
-                                                              )),
+                                                      ),
                                                       onPickGallery: () =>
-                                                          pickPortfolio(
+                                                          onPick(
+                                                        context,
                                                         ImageSource.gallery,
-                                                      )..then((_) => context
-                                                              .read<
-                                                                  PortfolioBloc>()
-                                                              .add(
-                                                                PortfolioEvent
-                                                                    .addPhoto(
-                                                                  id: widget.id,
-                                                                  photo:
-                                                                      portfolio!,
-                                                                ),
-                                                              )),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -292,58 +274,11 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                               ),
                                               ...state.portfolio.map(
                                                 (e) => PortfolioContainer(
-                                                    onLongPress:
-                                                        () => MessagePopup
-                                                                .bottomSheet(
-                                                              context,
-                                                              'Действия с портфолио',
-                                                              additional: [
-                                                                ElevatedButton(
-                                                                  style: ElevatedButton
-                                                                      .styleFrom(
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              12),
-                                                                    ),
-                                                                    fixedSize: Size(
-                                                                        MediaQuery.sizeOf(context).width -
-                                                                            75,
-                                                                        35),
-                                                                    backgroundColor: context
-                                                                        .colorScheme
-                                                                        .primary,
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    context
-                                                                        .read<
-                                                                            PortfolioBloc>()
-                                                                        .add(
-                                                                          PortfolioEvent.delete(
-                                                                              id: e.id),
-                                                                        );
-                                                                    context
-                                                                        .pop();
-                                                                  },
-                                                                  child: Text(
-                                                                    'Удалить портфолио',
-                                                                    style: context
-                                                                        .textTheme
-                                                                        .bodyLarge
-                                                                        ?.copyWith(
-                                                                      fontFamily:
-                                                                          FontFamily
-                                                                              .geologica,
-                                                                      color: context
-                                                                          .colorScheme
-                                                                          .onBackground,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
+                                                    onLongPress: () =>
+                                                        onLongPress(
+                                                          context,
+                                                          e.id,
+                                                        ),
                                                     child: ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -430,6 +365,45 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
             ),
           ),
         ),
+      );
+
+  void onPick(BuildContext context, ImageSource source) => pickPortfolio(source)
+    ..then((_) => portfolio != null
+        ? context.read<PortfolioBloc>().add(
+              PortfolioEvent.addPhoto(
+                id: widget.id,
+                photo: portfolio!,
+              ),
+            )
+        : null);
+
+  void onLongPress(BuildContext context, int id) => MessagePopup.bottomSheet(
+        context,
+        'Действия с портфолио',
+        additional: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              fixedSize: Size(MediaQuery.sizeOf(context).width - 75, 35),
+              backgroundColor: context.colorScheme.primary,
+            ),
+            onPressed: () {
+              context.read<PortfolioBloc>().add(
+                    PortfolioEvent.delete(id: id),
+                  );
+              context.pop();
+            },
+            child: Text(
+              'Удалить портфолио',
+              style: context.textTheme.bodyLarge?.copyWith(
+                fontFamily: FontFamily.geologica,
+                color: context.colorScheme.onBackground,
+              ),
+            ),
+          ),
+        ],
       );
 
   Future pickAvatar(ImageSource source) async {
