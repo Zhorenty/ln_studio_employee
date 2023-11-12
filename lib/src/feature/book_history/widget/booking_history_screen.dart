@@ -72,22 +72,25 @@ class BookingHistoryScreen extends StatelessWidget {
             ),
           ),
           body: BlocBuilder<BookingHistoryBloc, BookingHistoryState>(
-            builder: (context, state) => TabBarView(
-              children: [
-                _BookingList(
-                  id: id,
-                  state: state,
-                  isAfter: _isAfter,
-                  isUpcoming: true,
-                ),
-                _BookingList(
-                  id: id,
-                  state: state,
-                  isAfter: _isAfter,
-                  isUpcoming: false,
-                ),
-              ],
-            ),
+            builder: (context, state) {
+              if (state.isProcessing)
+                return TabBarView(
+                  children: [
+                    _BookingList(
+                      id: id,
+                      state: state,
+                      isAfter: _isAfter,
+                      isUpcoming: true,
+                    ),
+                    _BookingList(
+                      id: id,
+                      state: state,
+                      isAfter: _isAfter,
+                      isUpcoming: false,
+                    ),
+                  ],
+                );
+            },
           ),
         ),
       ),
