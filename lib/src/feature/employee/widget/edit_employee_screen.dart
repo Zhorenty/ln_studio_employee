@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/common/widget/star_rating.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -105,7 +106,10 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<EmployeeBloc, EmployeeState>(
+      BlocConsumer<EmployeeBloc, EmployeeState>(
+        listener: (context, state) => state.hasError
+            ? CustomSnackBar.showError(context, message: state.error)
+            : null,
         builder: (context, state) {
           final employee = state.employee!;
           final user = state.employee!.userModel;

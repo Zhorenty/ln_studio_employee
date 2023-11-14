@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_bloc.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_event.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_state.dart';
@@ -51,7 +52,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
         }
         return false;
       },
-      child: BlocBuilder<TimetableBloc, TimetableState>(
+      child: BlocConsumer<TimetableBloc, TimetableState>(
+        listener: (context, state) => state.hasError
+            ? CustomSnackBar.showError(context, message: state.error)
+            : null,
         builder: (context, state) => CustomScrollView(
           slivers: [
             CustomSliverAppBar(

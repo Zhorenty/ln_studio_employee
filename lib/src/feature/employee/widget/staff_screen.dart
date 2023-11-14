@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -67,7 +68,10 @@ class _StaffScreenState extends State<StaffScreen>
           }
           return false;
         },
-        child: BlocBuilder<StaffBloc, StaffState>(
+        child: BlocConsumer<StaffBloc, StaffState>(
+          listener: (context, state) => state.hasError
+              ? CustomSnackBar.showError(context, message: state.error)
+              : null,
           builder: (context, state) {
             final staff =
                 state.staff.where((employee) => !employee.isDismiss).toList();
