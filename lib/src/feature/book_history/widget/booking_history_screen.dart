@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
+import 'package:ln_employee/src/common/widget/information_widget.dart';
 import 'package:ln_employee/src/feature/book_history/bloc/booking_history_event.dart';
+import 'package:ln_employee/src/feature/book_history/model/booking.dart';
 import 'package:ln_employee/src/feature/book_history/widget/components/history_item_card.dart';
 
 import '../bloc/booking_history_bloc.dart';
@@ -76,15 +78,11 @@ class BookingHistoryScreen extends StatelessWidget {
               children: [
                 _BookingList(
                   id: id,
-                  state: state,
-                  isAfter: _isAfter,
-                  isUpcoming: true,
+                  bookingHistory: state.upcomingEvents,
                 ),
                 _BookingList(
                   id: id,
-                  state: state,
-                  isAfter: _isAfter,
-                  isUpcoming: false,
+                  bookingHistory: state.pastEvents,
                 ),
               ],
             ),
@@ -93,54 +91,18 @@ class BookingHistoryScreen extends StatelessWidget {
       ),
     );
   }
-
-  ///
-  bool _isAfter(String dateAt, String timeblock, bool isNegative) {
-    // Разделяем значение timeblock на отдельные части
-    List<String> timeblockParts = timeblock.split(':');
-    int hours = int.parse(timeblockParts[0]);
-    int minutes = int.parse(timeblockParts[1]);
-    int seconds = int.parse(timeblockParts[2]);
-
-    // Создаем объект DateTime для dateAt и timeblock
-    DateTime dateAtDateTime = DateTime.parse(dateAt);
-    DateTime timeblockDateTime = DateTime(
-      dateAtDateTime.year,
-      dateAtDateTime.month,
-      dateAtDateTime.day,
-      hours,
-      minutes,
-      seconds,
-    );
-
-    // Сравниваем даты
-    DateTime now = DateTime.now();
-    if (isNegative
-        ? !now.isAfter(timeblockDateTime)
-        : now.isAfter(timeblockDateTime)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 }
 
 // TODO: Make function
 class _BookingList extends StatelessWidget {
   const _BookingList({
     required this.id,
-    required this.state,
-    required this.isAfter,
-    this.isUpcoming = true,
+    required this.bookingHistory,
   });
 
   final int id;
 
-  final BookingHistoryState state;
-
-  final bool Function(String, String, bool) isAfter;
-
-  final bool isUpcoming;
+  final List<BookingModel> bookingHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -149,30 +111,26 @@ class _BookingList extends StatelessWidget {
       onRefresh: () async => context.read<BookingHistoryBloc>().add(
             BookingHistoryEvent.fetchByEmployee(id: id),
           ),
-      child: ListView(
-        children: [
-          ...state.bookingHistory.reversed.map((e) {
-            final bool visible = isAfter(
-              e.dateAt.jsonFormat(),
-              e.timeblock.time,
-              isUpcoming,
-            );
-
-            return visible
-                ? HistoryItemCard(
-                    phone: e.client.user.phone,
-                    title: e.client.user.fullName,
-                    subtitle: e.service.name,
-                    dateAt: e.dateAt.defaultFormat(),
-                    timeblock: createTimeWithDuration(
-                      e.timeblock.time,
-                      e.service.duration!,
-                    ),
-                  )
-                : const SizedBox.shrink();
-          }),
-        ],
-      ),
+      child: bookingHistory.isNotEmpty
+          ? ListView.builder(
+              itemBuilder: (context, index) {
+                final item = bookingHistory[index];
+                return HistoryItemCard(
+                  phone: item.client.user.phone,
+                  title: item.client.user.fullName,
+                  subtitle: item.service.name,
+                  dateAt: item.dateAt.defaultFormat(),
+                  timeblock: createTimeWithDuration(
+                    item.timeblock.time,
+                    item.service.duration!,
+                  ),
+                );
+              },
+            )
+          : InformationWidget.empty(
+              title: 'Предстоящих записей нет',
+              description: null,
+            ),
     );
   }
 

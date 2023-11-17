@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_employee/src/feature/auth/widget/auth_screen.dart';
 import 'package:ln_employee/src/feature/auth/widget/verification_screen.dart';
 import 'package:ln_employee/src/feature/book_history/widget/booking_history_screen.dart';
@@ -54,7 +55,14 @@ final router = GoRouter(
             GoRoute(
               path: '/timetable',
               name: 'timetable',
-              builder: (context, state) => const TimetableScreen(),
+              builder: (context, state) {
+                final authScope = AuthenticationScope.of(context);
+                return authScope.isSuperuser
+                    ? const TimetableScreen()
+                    : BookingHistoryScreen(
+                        id: authScope.user?.id ?? 1,
+                      );
+              },
             ),
           ],
         ),
@@ -62,7 +70,16 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: '/staff',
-              builder: (context, state) => const StaffScreen(),
+              builder: (context, state) {
+                final authScope = AuthenticationScope.of(context);
+                return authScope.isSuperuser
+                    ? const StaffScreen()
+                    : TimetableEmployeeScreen(
+                        employeeId: authScope.user?.id ?? 1,
+                        // TODO: Заменить salonId на реальный
+                        salonId: 1,
+                      );
+              },
               routes: [
                 ShellRoute(
                   parentNavigatorKey: _parentKey,
