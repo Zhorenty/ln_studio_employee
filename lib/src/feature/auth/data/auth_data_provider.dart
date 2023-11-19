@@ -90,17 +90,20 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
   ///
   Future<void> _saveUser(User user) async {
-    // TODO: uncomment remaining variables
-    // await _sharedPreferences.setInt('auth.user.phone', user.id!);
+    await _sharedPreferences.setInt('auth.user.id', user.id!);
     await _sharedPreferences.setString('auth.user.phone', user.phone!);
-    // await _sharedPreferences.setString('auth.user.photo', user.photo!);
-    // await _sharedPreferences.setString('auth.user.first_name', user.firstName!);
-    // await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
-    // await _sharedPreferences.setString(
-    //   'auth.user.birth_date',
-    //   user.birthDate.toString(),
-    // );
-    // await _sharedPreferences.setString('auth.user.email', user.email!);
+    await _sharedPreferences.setString('auth.user.photo', user.photo!);
+    await _sharedPreferences.setString('auth.user.first_name', user.firstName!);
+    await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
+    await _sharedPreferences.setString(
+      'auth.user.birth_date',
+      user.birthDate.toString(),
+    );
+    await _sharedPreferences.setString('auth.user.email', user.email!);
+    await _sharedPreferences.setBool(
+      'auth.user.is_superuser',
+      user.isSuperuser!,
+    );
 
     _userController.add(user);
   }
@@ -272,12 +275,27 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       _tokenPairController.stream.asBroadcastStream(
     onListen: (subscription) => _tokenPairController.add(getTokenPair()),
   );
-
   @override
   User? getUser() {
+    final id = _sharedPreferences.getInt('auth.user.id');
     final phone = _sharedPreferences.getString('auth.user.phone');
+    final photo = _sharedPreferences.getString('auth.user.photo');
+    final firstName = _sharedPreferences.getString('auth.user.first_name');
+    final lastName = _sharedPreferences.getString('auth.user.last_name');
+    final birthDate = _sharedPreferences.getString('auth.user.birthDate');
+    final email = _sharedPreferences.getString('auth.user.email');
+    final isSuperuser = _sharedPreferences.getBool('auth.user.is_superuser');
 
-    return User(phone: phone);
+    return User(
+      id: id,
+      phone: phone,
+      photo: photo,
+      firstName: firstName,
+      lastName: lastName,
+      birthDate: DateTime.tryParse(birthDate ?? ''),
+      email: email,
+      isSuperuser: isSuperuser,
+    );
   }
 
   @override
