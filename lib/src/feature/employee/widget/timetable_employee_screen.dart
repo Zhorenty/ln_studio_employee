@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/employee_timetable/employee_timetable_bloc.dart';
@@ -56,7 +57,10 @@ class _TimetableEmployeeScreenState extends State<TimetableEmployeeScreen> {
 
     return BlocProvider.value(
       value: employeeTimetableBloc,
-      child: BlocBuilder<EmployeeTimetableBloc, EmployeeTimetableState>(
+      child: BlocConsumer<EmployeeTimetableBloc, EmployeeTimetableState>(
+        listener: (context, state) => state.hasError
+            ? CustomSnackBar.showError(context, message: state.error)
+            : null,
         builder: (context, state) => Scaffold(
           backgroundColor: context.colorScheme.onBackground,
           body: CustomScrollView(

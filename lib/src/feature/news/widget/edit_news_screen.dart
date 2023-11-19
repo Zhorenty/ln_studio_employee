@@ -8,11 +8,13 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/common/widget/custom_text_field.dart';
 import 'package:ln_employee/src/common/widget/overlay/message_popup.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/common/widget/picker_popup.dart';
 import 'package:ln_employee/src/feature/initialization/logic/initialization_steps.dart';
+import 'package:ln_employee/src/feature/news/bloc/news_state.dart';
 
 import '../bloc/news_bloc.dart';
 import '../bloc/news_event.dart';
@@ -69,191 +71,197 @@ class _EditNewsScreenState extends State<EditNewsScreen> {
         context.read<NewsBLoC>().add(const NewsEvent.fetchAll());
         return true;
       },
-      child: Form(
-        key: _formKey,
-        child: Scaffold(
-          backgroundColor: context.colorScheme.onBackground,
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                stretch: true,
-                snap: true,
-                floating: true,
-                pinned: true,
-                expandedHeight: 200,
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: IconButton(
-                      icon: const Icon(Icons.more_horiz_rounded),
-                      onPressed: showNewsActions,
-                    ),
-                  ),
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  // title: Align(
-                  //   alignment: Alignment.bottomRight,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(right: 8),
-                  //     child: SizedBox(
-                  //       height: 35,
-                  //       width: 35,
-                  //       child: IconButton.filled(
-                  //         // Padding for centering icon
-                  //         padding: const EdgeInsets.only(),
-                  //         icon: Icon(
-                  //           Icons.add_rounded,
-                  //           color: context.colorScheme.onBackground,
-                  //         ),
-                  //         onPressed: () => MessagePopup.bottomSheet(
-                  //           context,
-                  //           'Выберите источник фото',
-                  //           additional: [
-                  //             PickerPopup(
-                  //               onPickCamera: () {
-                  //                 pickImage(ImageSource.camera);
-                  //                 context.pop();
-                  //               },
-                  //               onPickGallery: () {
-                  //                 pickImage(ImageSource.gallery);
-                  //                 context.pop();
-                  //               },
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  background: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: CustomNetworkImage(
-                          hasPhoto: widget.news.photo != null,
-                          imageUrl: '$kBaseUrl/${widget.news.photo ?? ''}',
-                        ),
+      child: BlocListener<NewsBLoC, NewsState>(
+        listener: (context, state) => state.hasError
+            ? CustomSnackBar.showError(context, message: state.message)
+            : null,
+        child: Form(
+          key: _formKey,
+          child: Scaffold(
+            backgroundColor: context.colorScheme.onBackground,
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  stretch: true,
+                  snap: true,
+                  floating: true,
+                  pinned: true,
+                  expandedHeight: 200,
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: IconButton(
+                        icon: const Icon(Icons.more_horiz_rounded),
+                        onPressed: showNewsActions,
                       ),
-                      if (image != null)
+                    ),
+                  ],
+                  flexibleSpace: FlexibleSpaceBar(
+                    // title: Align(
+                    //   alignment: Alignment.bottomRight,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.only(right: 8),
+                    //     child: SizedBox(
+                    //       height: 35,
+                    //       width: 35,
+                    //       child: IconButton.filled(
+                    //         // Padding for centering icon
+                    //         padding: const EdgeInsets.only(),
+                    //         icon: Icon(
+                    //           Icons.add_rounded,
+                    //           color: context.colorScheme.onBackground,
+                    //         ),
+                    //         onPressed: () => MessagePopup.bottomSheet(
+                    //           context,
+                    //           'Выберите источник фото',
+                    //           additional: [
+                    //             PickerPopup(
+                    //               onPickCamera: () {
+                    //                 pickImage(ImageSource.camera);
+                    //                 context.pop();
+                    //               },
+                    //               onPickGallery: () {
+                    //                 pickImage(ImageSource.gallery);
+                    //                 context.pop();
+                    //               },
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    background: Stack(
+                      children: [
                         Positioned.fill(
-                          child: Image.file(
-                            image!,
-                            fit: BoxFit.cover,
-                            height: double.infinity,
-                            width: double.infinity,
+                          child: CustomNetworkImage(
+                            hasPhoto: widget.news.photo != null,
+                            imageUrl: '$kBaseUrl/${widget.news.photo ?? ''}',
                           ),
                         ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 12, bottom: 12),
-                          child: SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: IconButton.filled(
-                              // Padding for centering icon
-                              padding: const EdgeInsets.only(),
-                              icon: Icon(
-                                Icons.add_rounded,
-                                color: context.colorScheme.onBackground,
-                              ),
-                              onPressed: () => MessagePopup.bottomSheet(
-                                context,
-                                'Выберите источник фото',
-                                additional: [
-                                  PickerPopup(
-                                    onPickCamera: () {
-                                      pickImage(ImageSource.camera);
-                                      context.pop();
-                                    },
-                                    onPickGallery: () {
-                                      pickImage(ImageSource.gallery);
-                                      context.pop();
-                                    },
-                                  ),
-                                ],
+                        if (image != null)
+                          Positioned.fill(
+                            child: Image.file(
+                              image!,
+                              fit: BoxFit.cover,
+                              height: double.infinity,
+                              width: double.infinity,
+                            ),
+                          ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(right: 12, bottom: 12),
+                            child: SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: IconButton.filled(
+                                // Padding for centering icon
+                                padding: const EdgeInsets.only(),
+                                icon: Icon(
+                                  Icons.add_rounded,
+                                  color: context.colorScheme.onBackground,
+                                ),
+                                onPressed: () => MessagePopup.bottomSheet(
+                                  context,
+                                  'Выберите источник фото',
+                                  additional: [
+                                    PickerPopup(
+                                      onPickCamera: () {
+                                        pickImage(ImageSource.camera);
+                                        context.pop();
+                                      },
+                                      onPickGallery: () {
+                                        pickImage(ImageSource.gallery);
+                                        context.pop();
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.all(16),
+                  sliver: SliverList.list(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Text(
+                          'Название',
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                      ),
+                      CustomTextField(
+                        controller: _titleController,
+                        validator: _emptyValidator,
+                      ),
+                      const SizedBox(height: 4),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Text(
+                          'Содержание',
+                          style: context.textTheme.bodyLarge?.copyWith(
+                            fontFamily: FontFamily.geologica,
+                          ),
+                        ),
+                      ),
+                      HugeTextField(
+                        controller: _descriptionController,
+                        focusNode: _descriptionFocusNode,
+                        validator: _emptyValidator,
                       ),
                     ],
                   ),
                 ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverList.list(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Text(
-                        'Название',
-                        style: context.textTheme.bodyLarge?.copyWith(
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                    ),
-                    CustomTextField(
-                      controller: _titleController,
-                      validator: _emptyValidator,
-                    ),
-                    const SizedBox(height: 4),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Text(
-                        'Содержание',
-                        style: context.textTheme.bodyLarge?.copyWith(
-                          fontFamily: FontFamily.geologica,
-                        ),
-                      ),
-                    ),
-                    HugeTextField(
-                      controller: _descriptionController,
-                      focusNode: _descriptionFocusNode,
-                      validator: _emptyValidator,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 22),
-            child: ElevatedButton(
-              onPressed: () {
-                context.read<NewsBLoC>().add(
-                      NewsEvent.edit(
-                        news: NewsModel(
-                          id: widget.news.id,
-                          photo: widget.news.photo,
-                          title: _titleController.text,
-                          description: _descriptionController.text,
-                          isDeleted: widget.news.isDeleted,
-                        ),
-                      ),
-                    );
-                if (image != null) {
+              ],
+            ),
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 22),
+              child: ElevatedButton(
+                onPressed: () {
                   context.read<NewsBLoC>().add(
-                        NewsEvent.uploadPhoto(
-                          id: widget.news.id,
-                          photo: image!,
+                        NewsEvent.edit(
+                          news: NewsModel(
+                            id: widget.news.id,
+                            photo: widget.news.photo,
+                            title: _titleController.text,
+                            description: _descriptionController.text,
+                            isDeleted: widget.news.isDeleted,
+                          ),
                         ),
                       );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  if (image != null) {
+                    context.read<NewsBLoC>().add(
+                          NewsEvent.uploadPhoto(
+                            id: widget.news.id,
+                            photo: image!,
+                          ),
+                        );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
+                  backgroundColor: context.colorScheme.primary,
                 ),
-                fixedSize: Size(MediaQuery.sizeOf(context).width - 50, 50),
-                backgroundColor: context.colorScheme.primary,
-              ),
-              child: Text(
-                'Сохранить',
-                style: context.textTheme.bodyLarge?.copyWith(
-                  fontSize: 17.5,
-                  fontFamily: FontFamily.geologica,
-                  color: context.colorScheme.onBackground,
+                child: Text(
+                  'Сохранить',
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    fontSize: 17.5,
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.onBackground,
+                  ),
                 ),
               ),
             ),

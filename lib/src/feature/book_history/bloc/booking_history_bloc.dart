@@ -26,6 +26,7 @@ class BookingHistoryBloc
     Emitter<BookingHistoryState> emit,
   ) async {
     try {
+      emit(const BookingHistoryState.processing());
       final bookingHistory = await repository.getEmployeeBookings(event.id);
       emit(BookingHistoryState.loaded(bookingHistory: bookingHistory));
     } on Object catch (e) {

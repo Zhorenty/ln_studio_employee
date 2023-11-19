@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -49,7 +50,10 @@ class _SpecializationChoiceScreenState
   @override
   Widget build(BuildContext context) => BlocProvider(
         create: (context) => specializationBloc,
-        child: BlocBuilder<SpecializationBloc, SpecializationState>(
+        child: BlocConsumer<SpecializationBloc, SpecializationState>(
+          listener: (context, state) => state.hasError
+              ? CustomSnackBar.showError(context, message: state.error)
+              : null,
           builder: (context, state) {
             return state.hasSpecializations
                 ? Padding(
