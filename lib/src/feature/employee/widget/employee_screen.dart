@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ln_employee/src/common/assets/generated/assets.gen.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/common/widget/picker_popup.dart';
 import 'package:ln_employee/src/feature/employee/bloc/avatar/avatar_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/avatar/avatar_event.dart';
@@ -74,7 +75,10 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
           BlocProvider.value(value: avatarBloc),
           BlocProvider.value(value: portfolioBloc),
         ],
-        child: BlocBuilder<EmployeeBloc, EmployeeState>(
+        child: BlocConsumer<EmployeeBloc, EmployeeState>(
+          listener: (context, state) => state.hasError
+              ? CustomSnackBar.showError(context, message: state.error)
+              : null,
           builder: (context, state) => Scaffold(
             body: AnimatedOpacity(
               duration: const Duration(milliseconds: 300),

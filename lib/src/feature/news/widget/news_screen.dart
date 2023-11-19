@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/feature/news/bloc/news_event.dart';
 
 import '../bloc/news_bloc.dart';
@@ -24,7 +25,10 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NewsBLoC, NewsState>(
+    return BlocConsumer<NewsBLoC, NewsState>(
+      listener: (context, state) => state.hasError
+          ? CustomSnackBar.showError(context, message: state.message)
+          : null,
       builder: (context, state) => Scaffold(
         backgroundColor: context.colorScheme.onBackground,
         body: SafeArea(

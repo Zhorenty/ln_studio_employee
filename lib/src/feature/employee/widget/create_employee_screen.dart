@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -136,12 +137,17 @@ class _CreateEmployeeScreenState extends State<CreateEmployeeScreen> {
   Widget build(BuildContext context) => BlocProvider.value(
         value: employeeBloc,
         child: BlocConsumer<EmployeeBloc, EmployeeState>(
-          listener: (context, state) => state.mapOrNull(
-            successful: (_) {
-              _refresh();
-              context.pop();
-            },
-          ),
+          listener: (context, state) {
+            if (state.hasError) {
+              CustomSnackBar.showError(context, message: state.error);
+            }
+            state.mapOrNull(
+              successful: (_) {
+                _refresh();
+                context.pop();
+              },
+            );
+          },
           builder: (context, state) {
             return Column(
               mainAxisSize: MainAxisSize.min,

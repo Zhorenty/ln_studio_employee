@@ -14,6 +14,12 @@ sealed class BookingHistoryState extends _$BookingHistoryStateBase {
     String? error,
   }) = _BookingHistoryState$Idle;
 
+  /// BookingHistory is processing.
+  const factory BookingHistoryState.processing({
+    List<BookingModel> bookingHistory,
+    String? error,
+  }) = _BookingHistoryState$Processing;
+
   /// BookingHistory is loaded.
   const factory BookingHistoryState.loaded({
     required List<BookingModel> bookingHistory,
@@ -24,6 +30,14 @@ sealed class BookingHistoryState extends _$BookingHistoryStateBase {
 /// [BookingHistoryState.idle] state matcher.
 final class _BookingHistoryState$Idle extends BookingHistoryState {
   const _BookingHistoryState$Idle({
+    super.bookingHistory = const [],
+    super.error,
+  }) : super._();
+}
+
+/// [BookingHistoryState.processing] state matcher.
+final class _BookingHistoryState$Processing extends BookingHistoryState {
+  const _BookingHistoryState$Processing({
     super.bookingHistory = const [],
     super.error,
   }) : super._();
@@ -80,6 +94,12 @@ abstract base class _$BookingHistoryStateBase {
         orElse: () => false,
       );
 
+  /// Indicator whether state is already loaded.
+  bool get isProcessing => maybeMap(
+        processing: (_) => true,
+        orElse: () => false,
+      );
+
   /// Indicator whether state is already idling.
   bool get isIdling => maybeMap(
         idle: (_) => true,
@@ -89,10 +109,13 @@ abstract base class _$BookingHistoryStateBase {
   /// Map over state union.
   R map<R>({
     required PatternMatch<R, _BookingHistoryState$Idle> idle,
+    required PatternMatch<R, _BookingHistoryState$Processing> processing,
     required PatternMatch<R, _BookingHistoryState$Loaded> loaded,
   }) =>
       switch (this) {
         final _BookingHistoryState$Idle idleState => idle(idleState),
+        final _BookingHistoryState$Processing processingState =>
+          processing(processingState),
         final _BookingHistoryState$Loaded loadedState => loaded(loadedState),
         _ => throw UnsupportedError('Unsupported state: $this'),
       };
@@ -101,10 +124,12 @@ abstract base class _$BookingHistoryStateBase {
   R maybeMap<R>({
     required R Function() orElse,
     PatternMatch<R, _BookingHistoryState$Idle>? idle,
+    PatternMatch<R, _BookingHistoryState$Processing>? processing,
     PatternMatch<R, _BookingHistoryState$Loaded>? loaded,
   }) =>
       map(
         idle: idle ?? (_) => orElse(),
+        processing: processing ?? (_) => orElse(),
         loaded: loaded ?? (_) => orElse(),
       );
 

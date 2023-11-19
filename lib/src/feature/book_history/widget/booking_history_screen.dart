@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_employee/src/common/widget/information_widget.dart';
+import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
+import 'package:ln_employee/src/common/widget/shimmer.dart';
 import 'package:ln_employee/src/feature/book_history/bloc/booking_history_event.dart';
 import 'package:ln_employee/src/feature/book_history/model/booking.dart';
 import 'package:ln_employee/src/feature/book_history/widget/components/history_item_card.dart';
@@ -73,19 +75,32 @@ class BookingHistoryScreen extends StatelessWidget {
               ),
             ),
           ),
-          body: BlocBuilder<BookingHistoryBloc, BookingHistoryState>(
-            builder: (context, state) => TabBarView(
-              children: [
-                _BookingList(
-                  id: id,
-                  bookingHistory: state.upcomingEvents,
-                ),
-                _BookingList(
-                  id: id,
-                  bookingHistory: state.pastEvents,
-                ),
-              ],
-            ),
+          body: BlocConsumer<BookingHistoryBloc, BookingHistoryState>(
+            listener: (context, state) => state.hasError
+                ? CustomSnackBar.showError(context, message: state.error)
+                : null,
+            builder: (context, state) {
+              if (state.isProcessing && !state.hasBookingHistory) {
+                final size = MediaQuery.sizeOf(context);
+                return Center(
+                  child: Shimmer(
+                    size: Size(size.width - 32, size.height / 1.5),
+                  ),
+                );
+              }
+              return TabBarView(
+                children: [
+                  _BookingList(
+                    id: id,
+                    bookingHistory: state.upcomingEvents,
+                  ),
+                  _BookingList(
+                    id: id,
+                    bookingHistory: state.pastEvents,
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

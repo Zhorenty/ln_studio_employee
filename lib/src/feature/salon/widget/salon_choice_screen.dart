@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ln_employee/src/common/widget/information_widget.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
@@ -44,37 +45,44 @@ class _SalonChoiceScreenState extends State<SalonChoiceScreen> {
 
   @override
   Widget build(BuildContext context) => BlocBuilder<SalonBLoC, SalonState>(
-        builder: (context, state) => salonBloc.state.hasData
-            ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Выберите салон',
-                      style: context.textTheme.bodyLarge?.copyWith(
-                        fontFamily: FontFamily.geologica,
-                      ),
+        builder: (context, state) {
+          if (state.hasData) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Выберите салон',
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontFamily: FontFamily.geologica,
                     ),
-                    ...salonBloc.state.data!.map(
-                      (salon) => _SalonChoiceRow(
-                        salon: salon,
-                        currentSalon: widget.currentSalon,
-                        onChanged: (salon) {
-                          if (widget.onChanged == null) {
-                            salonBloc.add(SalonEvent.saveCurrent(salon!));
-                          } else {
-                            setState(() => widget.onChanged!(salon));
-                          }
-                          context.pop();
-                        },
-                      ),
+                  ),
+                  ...salonBloc.state.data!.map(
+                    (salon) => _SalonChoiceRow(
+                      salon: salon,
+                      currentSalon: widget.currentSalon,
+                      onChanged: (salon) {
+                        if (widget.onChanged == null) {
+                          salonBloc.add(SalonEvent.saveCurrent(salon!));
+                        } else {
+                          setState(() => widget.onChanged!(salon));
+                        }
+                        context.pop();
+                      },
                     ),
-                  ],
-                ),
-              )
-            : const Shimmer(),
+                  ),
+                ],
+              ),
+            );
+          } else if (state.isProcessing) {
+            return const Shimmer();
+          }
+          return InformationWidget.error(
+            reloadFunc: () => salonBloc.add(const SalonEvent.fetchAll()),
+          );
+        },
       );
 }
 
