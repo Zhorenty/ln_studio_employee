@@ -16,7 +16,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(context) {
     return Scaffold(
-      extendBody: true,
+      // extendBody: true,
       body: navigationShell,
       bottomNavigationBar: ClipRRect(
         child: BackdropFilter(

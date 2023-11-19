@@ -53,21 +53,24 @@ class CustomSnackBar {
     late OverlayEntry entry;
     Overlay.of(context).insert(
       entry = OverlayEntry(
-        builder: (context) => Positioned(
-          bottom: 25,
-          right: 16,
-          left: 16,
-          child: Material(
-            color: Colors.transparent,
-            child: _CustomSnackBarWidget(
-              icon: icon,
-              iconColor: iconColor,
-              title: title,
-              message: message,
-              removeOverlayEntry: () => entry.remove(),
+        builder: (context) {
+          final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+          return Positioned(
+            bottom: bottomInset + 16,
+            right: 16,
+            left: 16,
+            child: Material(
+              color: Colors.transparent,
+              child: _CustomSnackBarWidget(
+                icon: icon,
+                iconColor: iconColor,
+                title: title,
+                message: message,
+                removeOverlayEntry: () => entry.remove(),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -98,24 +101,33 @@ class _CustomSnackBarWidget extends StatefulWidget {
 
 class __CustomSnackBarWidgetState extends State<_CustomSnackBarWidget>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(milliseconds: 1200),
-    vsync: this,
-  )..forward();
-  late final Animation<Offset> _offsetAnimation = Tween<Offset>(
-    begin: const Offset(0.0, 1.5),
-    end: Offset.zero,
-  ).animate(CurvedAnimation(
-    parent: _controller,
-    curve: Curves.fastEaseInToSlowEaseOut,
-  ))
-    ..addStatusListener(_statusListener);
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    )..forward();
+
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.fastEaseInToSlowEaseOut,
+    );
+
+    _controller.addStatusListener(_statusListener);
+    super.initState();
+  }
 
   void _statusListener(AnimationStatus status) {
     if (status == AnimationStatus.dismissed) {
       widget.removeOverlayEntry();
     } else if (status == AnimationStatus.completed) {
-      _controller.reverse();
+      Future.delayed(
+        const Duration(seconds: 3),
+        () => _controller.reverse(),
+      );
     }
   }
 
@@ -126,11 +138,11 @@ class __CustomSnackBarWidgetState extends State<_CustomSnackBarWidget>
   }
 
   @override
-  Widget build(BuildContext context) => SlideTransition(
-        position: _offsetAnimation,
+  Widget build(BuildContext context) => FadeTransition(
+        opacity: _animation,
         child: GestureDetector(
           onVerticalDragStart: (d) {
-            _offsetAnimation.removeStatusListener(_statusListener);
+            _animation.removeStatusListener(_statusListener);
             _controller.forward();
           },
           child: Container(
