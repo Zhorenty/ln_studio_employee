@@ -140,58 +140,52 @@ class __CustomSnackBarWidgetState extends State<_CustomSnackBarWidget>
   @override
   Widget build(BuildContext context) => FadeTransition(
         opacity: _animation,
-        child: GestureDetector(
-          onVerticalDragStart: (d) {
-            _animation.removeStatusListener(_statusListener);
-            _controller.forward();
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Theme.of(context).colorScheme.surface,
-            ),
-            padding: const EdgeInsets.symmetric(
-              vertical: 5,
-              horizontal: 16,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(
-                  widget.icon,
-                  size: 32,
-                  color: widget.iconColor,
-                ),
-                const SizedBox(width: 5),
-                Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.surface,
+          ),
+          padding: const EdgeInsets.symmetric(
+            vertical: 5,
+            horizontal: 16,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(
+                widget.icon,
+                size: 32,
+                color: widget.iconColor,
+              ),
+              const SizedBox(width: 5),
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.title,
+                      textAlign: TextAlign.center,
+                    ),
+                    if (widget.message != null)
                       Text(
-                        widget.title,
+                        widget.message!,
+                        style: Theme.of(context).textTheme.bodySmall,
                         textAlign: TextAlign.center,
                       ),
-                      if (widget.message != null)
-                        Text(
-                          widget.message!,
-                          style: Theme.of(context).textTheme.bodySmall,
-                          textAlign: TextAlign.center,
-                        ),
-                    ],
-                  ),
+                  ],
                 ),
-                const SizedBox(width: 5),
-                IconButton(
-                  iconSize: 32,
-                  icon: const Icon(Icons.close),
-                  onPressed: () async {
-                    await _controller.reverse();
-                    widget.removeOverlayEntry();
-                  },
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 5),
+              IconButton(
+                iconSize: 32,
+                icon: const Icon(Icons.close),
+                onPressed: () async {
+                  await _controller.reverse();
+                  widget.removeOverlayEntry();
+                },
+              ),
+            ],
           ),
         ),
       );
