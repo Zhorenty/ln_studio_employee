@@ -207,7 +207,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
     await _saveTokenPair(tokenPair);
 
-    final user = User(phone: phone);
+    final user = User.fromJson((response.data!['data'] as Map)['user']);
 
     await _saveUser(user);
 

@@ -15,6 +15,7 @@ final class User {
     this.lastName,
     this.birthDate,
     this.email,
+    this.isSuperuser,
   });
 
   final int? id;
@@ -31,6 +32,9 @@ final class User {
 
   final String? email;
 
+  /// Indicator whether user is a superuser.
+  final bool? isSuperuser;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -42,12 +46,13 @@ final class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      phone: json['phone_number'],
+      phone: json['phone'],
       photo: json['photo'],
       firstName: json['first_name'],
       lastName: json['last_name'],
-      birthDate: json['birth_date'],
+      birthDate: DateTime.parse(json['birth_date']),
       email: json['email'],
+      isSuperuser: json['is_superuser'] as bool,
     );
   }
 
@@ -58,6 +63,7 @@ final class User {
       'last_name': lastName,
       'birth_date': birthDate,
       'email': email,
+      'is_superuser': isSuperuser,
     };
   }
 }

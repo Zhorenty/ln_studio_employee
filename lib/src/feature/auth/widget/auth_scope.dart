@@ -35,6 +35,8 @@ abstract mixin class AuthenticationController {
 
   /// Whether the current user is authenticated
   bool get isAuthenticated => user?.phone != null;
+
+  bool get isSuperuser => user?.isSuperuser ?? false;
 }
 
 ///
