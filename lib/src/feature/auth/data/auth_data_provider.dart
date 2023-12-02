@@ -92,7 +92,9 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   Future<void> _saveUser(User user) async {
     await _sharedPreferences.setInt('auth.user.id', user.id!);
     await _sharedPreferences.setString('auth.user.phone', user.phone!);
-    await _sharedPreferences.setString('auth.user.photo', user.photo!);
+    if (user.photo != null) {
+      await _sharedPreferences.setString('auth.user.photo', user.photo!);
+    }
     await _sharedPreferences.setString('auth.user.first_name', user.firstName!);
     await _sharedPreferences.setString('auth.user.last_name', user.lastName!);
     await _sharedPreferences.setString(
