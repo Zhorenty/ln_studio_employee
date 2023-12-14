@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
+import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_bloc.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_event.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_state.dart';
@@ -42,6 +43,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = AuthenticationScope.of(context);
     return BlocListener<SalonBLoC, SalonState>(
       listener: (context, state) {},
       listenWhen: (previous, current) {
@@ -140,10 +142,14 @@ class _TimetableScreenState extends State<TimetableScreen> {
                         ),
                         CustomTableCalendar(
                           focusedDay: _focusedDays[index],
-                          selectedDayPredicate: (day) =>
-                              selectedDayPredicate(day, index, employee),
-                          onDaySelected: (sel, foc) =>
-                              onDaySelected(sel, foc, index, employee.id),
+                          selectedDayPredicate: auth.isSuperuser
+                              ? (day) =>
+                                  selectedDayPredicate(day, index, employee)
+                              : null,
+                          onDaySelected: auth.isSuperuser
+                              ? (sel, foc) =>
+                                  onDaySelected(sel, foc, index, employee.id)
+                              : null,
                         ),
                       ],
                     );
