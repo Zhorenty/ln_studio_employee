@@ -10,6 +10,7 @@ sealed class AuthState extends _$AuthStateBase {
   const AuthState({
     required super.user,
     required super.phone,
+    required super.uniqueRequestId,
     required super.message,
     required super.smsCode,
   });
@@ -20,6 +21,7 @@ sealed class AuthState extends _$AuthStateBase {
     User? user,
     String? phone,
     int? smsCode,
+    String? uniqueRequestId,
     String message,
     String? error,
   }) = AuthState$Idle;
@@ -30,6 +32,7 @@ sealed class AuthState extends _$AuthStateBase {
     required User? user,
     required String? phone,
     required int? smsCode,
+    required String? uniqueRequestId,
     String message,
   }) = AuthState$Processing;
 
@@ -39,6 +42,7 @@ sealed class AuthState extends _$AuthStateBase {
     required User? user,
     required String? phone,
     required int? smsCode,
+    required String? uniqueRequestId,
     String message,
   }) = AuthState$Successful;
 
@@ -48,6 +52,7 @@ sealed class AuthState extends _$AuthStateBase {
     required User? user,
     required String? phone,
     required int? smsCode,
+    required String? uniqueRequestId,
     String message,
   }) = AuthState$NotRegistered;
 }
@@ -60,6 +65,7 @@ final class AuthState$Idle extends AuthState with _$AuthState {
     super.user,
     super.phone,
     super.smsCode,
+    super.uniqueRequestId,
     super.message = 'Idling',
     this.error,
   });
@@ -76,6 +82,7 @@ final class AuthState$Processing extends AuthState with _$AuthState {
     required super.user,
     required super.phone,
     required super.smsCode,
+    required super.uniqueRequestId,
     super.message = 'Successful',
   });
 
@@ -91,6 +98,7 @@ final class AuthState$Successful extends AuthState with _$AuthState {
     super.user,
     super.phone,
     super.smsCode,
+    required super.uniqueRequestId,
     super.message = 'Successful',
   });
 
@@ -106,6 +114,7 @@ final class AuthState$NotRegistered extends AuthState with _$AuthState {
     super.user,
     super.phone,
     super.smsCode,
+    required super.uniqueRequestId,
     super.message = 'Not Registered',
   });
 
@@ -126,6 +135,7 @@ abstract base class _$AuthStateBase {
   const _$AuthStateBase({
     required this.user,
     required this.phone,
+    required this.uniqueRequestId,
     required this.message,
     required this.smsCode,
   });
@@ -139,6 +149,9 @@ abstract base class _$AuthStateBase {
 
   @nonVirtual
   final int? smsCode;
+
+  @nonVirtual
+  final String? uniqueRequestId;
 
   /// Message or state description.
   @nonVirtual
