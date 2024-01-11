@@ -48,12 +48,13 @@ abstract interface class AuthDataProvider {
   /// Returns the current [User].
   User? getUser();
 
-  Future<bool> sendCode({required String phone});
+  Future<String> sendCode({required String phone});
 
   // /// Attempts to sign in with the given [phone].
   Future<User> signInWithPhone({
     required String phone,
     required int smsCode,
+    required String uniqueRequestId,
   });
 
   Future<User> signUp({required User userModel});
@@ -183,15 +184,16 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   }
 
   @override
-  Future<bool> sendCode({required String phone}) async {
+  Future<String> sendCode({required String phone}) async {
     final response = await client.post(
-      '/api/auth/sms/send',
+      '/api/auth/call/init',
       data: {
-        'is_employee': true,
         'phone_number': phone,
+        "unique_request_id": null,
+        'is_employee': true,
       },
     );
-
+    // Возвращаем unique_request_id
     return response.data['data'];
   }
 
@@ -199,12 +201,14 @@ final class AuthDataProviderImpl implements AuthDataProvider {
   Future<User> signInWithPhone({
     required String phone,
     required int smsCode,
+    required String uniqueRequestId,
   }) async {
     final response = await client.post<Map<String, Object?>>(
-      '/api/auth/sms/validate',
+      '/api/auth/call/validate',
       data: {
-        'phone': phone,
-        'sms_code': smsCode,
+        'code': smsCode.toString(),
+        "unique_request_id": uniqueRequestId,
+        "is_employee": true,
       },
     );
 
@@ -212,7 +216,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
 
     await _saveTokenPair(tokenPair);
 
-    final user = User.fromJson((response.data!['data'] as Map)['user']);
+    final user = User.fromJson((response.data!['data'] as Map)['model']);
 
     await _saveUser(user);
 

@@ -44,15 +44,16 @@ final class User {
   int get hashCode => phone.hashCode;
 
   factory User.fromJson(Map<String, dynamic> json) {
+    final userJson = json['user'];
     return User(
       id: json['id'],
-      phone: json['phone'],
-      photo: json['photo'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      birthDate: DateTime.parse(json['birth_date']),
-      email: json['email'],
-      isSuperuser: json['is_superuser'] as bool,
+      phone: userJson['phone'],
+      photo: userJson['photo'],
+      firstName: userJson['first_name'],
+      lastName: userJson['last_name'],
+      birthDate: DateTime.parse(userJson['birth_date']),
+      email: userJson['email'],
+      isSuperuser: userJson['is_superuser'] as bool,
     );
   }
 
