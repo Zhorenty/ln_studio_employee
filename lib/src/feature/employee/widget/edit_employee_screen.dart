@@ -115,7 +115,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
           final user = state.employee!.userModel;
 
           DateTime birthDate = user.birthDate;
-          DateTime dateOfEmployment = employee.dateOfEmployment;
+          DateTime? dateOfEmployment = employee.dateOfEmployment;
           Salon employeeSalon = employee.salon;
           Specialization employeeSpecialization = employee.jobModel;
           int stars = employee.stars;
@@ -124,17 +124,25 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
           _firstNameController.text = user.firstName;
           _lastNameController.text = user.lastName;
           _phoneController.text = user.phone;
-          _addressController.text = employee.address;
+          if (employee.address != null) {
+            _addressController.text = employee.address!;
+          }
           _emailController.text = user.email;
           _birthDateController.text = birthDate.defaultFormat();
 
           /// Employee information
           _salonController.text = employeeSalon.name;
           _specializationController.text = employeeSpecialization.name;
-          _contractNumberController.text = employee.contractNumber;
-          _descriptionController.text = employee.description;
+          if (employee.contractNumber != null) {
+            _contractNumberController.text = employee.contractNumber!;
+          }
+          if (employee.description != null) {
+            _descriptionController.text = employee.description!;
+          }
           _salesController.text = employee.percentageOfSales.toString();
-          _dateOfEmploymentController.text = dateOfEmployment.defaultFormat();
+          if (dateOfEmployment != null) {
+            _dateOfEmploymentController.text = dateOfEmployment.defaultFormat();
+          }
 
           return Scaffold(
             backgroundColor: context.colorScheme.onBackground,
@@ -293,13 +301,14 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                           ),
                           validator: _emptyValidator,
                         ),
-                        DatePickerField(
-                          controller: _dateOfEmploymentController,
-                          label: 'Дата принятия на работу',
-                          initialDate: dateOfEmployment,
-                          onDateSelected: (day) => dateOfEmployment = day,
-                          validator: _emptyValidator,
-                        ),
+                        if (dateOfEmployment != null)
+                          DatePickerField(
+                            controller: _dateOfEmploymentController,
+                            label: 'Дата принятия на работу',
+                            initialDate: dateOfEmployment,
+                            onDateSelected: (day) => dateOfEmployment = day,
+                            validator: _emptyValidator,
+                          ),
                         const SizedBox(height: 16),
                         Center(
                           child: AnimatedButton(
@@ -352,7 +361,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
   /// Dismiss employee by [id].
   Future<void> _edit({
     required int id,
-    required DateTime dateOfEmployment,
+    required DateTime? dateOfEmployment,
     required int stars,
     required bool isDismiss,
     required DateTime birthDate,

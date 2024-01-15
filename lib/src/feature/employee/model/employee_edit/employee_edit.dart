@@ -36,7 +36,7 @@ final class Employee$Edit {
   final String description;
 
   /// Date of employment.
-  final DateTime dateOfEmployment;
+  final DateTime? dateOfEmployment;
 
   /// Contract number of employee.
   final String contractNumber;
@@ -77,7 +77,8 @@ final class Employee$Edit {
         'job_place_id': jobId,
         'salon_id': salonId,
         'description': description,
-        'date_of_employment': dateOfEmployment.jsonFormat(),
+        if (dateOfEmployment != null)
+          'date_of_employment': dateOfEmployment?.jsonFormat(),
         'contract_number': contractNumber,
         'percentage_of_sales': percentageOfSales,
         'stars': stars,
