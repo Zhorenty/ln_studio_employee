@@ -71,8 +71,9 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
     );
     try {
       await _repository.addPhoto(event.id, event.photo);
+      final portfolio = await _repository.getPortfolio(event.id);
       emit(PortfolioState.successful(
-        portfolio: state.portfolio,
+        portfolio: portfolio,
         photo: event.photo,
       ));
     } on Object catch (err, _) {

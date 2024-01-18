@@ -53,7 +53,6 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
   int? workedDaysCount;
 
   File? avatar;
-  File? portfolio;
 
   late EmployeeAvatarBloc avatarBloc;
   late PortfolioBloc portfolioBloc;
@@ -107,22 +106,26 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                 PickerPopup(
                                   onPickCamera: () => pickAvatar(
                                     ImageSource.camera,
-                                  )..then((_) =>
+                                  )..then((_) {
                                       context.read<EmployeeAvatarBloc>().add(
                                             EmployeeAvatarEvent.uploadAvatar(
                                               id: widget.id,
                                               file: avatar!,
                                             ),
-                                          )),
+                                          );
+                                      context.pop();
+                                    }),
                                   onPickGallery: () => pickAvatar(
                                     ImageSource.gallery,
-                                  )..then((_) =>
+                                  )..then((_) {
                                       context.read<EmployeeAvatarBloc>().add(
                                             EmployeeAvatarEvent.uploadAvatar(
                                               id: widget.id,
                                               file: avatar!,
                                             ),
-                                          )),
+                                          );
+                                      context.pop();
+                                    }),
                                 ),
                               ],
                               label: user.fullName,
@@ -372,14 +375,19 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
       );
 
   void onPick(BuildContext context, ImageSource source) => pickPortfolio(source)
-    ..then((_) => portfolio != null
-        ? context.read<PortfolioBloc>().add(
-              PortfolioEvent.addPhoto(
-                id: widget.id,
-                photo: portfolio!,
-              ),
-            )
-        : null);
+    ..then(
+      (portfolio) {
+        if (portfolio != null) {
+          context.read<PortfolioBloc>().add(
+                PortfolioEvent.addPhoto(
+                  id: widget.id,
+                  photo: portfolio,
+                ),
+              );
+          context.pop();
+        }
+      },
+    );
 
   void onLongPress(BuildContext context, int id) => MessagePopup.bottomSheet(
         context,
@@ -422,13 +430,14 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
     }
   }
 
-  Future pickPortfolio(ImageSource source) async {
+  // ignore: body_might_complete_normally_nullable
+  Future<File?> pickPortfolio(ImageSource source) async {
     try {
       final portfolio = await ImagePicker().pickImage(source: source);
-      if (portfolio == null) return;
-
-      final imageTemporary = File(portfolio.path);
-      setState(() => this.portfolio = imageTemporary);
+      if (portfolio != null) {
+        return File(portfolio.path);
+      }
+      return null;
     } on PlatformException catch (e) {
       log('Failed to pick image: $e');
     }

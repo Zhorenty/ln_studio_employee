@@ -91,9 +91,11 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                           'Выберите источник фото',
                           additional: [
                             PickerPopup(
-                              onPickCamera: () => pickImage(ImageSource.camera),
+                              onPickCamera: () => pickImage(ImageSource.camera)
+                                  .then((_) => context.pop()),
                               onPickGallery: () =>
-                                  pickImage(ImageSource.gallery),
+                                  pickImage(ImageSource.gallery)
+                                      .then((_) => context.pop()),
                             ),
                           ],
                         ),
