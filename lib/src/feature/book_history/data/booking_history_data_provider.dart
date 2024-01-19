@@ -6,6 +6,9 @@ import '../model/booking.dart';
 abstract interface class BookingHistoryDataProvider {
   /// Fetch .
   Future<List<BookingModel>> fetchEmployeeBookings(int id);
+
+  /// Make booking done .
+  Future<void> makeEmployeeBookingDone(int id);
 }
 
 /// Implementation of employee datasource.
@@ -25,4 +28,8 @@ class BookingHistoryDataProviderImpl implements BookingHistoryDataProvider {
 
     return bookings;
   }
+
+  @override
+  Future<void> makeEmployeeBookingDone(int id) =>
+      restClient.patch('/api/v1/service_sale/$id/make_done');
 }

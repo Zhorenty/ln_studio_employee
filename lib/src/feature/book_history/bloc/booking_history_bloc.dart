@@ -13,6 +13,7 @@ class BookingHistoryBloc
     on<BookingHistoryEvent>(
       (event, emit) => event.map(
         fetch: (event) => fetchByEmployee(event, emit),
+        done: (event) => makeEmployeeBookingDone(event, emit),
       ),
     );
   }
@@ -29,6 +30,30 @@ class BookingHistoryBloc
       emit(
           BookingHistoryState.processing(bookingHistory: state.bookingHistory));
       final bookingHistory = await repository.getEmployeeBookings(event.id);
+      emit(BookingHistoryState.loaded(bookingHistory: bookingHistory));
+    } on Object catch (e) {
+      emit(
+        BookingHistoryState.idle(
+          bookingHistory: state.bookingHistory,
+          error: ErrorUtil.formatError(e),
+        ),
+      );
+      rethrow;
+    }
+  }
+
+  /// Make Booking done.
+  Future<void> makeEmployeeBookingDone(
+    BookingHistoryEvent$Done event,
+    Emitter<BookingHistoryState> emit,
+  ) async {
+    try {
+      emit(
+          BookingHistoryState.processing(bookingHistory: state.bookingHistory));
+      await repository.makeEmployeeBookingDone(event.bookingId);
+      final bookingHistory = state.bookingHistory
+          .map((e) => e.id == event.bookingId ? e.copyWith(isDone: true) : e)
+          .toList();
       emit(BookingHistoryState.loaded(bookingHistory: bookingHistory));
     } on Object catch (e) {
       emit(

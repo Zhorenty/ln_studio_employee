@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_employee/src/feature/book_history/model/booking.dart';
 
 import '/src/common/utils/pattern_match.dart';
@@ -64,21 +63,13 @@ abstract base class _$BookingHistoryStateBase {
 
   List<BookingModel> get upcomingEvents => bookingHistory.reversed
       .where(
-        (e) => _isAfter(
-          e.dateAt.jsonFormat(),
-          e.timeblock.time,
-          true,
-        ),
+        (e) => !e.isDone,
       )
       .toList();
 
   List<BookingModel> get pastEvents => bookingHistory.reversed
       .where(
-        (e) => _isAfter(
-          e.dateAt.jsonFormat(),
-          e.timeblock.time,
-          false,
-        ),
+        (e) => e.isDone,
       )
       .toList();
 
@@ -144,7 +135,8 @@ abstract base class _$BookingHistoryStateBase {
   int get hashCode => Object.hash(bookingHistory, error);
 }
 
-///
+@Deprecated('Теперь сортируем по isDone')
+// ignore: unused_element
 bool _isAfter(String dateAt, String timeblock, bool isNegative) {
   // Разделяем значение timeblock на отдельные части
   List<String> timeblockParts = timeblock.split(':');

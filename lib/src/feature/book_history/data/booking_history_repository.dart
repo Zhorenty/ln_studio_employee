@@ -5,6 +5,9 @@ import 'booking_history_data_provider.dart';
 abstract interface class BookingHistoryRepository {
   /// Get employee by id.
   Future<List<BookingModel>> getEmployeeBookings(int id);
+
+  /// Make booking done .
+  Future<void> makeEmployeeBookingDone(int id);
 }
 
 /// Implementation of the employee repository.
@@ -17,4 +20,8 @@ final class BookingHistoryRepositoryImpl implements BookingHistoryRepository {
   @override
   Future<List<BookingModel>> getEmployeeBookings(int id) =>
       _dataSource.fetchEmployeeBookings(id);
+
+  @override
+  Future<void> makeEmployeeBookingDone(int id) =>
+      _dataSource.makeEmployeeBookingDone(id);
 }

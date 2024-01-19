@@ -128,9 +128,11 @@ class _BookingList extends StatelessWidget {
           ),
       child: bookingHistory.isNotEmpty
           ? ListView.builder(
+              itemCount: bookingHistory.length,
               itemBuilder: (context, index) {
                 final item = bookingHistory[index];
                 return HistoryItemCard(
+                  id: item.id,
                   phone: item.client.user.phone,
                   title: item.client.user.fullName,
                   subtitle: item.service.name,
@@ -139,6 +141,7 @@ class _BookingList extends StatelessWidget {
                     item.timeblock.time,
                     item.service.duration!,
                   ),
+                  isDone: item.isDone,
                 );
               },
             )

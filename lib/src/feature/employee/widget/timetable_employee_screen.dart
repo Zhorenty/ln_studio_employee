@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
+import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/employee_timetable/employee_timetable_bloc.dart';
@@ -52,6 +53,8 @@ class _TimetableEmployeeScreenState extends State<TimetableEmployeeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = AuthenticationScope.of(context);
+
     _selectedDay = DateTime.now();
     _focusedDay = DateTime.now();
 
@@ -79,17 +82,20 @@ class _TimetableEmployeeScreenState extends State<TimetableEmployeeScreen> {
                 sliver: SliverList.list(
                   children: [
                     CustomTableCalendar(
-                        padding: const EdgeInsets.symmetric(horizontal: 8).add(
-                          const EdgeInsets.only(bottom: 8),
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFF272727)),
-                        color: context.colorScheme.background,
-                        focusedDay: _focusedDay,
-                        selectedDayPredicate: (day) =>
-                            selectedDayPredicate(day, state.timetables),
-                        onDaySelected: (sel, foc) =>
-                            onDaySelected(sel, foc, widget.employeeId)),
+                      padding: const EdgeInsets.symmetric(horizontal: 8).add(
+                        const EdgeInsets.only(bottom: 8),
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: const Color(0xFF272727)),
+                      color: context.colorScheme.background,
+                      focusedDay: _focusedDay,
+                      selectedDayPredicate: (day) =>
+                          selectedDayPredicate(day, state.timetables),
+                      onDaySelected: auth.isSuperuser
+                          ? (sel, foc) =>
+                              onDaySelected(sel, foc, widget.employeeId)
+                          : null,
+                    ),
                   ],
                 ),
               ),
