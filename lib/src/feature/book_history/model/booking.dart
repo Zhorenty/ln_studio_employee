@@ -19,6 +19,7 @@ final class BookingModel {
     required this.timeblock,
     required this.client,
     this.comment,
+    required this.isDone,
   });
 
   ///
@@ -47,6 +48,8 @@ final class BookingModel {
 
   final ClientModel client;
 
+  final bool isDone;
+
   factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
         id: json['id'],
         dateAt: DateTime.parse(json['date_at']),
@@ -57,6 +60,7 @@ final class BookingModel {
         service: ServiceModel.fromJson(json['service']),
         timeblock: EmployeeTimeblock$Response.fromJson(json['timeblock']),
         client: ClientModel.fromJson(json['client']),
+        isDone: bool.parse(json['is_done']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -68,7 +72,34 @@ final class BookingModel {
         'employee': employee.toJson(),
         'service': service.toJson(),
         'timeblock': timeblock.toJson(),
+        'is_done': isDone,
       };
+
+  BookingModel copyWith({
+    int? id,
+    DateTime? dateAt,
+    int? price,
+    String? comment,
+    Salon? salon,
+    Employee? employee,
+    ServiceModel? service,
+    EmployeeTimeblock$Response? timeblock,
+    ClientModel? client,
+    bool? isDone,
+  }) {
+    return BookingModel(
+      id: id ?? this.id,
+      dateAt: dateAt ?? this.dateAt,
+      price: price ?? this.price,
+      comment: comment ?? this.comment,
+      salon: salon ?? this.salon,
+      employee: employee ?? this.employee,
+      service: service ?? this.service,
+      timeblock: timeblock ?? this.timeblock,
+      client: client ?? this.client,
+      isDone: isDone ?? this.isDone,
+    );
+  }
 }
 
 @immutable

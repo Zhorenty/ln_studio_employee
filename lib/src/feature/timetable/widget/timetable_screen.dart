@@ -142,10 +142,8 @@ class _TimetableScreenState extends State<TimetableScreen> {
                         ),
                         CustomTableCalendar(
                           focusedDay: _focusedDays[index],
-                          selectedDayPredicate: auth.isSuperuser
-                              ? (day) =>
-                                  selectedDayPredicate(day, index, employee)
-                              : null,
+                          selectedDayPredicate: (day) =>
+                              selectedDayPredicate(day, index, employee),
                           onDaySelected: auth.isSuperuser
                               ? (sel, foc) =>
                                   onDaySelected(sel, foc, index, employee.id)

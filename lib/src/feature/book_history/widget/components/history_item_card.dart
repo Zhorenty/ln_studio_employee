@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/assets/generated/fonts.gen.dart';
 import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:ln_employee/src/common/widget/overlay/message_popup.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
+import 'package:ln_employee/src/feature/book_history/bloc/booking_history_bloc.dart';
+import 'package:ln_employee/src/feature/book_history/bloc/booking_history_event.dart';
 
 ///
 class HistoryItemCard extends StatelessWidget {
   const HistoryItemCard({
     super.key,
+    required this.id,
     required this.title,
     required this.subtitle,
     required this.dateAt,
     required this.timeblock,
     required this.phone,
+    required this.isDone,
   });
+
+  ///
+  final int id;
 
   ///
   final String title;
@@ -30,6 +38,8 @@ class HistoryItemCard extends StatelessWidget {
   final String timeblock;
 
   final String phone;
+
+  final bool isDone;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +72,7 @@ class HistoryItemCard extends StatelessWidget {
                   'Удалить запись',
                   style: context.textTheme.bodyLarge?.copyWith(
                     fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.onBackground,
+                    color: context.colorScheme.error,
                   ),
                 ),
               ),
@@ -159,7 +169,28 @@ class HistoryItemCard extends StatelessWidget {
                 color: context.colorScheme.secondaryContainer,
                 fontFamily: FontFamily.geologica,
               ),
-            )
+            ),
+            if (!isDone) ...[
+              const SizedBox(height: 12),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  backgroundColor: context.colorScheme.primary,
+                ),
+                onPressed: () => context.read<BookingHistoryBloc>().add(
+                      BookingHistoryEvent.done(bookingId: id),
+                    ),
+                child: Text(
+                  'Завершить',
+                  style: context.textTheme.bodyLarge?.copyWith(
+                    fontFamily: FontFamily.geologica,
+                    color: context.colorScheme.onBackground,
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
