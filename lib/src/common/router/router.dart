@@ -16,6 +16,7 @@ import 'package:ln_employee/src/feature/news/model/news.dart';
 import 'package:ln_employee/src/feature/news/widget/create_news_screen.dart';
 import 'package:ln_employee/src/feature/news/widget/edit_news_screen.dart';
 import 'package:ln_employee/src/feature/news/widget/news_screen.dart';
+import 'package:ln_employee/src/feature/salon/bloc/salon_bloc.dart';
 
 import '/src/common/widget/custom_bottom_navigation_bar.dart';
 import '/src/feature/employee/widget/edit_employee_screen.dart';
@@ -76,8 +77,9 @@ final router = GoRouter(
                     ? const StaffScreen()
                     : TimetableEmployeeScreen(
                         employeeId: authScope.user?.id ?? 1,
-                        // TODO: Заменить salonId на реальный
-                        salonId: 1,
+                        salonId:
+                            context.read<SalonBLoC>().state.currentSalon?.id ??
+                                1,
                       );
               },
               routes: [
