@@ -47,7 +47,7 @@ class EmployeeCard extends StatelessWidget {
               title: user.fullName,
               imageUrl: user.photo != null ? '$kBaseUrl/${user.photo}' : null,
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 16),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,19 +73,19 @@ class EmployeeCard extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              decoration: ShapeDecoration(
-                shape: const CircleBorder(),
-                color: context.colorScheme.primary,
-              ),
-              margin: const EdgeInsets.all(6),
-              padding: const EdgeInsets.all(6),
-              child: Icon(
-                Icons.edit,
-                size: 21,
-                color: context.colorScheme.onBackground,
-              ),
-            ),
+            // Container(
+            //   decoration: ShapeDecoration(
+            //     shape: const CircleBorder(),
+            //     color: context.colorScheme.primary,
+            //   ),
+            //   margin: const EdgeInsets.all(6),
+            //   padding: const EdgeInsets.all(6),
+            //   child: Icon(
+            //     Icons.edit,
+            //     size: 21,
+            //     color: context.colorScheme.onBackground,
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -10,10 +10,18 @@ import '/src/feature/salon/bloc/salon_state.dart';
 
 ///
 class HeaderListTile extends StatelessWidget {
-  const HeaderListTile({super.key, this.onPressed, this.title});
+  const HeaderListTile({
+    super.key,
+    this.onPressed,
+    this.title,
+    this.subtitle,
+  });
 
   ///
   final String? title;
+
+  ///
+  final String? subtitle;
 
   ///
   final void Function()? onPressed;
@@ -35,7 +43,7 @@ class HeaderListTile extends StatelessWidget {
         child: ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Аналитика',
+            title ?? '',
             style: context.textTheme.headlineSmall?.copyWith(
               fontFamily: FontFamily.geologica,
               color: context.colorScheme.secondary,
@@ -43,7 +51,7 @@ class HeaderListTile extends StatelessWidget {
           ),
           subtitle: BlocBuilder<SalonBLoC, SalonState>(
             builder: (_, state) => Text(
-              state.currentSalon?.name ?? '',
+              subtitle ?? '',
               style: context.textTheme.titleSmall?.copyWith(
                 fontFamily: FontFamily.geologica,
                 color: context.colorScheme.primary,

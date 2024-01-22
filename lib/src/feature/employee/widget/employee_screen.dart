@@ -349,16 +349,6 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                           },
                                         ),
                                       ),
-                                      FieldButton(
-                                        controller: TextEditingController(),
-                                        label: 'Услуги',
-                                        onTap: () {},
-                                      ),
-                                      FieldButton(
-                                        controller: TextEditingController(),
-                                        label: 'Написать сотруднику',
-                                        onTap: () {},
-                                      ),
                                       const SizedBox(height: 16),
                                     ],
                                   ),

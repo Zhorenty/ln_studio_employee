@@ -1,3 +1,4 @@
+/// Extension adding an ability to get initials from a [String].
 extension InitialsExtension on String {
   /// Returns initials (two letters which begin each word) of this string.
   String initials() {
@@ -14,6 +15,23 @@ extension InitialsExtension on String {
     }
 
     return '';
+  }
+
+  String formatPhoneNumber() {
+    // Удаление всех символов, кроме цифр
+    String digitsOnly = replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Проверка длины строки
+    if (digitsOnly.length == 11) {
+      // Форматирование номера с 11 цифрами (начинается с "7")
+      return '+7 (${digitsOnly.substring(1, 4)}) ${digitsOnly.substring(4, 7)}-${digitsOnly.substring(7, 9)}-${digitsOnly.substring(9)}';
+    } else if (digitsOnly.length == 10) {
+      // Форматирование номера с 10 цифрами (не начинается с "7")
+      return '+7 (${digitsOnly.substring(0, 3)}) ${digitsOnly.substring(3, 6)}-${digitsOnly.substring(6, 8)}-${digitsOnly.substring(8)}';
+    } else {
+      // Номер не соответствует требуемым длинам
+      return this;
+    }
   }
 }
 

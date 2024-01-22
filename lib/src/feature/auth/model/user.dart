@@ -43,6 +43,8 @@ final class User {
   @override
   int get hashCode => phone.hashCode;
 
+  String get fullName => '$lastName $firstName';
+
   factory User.fromJson(Map<String, dynamic> json) {
     final userJson = json['user'];
     return User(

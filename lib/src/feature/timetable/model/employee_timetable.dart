@@ -28,7 +28,7 @@ final class EmployeeTimetableModel {
   final List<TimetableItem> timetableItems;
 
   ///
-  String get fullName => '$firstName $lastName';
+  String get fullName => '$lastName $firstName';
 
   /// Returns [EmployeeTimetableModel] from [json].
   factory EmployeeTimetableModel.fromJson(Map<String, Object?> json) =>

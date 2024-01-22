@@ -6,6 +6,7 @@ import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
 import '/src/common/utils/extensions/context_extension.dart';
+import '/src/common/utils/extensions/string_extension.dart';
 import 'components/category_list_tile.dart';
 import 'components/header_list_tile.dart';
 
@@ -31,53 +32,57 @@ class ProfileScreen extends StatelessWidget {
           ),
           SliverList.list(
             children: [
-              const HeaderListTile(),
-              const Divider(),
-              const CategoryListTile(
-                icon: Icons.account_circle_rounded,
-                title: 'Личная информация',
-                size: 25,
+              HeaderListTile(
+                title: auth.user?.fullName ?? '',
+                subtitle: auth.user?.phone?.formatPhoneNumber(),
+                onPressed: () => context.goNamed('profile_edit'),
               ),
-              const Divider(),
-              const CategoryListTile(
-                icon: Icons.extension_rounded,
-                title: 'Услуги',
-              ),
-              const Divider(),
-              const CategoryListTile(
-                icon: Icons.event,
-                title: 'Онлайн запись',
-              ),
-              const Divider(),
-              const CategoryListTile(
-                icon: Icons.family_restroom_rounded,
-                title: 'Клиенты',
-              ),
-              const Divider(),
+              // const Divider(),
+              // const CategoryListTile(
+              //   icon: Icons.account_circle_rounded,
+              //   title: 'Личная информация',
+              //   size: 25,
+              // ),
+              // const Divider(),
+              // const CategoryListTile(
+              //   icon: Icons.extension_rounded,
+              //   title: 'Услуги',
+              // ),
+              // const Divider(),
+              // const CategoryListTile(
+              //   icon: Icons.event,
+              //   title: 'Онлайн запись',
+              // ),
+              // const Divider(),
+              // const CategoryListTile(
+              //   icon: Icons.family_restroom_rounded,
+              //   title: 'Клиенты',
+              // ),
+              // const Divider(),
               CategoryListTile(
                 onTap: () => context.goNamed('news'),
                 icon: Icons.article_rounded,
                 title: 'Новости',
                 size: 23,
               ),
-              const Divider(),
-              const CategoryListTile(
-                icon: Icons.markunread_rounded,
-                title: 'Рассылка',
-                size: 23,
-              ),
-              const Divider(),
-              const CategoryListTile(
-                icon: Icons.loyalty_rounded,
-                title: 'Скидки',
-                size: 23,
-              ),
-              const Divider(),
-              const CategoryListTile(
-                icon: Icons.settings_rounded,
-                title: 'Настройки',
-                size: 23,
-              ),
+              // const Divider(),
+              // const CategoryListTile(
+              //   icon: Icons.markunread_rounded,
+              //   title: 'Рассылка',
+              //   size: 23,
+              // ),
+              // const Divider(),
+              // const CategoryListTile(
+              //   icon: Icons.loyalty_rounded,
+              //   title: 'Скидки',
+              //   size: 23,
+              // ),
+              // const Divider(),
+              // const CategoryListTile(
+              //   icon: Icons.settings_rounded,
+              //   title: 'Настройки',
+              //   size: 23,
+              // ),
               const Divider(),
               CategoryListTile(
                 onTap: () => showExit(context, auth.signOut),

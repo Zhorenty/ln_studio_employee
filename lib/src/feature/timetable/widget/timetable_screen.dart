@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
+import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_bloc.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_event.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_state.dart';
@@ -35,129 +36,144 @@ class _TimetableScreenState extends State<TimetableScreen> {
   final List<DateTime> _focusedDays = [];
 
   /// Timetable bloc.
+  late final TimetableBloc timetableBloc;
 
   @override
   void initState() {
     super.initState();
+    timetableBloc = TimetableBloc(
+      repository: DependenciesScope.of(context).timetableRepository,
+    );
+    final currentSalon = context.read<SalonBLoC>().state.currentSalon;
+    if (currentSalon != null) {
+      timetableBloc.add(
+        TimetableEvent.fetchBySalonId(currentSalon.id),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final auth = AuthenticationScope.of(context);
-    return BlocListener<SalonBLoC, SalonState>(
-      listener: (context, state) {},
-      listenWhen: (previous, current) {
-        if (previous.currentSalon?.id != current.currentSalon?.id) {
-          context.read<TimetableBloc>().add(
-                TimetableEvent.fetchBySalonId(current.currentSalon!.id),
-              );
-        }
-        return false;
-      },
-      child: BlocConsumer<TimetableBloc, TimetableState>(
-        listener: (context, state) => state.hasError
-            ? CustomSnackBar.showError(context, message: state.error)
-            : null,
-        builder: (context, state) => CustomScrollView(
-          slivers: [
-            CustomSliverAppBar(
-              title: context.stringOf().workSchedule,
-              actions: [
-                IconButton(
-                  // TODO: Implement notifications screen.
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.notifications,
-                    color: context.colorScheme.secondary,
+    return BlocProvider(
+      create: (context) => timetableBloc,
+      child: BlocListener<SalonBLoC, SalonState>(
+        listener: (context, state) {},
+        // Когда меняется salonId
+        listenWhen: (previous, current) {
+          if (previous.currentSalon?.id != current.currentSalon?.id) {
+            timetableBloc.add(
+              TimetableEvent.fetchBySalonId(current.currentSalon!.id),
+            );
+          }
+          return false;
+        },
+        child: BlocConsumer<TimetableBloc, TimetableState>(
+          bloc: timetableBloc,
+          listener: (context, state) => state.hasError
+              ? CustomSnackBar.showError(context, message: state.error)
+              : null,
+          builder: (context, state) => CustomScrollView(
+            slivers: [
+              CustomSliverAppBar(
+                title: context.stringOf().workSchedule,
+                // TODO: Implement notifications screen.
+                // actions: [
+                //   IconButton(
+                //     onPressed: () {},
+                //     icon: Icon(
+                //       Icons.notifications,
+                //       color: context.colorScheme.secondary,
+                //     ),
+                //   ),
+                // ],
+                bottomChild: BlocBuilder<SalonBLoC, SalonState>(
+                  builder: (context, state) => PopupButton(
+                    label: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: state.currentSalon != null
+                          ? Text(state.currentSalon!.name)
+                          : const SizedBox(height: 26),
+                    ),
+                    child: SalonChoiceScreen(currentSalon: state.currentSalon),
                   ),
-                ),
-              ],
-              bottomChild: BlocBuilder<SalonBLoC, SalonState>(
-                builder: (context, state) => PopupButton(
-                  label: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: state.currentSalon != null
-                        ? Text(state.currentSalon!.name)
-                        : const SizedBox(height: 26),
-                  ),
-                  child: SalonChoiceScreen(currentSalon: state.currentSalon),
                 ),
               ),
-            ),
-            CupertinoSliverRefreshControl(onRefresh: _refresh),
-            SliverAnimatedOpacity(
-              opacity: state.hasTimetables ? 1 : 0,
-              duration: const Duration(milliseconds: 400),
-              sliver: SliverPadding(
-                padding: EdgeInsets.only(
-                  left: 12,
-                  right: 12,
-                  top: 12,
-                  bottom: MediaQuery.sizeOf(context).height / 8,
-                ),
-                sliver: SliverList.separated(
-                  itemCount: state.employeeTimetable.length,
-                  itemBuilder: (context, index) {
-                    final employeeTimetable = state.employeeTimetable[index];
-                    final employee = employeeTimetable;
+              CupertinoSliverRefreshControl(onRefresh: _refresh),
+              SliverAnimatedOpacity(
+                opacity: state.hasTimetables ? 1 : 0,
+                duration: const Duration(milliseconds: 400),
+                sliver: SliverPadding(
+                  padding: EdgeInsets.only(
+                    left: 12,
+                    right: 12,
+                    top: 12,
+                    bottom: MediaQuery.sizeOf(context).height / 8,
+                  ),
+                  sliver: SliverList.separated(
+                    itemCount: state.employeeTimetable.length,
+                    itemBuilder: (context, index) {
+                      final employeeTimetable = state.employeeTimetable[index];
+                      final employee = employeeTimetable;
 
-                    ///
-                    addFDaysIfNecessary(index);
+                      ///
+                      addFDaysIfNecessary(index);
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          clipBehavior: Clip.hardEdge,
-                          padding: const EdgeInsets.only(
-                            left: 12,
-                            top: 8,
-                            right: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            clipBehavior: Clip.hardEdge,
+                            padding: const EdgeInsets.only(
+                              left: 12,
+                              top: 8,
+                              right: 12,
                             ),
-                            color: context.colorScheme.onBackground,
-                          ),
-                          child: Row(
-                            children: [
-                              AvatarWidget(title: employee.fullName),
-                              const SizedBox(width: 16),
-                              Flexible(
-                                child: Text(
-                                  employee.fullName,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style:
-                                      context.textTheme.headlineSmall!.copyWith(
-                                    fontFamily: FontFamily.geologica,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
+                              color: context.colorScheme.onBackground,
+                            ),
+                            child: Row(
+                              children: [
+                                AvatarWidget(title: employee.fullName),
+                                const SizedBox(width: 16),
+                                Flexible(
+                                  child: Text(
+                                    employee.fullName,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: context.textTheme.headlineSmall!
+                                        .copyWith(
+                                      fontFamily: FontFamily.geologica,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        CustomTableCalendar(
-                          focusedDay: _focusedDays[index],
-                          selectedDayPredicate: (day) =>
-                              selectedDayPredicate(day, index, employee),
-                          onDaySelected: auth.isSuperuser
-                              ? (sel, foc) =>
-                                  onDaySelected(sel, foc, index, employee.id)
-                              : null,
-                        ),
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
+                          CustomTableCalendar(
+                            focusedDay: _focusedDays[index],
+                            selectedDayPredicate: (day) =>
+                                selectedDayPredicate(day, index, employee),
+                            onDaySelected: auth.isSuperuser
+                                ? (sel, foc) =>
+                                    onDaySelected(sel, foc, index, employee.id)
+                                : null,
+                          ),
+                        ],
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 16),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -165,12 +181,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
 
   /// Refresh timetables.
   Future<void> _refresh() async {
-    final block = context.read<TimetableBloc>().stream.first;
+    final block = timetableBloc.stream.first;
     final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {
-      context.read<TimetableBloc>().add(
-            TimetableEvent.fetchBySalonId(salonBloc.state.currentSalon!.id),
-          );
+      timetableBloc.add(
+        TimetableEvent.fetchBySalonId(salonBloc.state.currentSalon!.id),
+      );
     }
     await block;
   }
@@ -197,13 +213,13 @@ class _TimetableScreenState extends State<TimetableScreen> {
       _focusedDays[index] = focusedDay;
     });
 
-    context.read<TimetableBloc>().add(
-          TimetableEvent.fillTimetable(
-            employeeId: employeeId,
-            salonId: context.read<SalonBLoC>().state.currentSalon!.id,
-            dateAt: selectedDay,
-          ),
-        );
+    timetableBloc.add(
+      TimetableEvent.fillTimetable(
+        employeeId: employeeId,
+        salonId: context.read<SalonBLoC>().state.currentSalon!.id,
+        dateAt: selectedDay,
+      ),
+    );
   }
 
   ///

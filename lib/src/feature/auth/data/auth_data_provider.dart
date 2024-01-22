@@ -298,7 +298,7 @@ final class AuthDataProviderImpl implements AuthDataProvider {
       photo: photo,
       firstName: firstName,
       lastName: lastName,
-      birthDate: DateTime.tryParse(birthDate ?? ''),
+      birthDate: birthDate != null ? DateTime.parse(birthDate) : null,
       email: email,
       isSuperuser: isSuperuser,
     );
