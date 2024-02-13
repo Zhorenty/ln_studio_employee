@@ -16,6 +16,7 @@ class CustomTableCalendar extends StatelessWidget {
     this.borderRadius,
     this.border,
     this.color,
+    this.onDayLongPressed,
   });
 
   /// Focused day.
@@ -34,6 +35,8 @@ class CustomTableCalendar extends StatelessWidget {
   final BoxBorder? border;
 
   final Color? color;
+
+  final Function(DateTime selectedDay, DateTime focusedDay)? onDayLongPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +73,7 @@ class CustomTableCalendar extends StatelessWidget {
         calendarFormat: CalendarFormat.month,
         selectedDayPredicate: selectedDayPredicate,
         onDaySelected: onDaySelected,
+        onDayLongPressed: onDayLongPressed,
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,

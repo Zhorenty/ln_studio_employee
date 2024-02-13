@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
+import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
 import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_bloc.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_event.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/timetables/timetable_state.dart';
+import 'package:ln_employee/src/feature/timetable/widget/components/timeblocks_wrap.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '/src/common/assets/generated/fonts.gen.dart';
@@ -163,6 +165,22 @@ class _TimetableScreenState extends State<TimetableScreen> {
                                 ? (sel, foc) =>
                                     onDaySelected(sel, foc, index, employee.id)
                                 : null,
+                            onDayLongPressed: (selectedDay, focusedDay) {
+                              final timeBlocks = employee.timetableItems
+                                  .firstWhere(
+                                    (element) =>
+                                        element.dateAt.day ==
+                                        _focusedDays[index].day,
+                                  )
+                                  .timeblocs;
+                              ModalPopup.show(
+                                context: context,
+                                child: TimeblocksWrap(
+                                  visible: true,
+                                  timeBlocks: timeBlocks,
+                                ),
+                              );
+                            },
                           ),
                         ],
                       );

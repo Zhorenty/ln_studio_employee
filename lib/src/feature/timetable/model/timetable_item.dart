@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:ln_employee/src/feature/book_history/model/timeblock.dart';
 
 /// Timetable element.
 @immutable
@@ -9,6 +10,7 @@ final class TimetableItem {
     required this.salonId,
     this.salary,
     this.onWork = false,
+    required this.timeblocs,
   });
 
   /// Employee's ID.
@@ -26,12 +28,17 @@ final class TimetableItem {
   /// Indicator whether employee is at work or not.
   final bool onWork;
 
+  final List<EmployeeTimeblock$Response> timeblocs;
+
   /// Return [TimetableItem] from [json].
-  factory TimetableItem.fromJson(Map<String, Object?> json) => TimetableItem(
+  factory TimetableItem.fromJson(Map<String, dynamic> json) => TimetableItem(
         id: json['id'] as int,
         dateAt: DateTime.parse(json['date_at'] as String),
         salonId: json['salon_id'] as int,
         salary: json['salary'] as int?,
         onWork: json['on_work'] as bool,
+        timeblocs: List.of(json['timeblocks'])
+            .map((e) => EmployeeTimeblock$Response.fromJson(e))
+            .toList(),
       );
 }
