@@ -142,6 +142,7 @@ class _BookingList extends StatelessWidget {
                     item.service.duration!,
                   ),
                   isDone: item.isDone,
+                  isCanceled: item.isCanceled,
                 );
               },
             )

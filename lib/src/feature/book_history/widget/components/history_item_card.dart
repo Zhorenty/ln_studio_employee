@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class HistoryItemCard extends StatelessWidget {
     required this.timeblock,
     required this.phone,
     required this.isDone,
+    required this.isCanceled,
   });
 
   ///
@@ -40,6 +42,8 @@ class HistoryItemCard extends StatelessWidget {
   final String phone;
 
   final bool isDone;
+
+  final bool isCanceled;
 
   @override
   Widget build(BuildContext context) {
@@ -170,26 +174,61 @@ class HistoryItemCard extends StatelessWidget {
                 fontFamily: FontFamily.geologica,
               ),
             ),
-            if (!isDone) ...[
+            if (!isDone && !isCanceled) ...[
               const SizedBox(height: 12),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  backgroundColor: context.colorScheme.primary,
-                ),
-                onPressed: () => context.read<BookingHistoryBloc>().add(
-                      BookingHistoryEvent.done(bookingId: id),
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      backgroundColor: context.colorScheme.primary,
                     ),
-                child: Text(
-                  'Завершить',
-                  style: context.textTheme.bodyLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
-                    color: context.colorScheme.onBackground,
+                    onPressed: () => context.read<BookingHistoryBloc>().add(
+                          BookingHistoryEvent.done(bookingId: id),
+                        ),
+                    child: Text(
+                      'Завершить',
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        fontFamily: FontFamily.geologica,
+                        color: context.colorScheme.onBackground,
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  TextButton(
+                    onPressed: () => context.read<BookingHistoryBloc>().add(
+                          BookingHistoryEvent.cancelBooking(id),
+                        ),
+                    child: Text(
+                      'Отменить',
+                      style: TextStyle(color: context.colorScheme.error),
+                    ),
+                  ),
+                ],
               ),
+            ],
+            if (isCanceled) ...[
+              const SizedBox(height: 4),
+              Text(
+                'Отменено',
+                style:
+                    TextStyle(color: context.colorScheme.error, fontSize: 18),
+              ),
+            ],
+            if (kDebugMode) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Debug:',
+                style: TextStyle(color: context.colorScheme.error),
+              ),
+              const SizedBox(height: 2),
+              Text('ID: $id'),
+              const SizedBox(height: 2),
+              Text('isDone: $isDone'),
+              const SizedBox(height: 2),
+              Text('isCanceled: $isCanceled'),
             ],
           ],
         ),

@@ -63,13 +63,13 @@ abstract base class _$BookingHistoryStateBase {
 
   List<BookingModel> get upcomingEvents => bookingHistory.reversed
       .where(
-        (e) => !e.isDone,
+        (e) => !e.isDone && !e.isCanceled,
       )
       .toList();
 
   List<BookingModel> get pastEvents => bookingHistory.reversed
       .where(
-        (e) => e.isDone,
+        (e) => e.isDone || e.isCanceled,
       )
       .toList();
 
