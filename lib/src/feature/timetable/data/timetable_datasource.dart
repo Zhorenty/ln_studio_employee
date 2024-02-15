@@ -26,6 +26,15 @@ abstract interface class TimetableDatasource {
     required int salonId,
     required DateTime dateAt,
   });
+
+  /*
+  Если надо выключить, я передаю все, кроме тех, которые я хочу выключить.
+  Если я хочу включить, то я передаю все, включая те, которые я хочу включить.
+  */
+  Future<void> addTimeblock({
+    required int timetableId,
+    required List<int> timeblockIds,
+  });
 }
 
 /// Implementation of timetable datasource.
@@ -89,6 +98,24 @@ class TimetableDatasourceImpl implements TimetableDatasource {
           'employee_id': employeeId,
           'salon_id': salonId,
           'date_at': dateAt.jsonFormat(),
+        },
+      );
+
+  @override
+  /*
+  Включение/выключение таймблока
+  Если надо выключить, я передаю все, кроме тех, которые я хочу выключить.
+  Если я хочу включить, то я передаю все, включая те, которые я хочу включить.
+  */
+  Future<void> addTimeblock({
+    required int timetableId,
+    required List<int> timeblockIds,
+  }) =>
+      _restClient.post(
+        '/api/v1/timetable/add_timeblocks',
+        data: {
+          'timetable_id': timetableId,
+          'timeblocks': timeblockIds,
         },
       );
 }

@@ -22,6 +22,15 @@ abstract interface class TimetableRepository {
     required int salonId,
     required DateTime dateAt,
   });
+
+  /*
+  Если надо выключить, я передаю все, кроме тех, которые я хочу выключить.
+  Если я хочу включить, то я передаю все, включая те, которые я хочу включить.
+  */
+  Future<void> addTimeblock({
+    required int timetableId,
+    required List<int> timeblockIds,
+  });
 }
 
 /// Implementation of the timetable repository.
@@ -56,5 +65,15 @@ final class TimetableRepositoryImpl implements TimetableRepository {
         employeeId: employeeId,
         salonId: salonId,
         dateAt: dateAt,
+      );
+
+  @override
+  Future<void> addTimeblock({
+    required int timetableId,
+    required List<int> timeblockIds,
+  }) =>
+      _dataSource.addTimeblock(
+        timetableId: timetableId,
+        timeblockIds: timeblockIds,
       );
 }

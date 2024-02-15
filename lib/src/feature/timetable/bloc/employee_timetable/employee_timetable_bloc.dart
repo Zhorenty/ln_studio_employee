@@ -1,15 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:ln_employee/src/common/utils/error_util.dart';
-import 'package:ln_employee/src/common/utils/mixin/set_state_mixin.dart';
 import 'package:ln_employee/src/feature/timetable/bloc/employee_timetable/employee_timetable_event.dart';
 import 'package:ln_employee/src/feature/timetable/data/timetable_repository.dart';
 
 import 'employee_timetable_state.dart';
 
 class EmployeeTimetableBloc
-    extends Bloc<EmployeeTimetableEvent, EmployeeTimetableState>
-    with SetStateMixin {
+    extends Bloc<EmployeeTimetableEvent, EmployeeTimetableState> {
   EmployeeTimetableBloc(this.repository)
       : super(const EmployeeTimetable$Idle(timetables: [])) {
     on<EmployeeTimetableEvent>(

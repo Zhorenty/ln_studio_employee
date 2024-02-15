@@ -166,18 +166,18 @@ class _TimetableScreenState extends State<TimetableScreen> {
                                     onDaySelected(sel, foc, index, employee.id)
                                 : null,
                             onDayLongPressed: (selectedDay, focusedDay) {
-                              final timeBlocks = employee.timetableItems
-                                  .firstWhere(
-                                    (element) =>
-                                        element.dateAt.day ==
-                                        _focusedDays[index].day,
-                                  )
-                                  .timeblocs;
+                              final timetable =
+                                  employee.timetableItems.firstWhere(
+                                (element) =>
+                                    element.dateAt.day ==
+                                    _focusedDays[index].day,
+                              );
                               ModalPopup.show(
                                 context: context,
                                 child: TimeblocksWrap(
                                   visible: true,
-                                  timeBlocks: timeBlocks,
+                                  timeBlocks: timetable.timeblocs,
+                                  timetableId: timetable.id,
                                 ),
                               );
                             },
