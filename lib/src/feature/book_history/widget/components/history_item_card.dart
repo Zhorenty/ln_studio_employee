@@ -6,6 +6,7 @@ import 'package:ln_employee/src/common/utils/extensions/context_extension.dart';
 import 'package:ln_employee/src/common/widget/avatar_widget.dart';
 import 'package:ln_employee/src/common/widget/overlay/message_popup.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
+import 'package:ln_employee/src/feature/auth/widget/auth_scope.dart';
 import 'package:ln_employee/src/feature/book_history/bloc/booking_history_bloc.dart';
 import 'package:ln_employee/src/feature/book_history/bloc/booking_history_event.dart';
 
@@ -120,39 +121,41 @@ class HistoryItemCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Divider(color: Color(0xFF272727)),
-            const SizedBox(height: 8),
-            Text(
-              'Номер телефона:',
-              style: context.textTheme.bodySmall?.copyWith(
-                fontSize: 13,
-                color: context.colorScheme.secondary,
-                fontFamily: FontFamily.geologica,
+            if (AuthenticationScope.of(context).isSuperuser) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Номер телефона:',
+                style: context.textTheme.bodySmall?.copyWith(
+                  fontSize: 13,
+                  color: context.colorScheme.secondary,
+                  fontFamily: FontFamily.geologica,
+                ),
               ),
-            ),
-            const SizedBox(height: 2),
-            GestureDetector(
-              onTap: () {
-                Clipboard.setData(ClipboardData(text: phone));
-                MessagePopup.success(context, 'Номер успешно скопирован');
-              },
-              child: Row(
-                children: [
-                  Text(
-                    phone,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      color: context.colorScheme.secondaryContainer,
-                      fontFamily: FontFamily.geologica,
+              const SizedBox(height: 2),
+              GestureDetector(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: phone));
+                  MessagePopup.success(context, 'Номер успешно скопирован');
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      phone,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        color: context.colorScheme.secondaryContainer,
+                        fontFamily: FontFamily.geologica,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    Icons.copy_rounded,
-                    size: 15,
-                    color: context.colorScheme.secondaryContainer,
-                  )
-                ],
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.copy_rounded,
+                      size: 15,
+                      color: context.colorScheme.secondaryContainer,
+                    )
+                  ],
+                ),
               ),
-            ),
+            ],
             const SizedBox(height: 12),
             Text(
               'Дата записи:',
