@@ -9,6 +9,8 @@ abstract interface class BookingHistoryDataProvider {
 
   /// Make booking done .
   Future<void> makeEmployeeBookingDone(int id);
+
+  Future<void> cancelRecord(int recordId);
 }
 
 /// Implementation of employee datasource.
@@ -32,4 +34,8 @@ class BookingHistoryDataProviderImpl implements BookingHistoryDataProvider {
   @override
   Future<void> makeEmployeeBookingDone(int id) =>
       restClient.patch('/api/v1/service_sale/$id/make_done');
+
+  @override
+  Future<void> cancelRecord(int recordId) =>
+      restClient.get('/api/v1/book/cancel/$recordId');
 }

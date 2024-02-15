@@ -14,6 +14,7 @@ class BookingHistoryBloc
       (event, emit) => event.map(
         fetch: (event) => fetchByEmployee(event, emit),
         done: (event) => makeEmployeeBookingDone(event, emit),
+        cancel: (event) => _cancelBooking(event, emit),
       ),
     );
   }
@@ -62,6 +63,28 @@ class BookingHistoryBloc
           error: ErrorUtil.formatError(e),
         ),
       );
+      rethrow;
+    }
+  }
+
+  /// Cancel booking from repository.
+  Future<void> _cancelBooking(
+    BookingHistoryEvent$Cancel event,
+    Emitter<BookingHistoryState> emit,
+  ) async {
+    try {
+      await repository.cancelRecord(event.bookingId);
+      final cancelledBooking = state.bookingHistory[
+              state.bookingHistory.indexWhere((e) => e.id == event.bookingId)]
+          .copyWith(isCanceled: true);
+      state.bookingHistory.removeWhere((e) => e.id == event.bookingId);
+      state.bookingHistory.add(cancelledBooking);
+      emit(BookingHistoryState.loaded(bookingHistory: state.bookingHistory));
+    } on Object catch (e) {
+      emit(BookingHistoryState.idle(
+        bookingHistory: state.bookingHistory,
+        error: ErrorUtil.formatError(e),
+      ));
       rethrow;
     }
   }

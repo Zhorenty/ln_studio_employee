@@ -20,6 +20,7 @@ final class BookingModel {
     required this.client,
     this.comment,
     required this.isDone,
+    required this.isCanceled,
   });
 
   ///
@@ -50,6 +51,8 @@ final class BookingModel {
 
   final bool isDone;
 
+  final bool isCanceled;
+
   factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
         id: json['id'],
         dateAt: DateTime.parse(json['date_at']),
@@ -61,6 +64,7 @@ final class BookingModel {
         timeblock: EmployeeTimeblock$Response.fromJson(json['timeblock']),
         client: ClientModel.fromJson(json['client']),
         isDone: bool.parse(json['is_done']),
+        isCanceled: json['is_canceled'] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -73,6 +77,7 @@ final class BookingModel {
         'service': service.toJson(),
         'timeblock': timeblock.toJson(),
         'is_done': isDone,
+        'is_canceled': isCanceled,
       };
 
   BookingModel copyWith({
@@ -86,6 +91,7 @@ final class BookingModel {
     EmployeeTimeblock$Response? timeblock,
     ClientModel? client,
     bool? isDone,
+    bool? isCanceled,
   }) {
     return BookingModel(
       id: id ?? this.id,
@@ -98,6 +104,7 @@ final class BookingModel {
       timeblock: timeblock ?? this.timeblock,
       client: client ?? this.client,
       isDone: isDone ?? this.isDone,
+      isCanceled: isCanceled ?? this.isCanceled,
     );
   }
 }

@@ -8,6 +8,8 @@ abstract interface class BookingHistoryRepository {
 
   /// Make booking done .
   Future<void> makeEmployeeBookingDone(int id);
+
+  Future<void> cancelRecord(int recordId);
 }
 
 /// Implementation of the employee repository.
@@ -24,4 +26,7 @@ final class BookingHistoryRepositoryImpl implements BookingHistoryRepository {
   @override
   Future<void> makeEmployeeBookingDone(int id) =>
       _dataSource.makeEmployeeBookingDone(id);
+
+  @override
+  Future<void> cancelRecord(int recordId) => _dataSource.cancelRecord(recordId);
 }
