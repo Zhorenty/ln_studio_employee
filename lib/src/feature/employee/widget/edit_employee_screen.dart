@@ -324,6 +324,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                     dateOfEmployment: dateOfEmployment,
                                     birthDate: birthDate,
                                   );
+                                  context.pop();
                                 }
                               },
                               style: ElevatedButton.styleFrom(
