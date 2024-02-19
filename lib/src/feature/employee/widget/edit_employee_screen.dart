@@ -324,6 +324,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
                                     dateOfEmployment: dateOfEmployment,
                                     birthDate: birthDate,
                                   );
+                                  context.pop();
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -378,7 +379,7 @@ class _EditEmployeeScreenState extends State<EditEmployeeScreen> {
               description: _descriptionController.text,
               dateOfEmployment: dateOfEmployment,
               contractNumber: _contractNumberController.text,
-              percentageOfSales: double.parse(_salesController.text),
+              percentageOfSales: double.tryParse(_salesController.text),
               stars: stars,
               isDismiss: isDismiss,
               userModel: UserModel$Edit(

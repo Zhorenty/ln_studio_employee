@@ -99,10 +99,12 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
         'job_id': employee.jobId,
         'salon_id': employee.salonId,
         'description': employee.description,
-        if (employee.dateOfEmployment != null)
-          'date_of_employment': employee.dateOfEmployment!.jsonFormat(),
+        'date_of_employment':
+            // TODO: Попрвить
+            (employee.dateOfEmployment ?? DateTime.now()).jsonFormat(),
         'contract_number': employee.contractNumber,
-        'percentage_of_sales': employee.percentageOfSales,
+        // TODO: Попрвить
+        'percentage_of_sales': employee.percentageOfSales ?? 0,
         'stars': employee.stars,
         'user': {
           'email': employee.userModel.email,

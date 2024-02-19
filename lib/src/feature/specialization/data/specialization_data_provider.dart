@@ -18,7 +18,7 @@ class SpecializationDataProviderImpl implements SpecializationDataProvider {
   @override
   Future<List<Specialization>> fetchSpecializations() async {
     final response = await restClient.get('/api/v1/job');
-    final specializations = List.from(response.data as List)
+    final specializations = List.from(response.data['data'] as List)
         .map((e) => Specialization.fromJson(e))
         .toList();
     return specializations;
