@@ -42,7 +42,7 @@ final class Employee$Edit {
   final String contractNumber;
 
   /// Percentage of sales earned by the employee.
-  final double percentageOfSales;
+  final double? percentageOfSales;
 
   /// Number of stars received by the employee.
   final int stars;
@@ -63,7 +63,7 @@ final class Employee$Edit {
       description: json['description'] as String,
       dateOfEmployment: DateTime.parse(json['date_of_employment'] as String),
       contractNumber: json['contract_number'] as String,
-      percentageOfSales: json['percentage_of_sales'] as double,
+      percentageOfSales: json['percentage_of_sales'],
       stars: json['stars'] as int,
       isDismiss: json['is_dismiss'] as bool,
       userModel: UserModel$Edit.fromJson(json['user'] as Map<String, dynamic>),
