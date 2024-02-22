@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/book_history/model/timeblock.dart';
 
 import '../model/timetable_item.dart';
 import '/src/common/utils/extensions/date_time_extension.dart';
@@ -27,13 +28,17 @@ abstract interface class TimetableDatasource {
     required DateTime dateAt,
   });
 
-  /*
-  Если надо выключить, я передаю все, кроме тех, которые я хочу выключить.
-  Если я хочу включить, то я передаю все, включая те, которые я хочу включить.
-  */
-  Future<void> addTimeblock({
+  /// Включение/выключение таймблока
+  Future<void> toggleTimeblock({
     required int timetableId,
-    required List<int> timeblockIds,
+    required int timeblockId,
+    required bool onWork,
+  });
+
+  /// Получение всех таймблоков конкретного рабочего дня сотрудника
+  Future<List<EmployeeTimeblock$Response>> getTimetableTimeblocks({
+    required int timetableId,
+    required int timeblockId,
   });
 }
 
@@ -102,20 +107,30 @@ class TimetableDatasourceImpl implements TimetableDatasource {
       );
 
   @override
-  /*
-  Включение/выключение таймблока
-  Если надо выключить, я передаю все, кроме тех, которые я хочу выключить.
-  Если я хочу включить, то я передаю все, включая те, которые я хочу включить.
-  */
-  Future<void> addTimeblock({
+  Future<void> toggleTimeblock({
     required int timetableId,
-    required List<int> timeblockIds,
+    required int timeblockId,
+    required bool onWork,
   }) =>
       _restClient.post(
         '/api/v1/timetable/add_timeblocks',
         data: {
           'timetable_id': timetableId,
-          'timeblocks': timeblockIds,
+          'timeblock_id': timeblockId,
+          "on_work": onWork,
         },
       );
+
+  @override
+  Future<List<EmployeeTimeblock$Response>> getTimetableTimeblocks({
+    required int timetableId,
+    required int timeblockId,
+  }) async {
+    final response =
+        await _restClient.get('/api/v1/timetable/timeblocks/$timetableId');
+    final timeblocks = List.from(response.data['data'])
+        .map((e) => EmployeeTimeblock$Response.fromJson(e))
+        .toList();
+    return timeblocks;
+  }
 }
