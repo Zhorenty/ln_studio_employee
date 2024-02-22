@@ -1,3 +1,5 @@
+import 'package:ln_employee/src/feature/book_history/model/timeblock.dart';
+
 import '../model/timetable_item.dart';
 import '/src/feature/timetable/model/employee_timetable.dart';
 import 'timetable_datasource.dart';
@@ -23,13 +25,17 @@ abstract interface class TimetableRepository {
     required DateTime dateAt,
   });
 
-  /*
-  Если надо выключить, я передаю все, кроме тех, которые я хочу выключить.
-  Если я хочу включить, то я передаю все, включая те, которые я хочу включить.
-  */
-  Future<void> addTimeblock({
+  /// Включение/выключение таймблока
+  Future<void> toggleTimeblock({
     required int timetableId,
-    required List<int> timeblockIds,
+    required int timeblockId,
+    required bool onWork,
+  });
+
+  /// Получение всех таймблоков конкретного рабочего дня сотрудника
+  Future<List<EmployeeTimeblock$Response>> getTimetableTimeblocks({
+    required int timetableId,
+    required int timeblockId,
   });
 }
 
@@ -68,12 +74,24 @@ final class TimetableRepositoryImpl implements TimetableRepository {
       );
 
   @override
-  Future<void> addTimeblock({
+  Future<void> toggleTimeblock({
     required int timetableId,
-    required List<int> timeblockIds,
+    required int timeblockId,
+    required bool onWork,
   }) =>
-      _dataSource.addTimeblock(
+      _dataSource.toggleTimeblock(
         timetableId: timetableId,
-        timeblockIds: timeblockIds,
+        timeblockId: timeblockId,
+        onWork: onWork,
+      );
+
+  @override
+  Future<List<EmployeeTimeblock$Response>> getTimetableTimeblocks({
+    required int timetableId,
+    required int timeblockId,
+  }) =>
+      _dataSource.getTimetableTimeblocks(
+        timetableId: timetableId,
+        timeblockId: timeblockId,
       );
 }

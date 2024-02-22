@@ -1,9 +1,11 @@
+import 'package:ln_employee/src/feature/book_history/model/timeblock.dart';
+// ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 
 /// {@template timeblocks_state_placeholder}
 /// Entity placeholder for TimeblocksState
 /// {@endtemplate}
-typedef TimeblocksEntity = Object;
+typedef TimeblocksEntity = List<EmployeeTimeblock$Response>;
 
 /// {@template timeblocks_state}
 /// TimeblocksState.
@@ -98,7 +100,7 @@ abstract base class _$TimeblocksStateBase {
   final String message;
 
   /// Has data?
-  bool get hasData => data != null;
+  bool get hasData => data?.isNotEmpty ?? false;
 
   /// If an error has occurred?
   bool get hasError => maybeMap<bool>(orElse: () => false, error: (_) => true);

@@ -8,23 +8,53 @@ class TimeblockBloc extends Bloc<TimeblockEvent, TimeblocksState> {
   TimeblockBloc(this.timetableRepository)
       : super(const TimeblocksState$Idle(data: null)) {
     on<TimeblockEvent>(
-      (event, emit) => event.map(add: (e) => _add(e, emit)),
+      (event, emit) => event.map(
+        fetch: (e) => _fetch(e, emit),
+        toggle: (e) => _toggle(e, emit),
+      ),
     );
   }
 
   final TimetableRepository timetableRepository;
 
-  Future<void> _add(
-    TimeblockEvent$Add event,
+  Future<void> _fetch(
+    TimeblockEvent$Fetch event,
     Emitter<TimeblocksState> emit,
   ) async {
-    emit(const TimeblocksState.processing(data: null));
+    emit(TimeblocksState.processing(data: state.data));
     try {
-      await timetableRepository.addTimeblock(
+      final timeblocks = await timetableRepository.getTimetableTimeblocks(
         timetableId: event.timetableId,
-        timeblockIds: event.timeblockIds,
+        timeblockId: event.timeblockId,
       );
-      emit(const TimeblocksState.successful(data: null));
+      emit(TimeblocksState.successful(data: timeblocks));
+    } on Object catch (e) {
+      emit(TimeblocksState.error(
+        data: state.data,
+        message: ErrorUtil.formatError(e),
+      ));
+      rethrow;
+    } finally {
+      emit(TimeblocksState.idle(data: state.data));
+    }
+  }
+
+  Future<void> _toggle(
+    TimeblockEvent$Toggle event,
+    Emitter<TimeblocksState> emit,
+  ) async {
+    emit(TimeblocksState.processing(data: state.data));
+    try {
+      await timetableRepository.toggleTimeblock(
+        timetableId: event.timetableId,
+        timeblockId: event.timeblockId,
+        onWork: event.onWork,
+      );
+      final timeblocks = state.data
+          ?.map((e) =>
+              e.id == event.timeblockId ? e.copyWith(onWork: event.onWork) : e)
+          .toList();
+      emit(TimeblocksState.successful(data: timeblocks));
     } on Object catch (e) {
       emit(TimeblocksState.error(
         data: state.data,

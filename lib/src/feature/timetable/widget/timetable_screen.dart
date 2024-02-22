@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
@@ -175,8 +174,6 @@ class _TimetableScreenState extends State<TimetableScreen> {
                               ModalPopup.show(
                                 context: context,
                                 child: TimeblocksWrap(
-                                  visible: true,
-                                  timeBlocks: timetable.timeblocs,
                                   timetableId: timetable.id,
                                 ),
                               );

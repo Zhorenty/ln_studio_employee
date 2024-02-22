@@ -30,7 +30,10 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
       final employeeTimetable = await repository.getTimetables();
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
-      emit(TimetableState.idle(error: e.toString()));
+      emit(TimetableState.idle(
+        employeeTimetable: state.employeeTimetable,
+        error: ErrorUtil.formatError(e),
+      ));
       rethrow;
     }
   }
@@ -46,7 +49,10 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
       );
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
-      emit(TimetableState.idle(error: ErrorUtil.formatError(e)));
+      emit(TimetableState.idle(
+        employeeTimetable: state.employeeTimetable,
+        error: ErrorUtil.formatError(e),
+      ));
       rethrow;
     }
   }
@@ -66,7 +72,10 @@ class TimetableBloc extends Bloc<TimetableEvent, TimetableState> {
           await repository.getTimetablesBySalonId(event.salonId);
       emit(TimetableState.loaded(employeeTimetable: employeeTimetable));
     } on Object catch (e) {
-      emit(TimetableState.idle(error: ErrorUtil.formatError(e)));
+      emit(TimetableState.idle(
+        employeeTimetable: state.employeeTimetable,
+        error: ErrorUtil.formatError(e),
+      ));
       rethrow;
     }
   }
