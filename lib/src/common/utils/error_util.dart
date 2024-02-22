@@ -29,9 +29,9 @@ sealed class ErrorUtil {
             'Отсутствует подключение к интернету',
             null,
           ),
-        final dynamic e => _localizeError(
-            'Неизвестная ошибка: $e',
-            (l) => l.unknownError(e.toString()),
+        _ => _localizeError(
+            error.response?.statusMessage ?? 'Неизвестная ошибка',
+            null,
           ),
       };
 
