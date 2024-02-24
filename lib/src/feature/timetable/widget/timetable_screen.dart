@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ln_employee/src/common/widget/custom_snackbar.dart';
 import 'package:ln_employee/src/common/widget/overlay/modal_popup.dart';
@@ -74,120 +75,125 @@ class _TimetableScreenState extends State<TimetableScreen> {
           listener: (context, state) => state.hasError
               ? CustomSnackBar.showError(context, message: state.error)
               : null,
-          builder: (context, state) => CustomScrollView(
-            slivers: [
-              CustomSliverAppBar(
-                title: context.stringOf().workSchedule,
-                // TODO: Implement notifications screen.
-                // actions: [
-                //   IconButton(
-                //     onPressed: () {},
-                //     icon: Icon(
-                //       Icons.notifications,
-                //       color: context.colorScheme.secondary,
-                //     ),
-                //   ),
-                // ],
-                bottomChild: BlocBuilder<SalonBLoC, SalonState>(
-                  builder: (context, state) => PopupButton(
-                    label: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: state.currentSalon != null
-                          ? Text(state.currentSalon!.name)
-                          : const SizedBox(height: 26),
+          builder: (context, state) => RefreshIndicator.adaptive(
+            onRefresh: _onRefresh,
+            edgeOffset: 100,
+            child: CustomScrollView(
+              slivers: [
+                CustomSliverAppBar(
+                  title: context.stringOf().workSchedule,
+                  // TODO: Implement notifications screen.
+                  // actions: [
+                  //   IconButton(
+                  //     onPressed: () {},
+                  //     icon: Icon(
+                  //       Icons.notifications,
+                  //       color: context.colorScheme.secondary,
+                  //     ),
+                  //   ),
+                  // ],
+                  bottomChild: BlocBuilder<SalonBLoC, SalonState>(
+                    builder: (context, state) => PopupButton(
+                      label: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: state.currentSalon != null
+                            ? Text(state.currentSalon!.name)
+                            : const SizedBox(height: 26),
+                      ),
+                      child:
+                          SalonChoiceScreen(currentSalon: state.currentSalon),
                     ),
-                    child: SalonChoiceScreen(currentSalon: state.currentSalon),
                   ),
                 ),
-              ),
-              CupertinoSliverRefreshControl(onRefresh: _refresh),
-              SliverAnimatedOpacity(
-                opacity: state.hasTimetables ? 1 : 0,
-                duration: const Duration(milliseconds: 400),
-                sliver: SliverPadding(
-                  padding: EdgeInsets.only(
-                    left: 12,
-                    right: 12,
-                    top: 12,
-                    bottom: MediaQuery.sizeOf(context).height / 8,
-                  ),
-                  sliver: SliverList.separated(
-                    itemCount: state.employeeTimetable.length,
-                    itemBuilder: (context, index) {
-                      final employeeTimetable = state.employeeTimetable[index];
-                      final employee = employeeTimetable;
+                SliverAnimatedOpacity(
+                  opacity: state.hasTimetables ? 1 : 0,
+                  duration: const Duration(milliseconds: 400),
+                  sliver: SliverPadding(
+                    padding: EdgeInsets.only(
+                      left: 12,
+                      right: 12,
+                      top: 12,
+                      bottom: MediaQuery.sizeOf(context).height / 8,
+                    ),
+                    sliver: SliverList.separated(
+                      itemCount: state.employeeTimetable.length,
+                      itemBuilder: (context, index) {
+                        final employeeTimetable =
+                            state.employeeTimetable[index];
+                        final employee = employeeTimetable;
 
-                      ///
-                      addFDaysIfNecessary(index);
+                        ///
+                        addFDaysIfNecessary(index);
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            clipBehavior: Clip.hardEdge,
-                            padding: const EdgeInsets.only(
-                              left: 12,
-                              top: 8,
-                              right: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              clipBehavior: Clip.hardEdge,
+                              padding: const EdgeInsets.only(
+                                left: 12,
+                                top: 8,
+                                right: 12,
                               ),
-                              color: context.colorScheme.onBackground,
-                            ),
-                            child: Row(
-                              children: [
-                                AvatarWidget(title: employee.fullName),
-                                const SizedBox(width: 16),
-                                Flexible(
-                                  child: Text(
-                                    employee.fullName,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: context.textTheme.headlineSmall!
-                                        .copyWith(
-                                      fontFamily: FontFamily.geologica,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16),
+                                ),
+                                color: context.colorScheme.onBackground,
+                              ),
+                              child: Row(
+                                children: [
+                                  AvatarWidget(title: employee.fullName),
+                                  const SizedBox(width: 16),
+                                  Flexible(
+                                    child: Text(
+                                      employee.fullName,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: context.textTheme.headlineSmall!
+                                          .copyWith(
+                                        fontFamily: FontFamily.geologica,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          CustomTableCalendar(
-                            focusedDay: _focusedDays[index],
-                            selectedDayPredicate: (day) =>
-                                selectedDayPredicate(day, index, employee),
-                            onDaySelected: auth.isSuperuser
-                                ? (sel, foc) =>
-                                    onDaySelected(sel, foc, index, employee.id)
-                                : null,
-                            onDayLongPressed: (selectedDay, focusedDay) {
-                              final timetable =
-                                  employee.timetableItems.firstWhere(
-                                (element) =>
-                                    element.dateAt.day ==
-                                    _focusedDays[index].day,
-                              );
-                              ModalPopup.show(
-                                context: context,
-                                child: TimeblocksWrap(
-                                  timetableId: timetable.id,
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 16),
+                            CustomTableCalendar(
+                              focusedDay: _focusedDays[index],
+                              selectedDayPredicate: (day) =>
+                                  selectedDayPredicate(day, index, employee),
+                              onDaySelected: auth.isSuperuser
+                                  ? (sel, foc) => onDaySelected(
+                                      sel, foc, index, employee.id)
+                                  : null,
+                              onDayLongPressed: (selectedDay, focusedDay) {
+                                final timetable =
+                                    employee.timetableItems.firstWhere(
+                                  (element) =>
+                                      element.dateAt.day ==
+                                      _focusedDays[index].day,
+                                );
+                                ModalPopup.show(
+                                  context: context,
+                                  child: TimeblocksWrap(
+                                    timetableId: timetable.id,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 16),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -195,7 +201,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
   }
 
   /// Refresh timetables.
-  Future<void> _refresh() async {
+  Future<void> _onRefresh() async {
     final block = timetableBloc.stream.first;
     final salonBloc = context.read<SalonBLoC>();
     if (salonBloc.state.currentSalon != null) {

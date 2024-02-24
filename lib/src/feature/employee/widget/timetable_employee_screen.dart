@@ -66,40 +66,43 @@ class _TimetableEmployeeScreenState extends State<TimetableEmployeeScreen> {
             : null,
         builder: (context, state) => Scaffold(
           backgroundColor: context.colorScheme.onBackground,
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                title: Text(
-                  'Расписание',
-                  style: context.textTheme.titleLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
+          body: RefreshIndicator.adaptive(
+            onRefresh: _onRefresh,
+            edgeOffset: 100,
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  title: Text(
+                    'Расписание',
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                    ),
                   ),
                 ),
-              ),
-              CupertinoSliverRefreshControl(onRefresh: _refresh),
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverList.list(
-                  children: [
-                    CustomTableCalendar(
-                      padding: const EdgeInsets.symmetric(horizontal: 8).add(
-                        const EdgeInsets.only(bottom: 8),
+                SliverPadding(
+                  padding: const EdgeInsets.all(16),
+                  sliver: SliverList.list(
+                    children: [
+                      CustomTableCalendar(
+                        padding: const EdgeInsets.symmetric(horizontal: 8).add(
+                          const EdgeInsets.only(bottom: 8),
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF272727)),
+                        color: context.colorScheme.background,
+                        focusedDay: _focusedDay,
+                        selectedDayPredicate: (day) =>
+                            selectedDayPredicate(day, state.timetables),
+                        onDaySelected: auth.isSuperuser
+                            ? (sel, foc) =>
+                                onDaySelected(sel, foc, widget.employeeId)
+                            : null,
                       ),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFF272727)),
-                      color: context.colorScheme.background,
-                      focusedDay: _focusedDay,
-                      selectedDayPredicate: (day) =>
-                          selectedDayPredicate(day, state.timetables),
-                      onDaySelected: auth.isSuperuser
-                          ? (sel, foc) =>
-                              onDaySelected(sel, foc, widget.employeeId)
-                          : null,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -107,7 +110,7 @@ class _TimetableEmployeeScreenState extends State<TimetableEmployeeScreen> {
   }
 
   /// Refresh timetables.
-  Future<void> _refresh() async {
+  Future<void> _onRefresh() async {
     employeeTimetableBloc.add(EmployeeTimetableEvent$FetchTimetable(
       employeeId: widget.employeeId,
       salonId: widget.salonId,

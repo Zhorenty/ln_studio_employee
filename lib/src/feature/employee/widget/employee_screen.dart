@@ -95,267 +95,275 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                           workedDaysCount = employee.workedDays;
                         }
 
-                        return CustomScrollView(
-                          slivers: [
-                            ExpandedAppBar(
-                              imageUrl: state.employee?.userModel.photo != null
-                                  ? '$kBaseUrl/${state.employee?.userModel.photo}'
-                                  : null,
-                              avatar: avatar,
-                              additional: [
-                                PickerPopup(
-                                  onPickCamera: () => pickAvatar(
-                                    ImageSource.camera,
-                                  )..then((_) {
-                                      context.read<EmployeeAvatarBloc>().add(
-                                            EmployeeAvatarEvent.uploadAvatar(
-                                              id: widget.id,
-                                              file: avatar!,
-                                            ),
-                                          );
-                                      context.pop();
-                                    }),
-                                  onPickGallery: () => pickAvatar(
-                                    ImageSource.gallery,
-                                  )..then((_) {
-                                      context.read<EmployeeAvatarBloc>().add(
-                                            EmployeeAvatarEvent.uploadAvatar(
-                                              id: widget.id,
-                                              file: avatar!,
-                                            ),
-                                          );
-                                      context.pop();
-                                    }),
-                                ),
-                              ],
-                              label: user.fullName,
-                              title: Text(
-                                user.fullName,
-                                style: context.textTheme.titleLarge!.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                ),
-                              ),
-                              leading: Text(
-                                clientsCount.toString(),
-                                style: context.textTheme.titleLarge!.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                ),
-                              ),
-                              trailing: Text(
-                                workedDaysCount.toString(),
-                                style: context.textTheme.titleLarge!.copyWith(
-                                  fontFamily: FontFamily.geologica,
-                                ),
-                              ),
-                              additionalTrailing: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                    ),
-                                    backgroundColor:
-                                        context.colorScheme.primary,
-                                    side: const BorderSide(
-                                      color: Color(0xFF272727),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    dismissed
-                                        ? _reinstatement(employee.id)
-                                        : _dismiss(employee.id);
-                                    context.pop();
-                                    MessagePopup.success(
-                                      context,
-                                      dismissed
-                                          ? 'Вы вернули сотрудника на должность'
-                                          : 'Сотрудник успешно уволен',
-                                    );
-                                  },
-                                  child: Text(
-                                    dismissed
-                                        ? 'Восстановить сотрудника в должности'
-                                        : 'Уволить сотрудника',
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
-                                      color: context.colorScheme.onBackground,
-                                      fontFamily: FontFamily.geologica,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              onExit: () {
-                                context.pop();
-                                _refreshStaff();
-                              },
-                            ),
-                            CupertinoSliverRefreshControl(
-                              onRefresh: () => _fetch(employee.id),
-                            ),
-                            SliverList.list(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: context.colorScheme.onBackground,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      DefaultTextStyle(
-                                        style: context.textTheme.bodyLarge!
-                                            .copyWith(
-                                          color: dismissed
-                                              ? const Color(0xFFF45636)
-                                              : context.colorScheme.primary,
-                                          fontFamily: FontFamily.geologica,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const HeaderWidget(
-                                              label: 'Статус сотрудника',
-                                              showUnderscore: false,
-                                            ),
-                                            dismissed
-                                                ? const Text('Уволен')
-                                                : const Text('Работает')
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      const HeaderWidget(
-                                        label: 'Портфолио',
-                                        showUnderscore: false,
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Container(
-                                        height: 110,
-                                        width: MediaQuery.sizeOf(context).width,
-                                        decoration: BoxDecoration(
-                                          color: context.colorScheme.background,
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          border: Border.all(
-                                            color: const Color(0xFF272727),
-                                          ),
-                                        ),
-                                        child: BlocBuilder<PortfolioBloc,
-                                            PortfolioState>(
-                                          builder: (context, state) => ListView(
-                                            scrollDirection: Axis.horizontal,
-                                            children: [
-                                              PortfolioContainer(
-                                                onTap: () =>
-                                                    MessagePopup.bottomSheet(
-                                                  context,
-                                                  'Выберите источник фото',
-                                                  additional: [
-                                                    PickerPopup(
-                                                      onPickCamera: () =>
-                                                          onPick(
-                                                        context,
-                                                        ImageSource.camera,
-                                                      ),
-                                                      onPickGallery: () =>
-                                                          onPick(
-                                                        context,
-                                                        ImageSource.gallery,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.add_circle_rounded,
-                                                    size: 50,
-                                                    color: context.colorScheme
-                                                        .primaryContainer,
-                                                  ),
-                                                ),
+                        return RefreshIndicator.adaptive(
+                          onRefresh: () => _fetch(employee.id),
+                          edgeOffset: 100,
+                          child: CustomScrollView(
+                            slivers: [
+                              ExpandedAppBar(
+                                imageUrl: state.employee?.userModel.photo !=
+                                        null
+                                    ? '$kBaseUrl/${state.employee?.userModel.photo}'
+                                    : null,
+                                avatar: avatar,
+                                additional: [
+                                  PickerPopup(
+                                    onPickCamera: () => pickAvatar(
+                                      ImageSource.camera,
+                                    )..then((_) {
+                                        context.read<EmployeeAvatarBloc>().add(
+                                              EmployeeAvatarEvent.uploadAvatar(
+                                                id: widget.id,
+                                                file: avatar!,
                                               ),
-                                              ...state.portfolio.map(
-                                                (e) => PortfolioContainer(
-                                                    onLongPress: () =>
-                                                        onLongPress(
-                                                          context,
-                                                          e.id,
-                                                        ),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            '$kBaseUrl/${e.photo}',
-                                                        fit: BoxFit.cover,
-                                                        placeholder: (_, __) =>
-                                                            ColoredBox(
-                                                          color: context
-                                                              .colorScheme
-                                                              .onBackground,
-                                                          child: Assets
-                                                              .images.logoWhite
-                                                              .image(
-                                                            fit: BoxFit.contain,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )),
-                                              )
+                                            );
+                                        context.pop();
+                                      }),
+                                    onPickGallery: () => pickAvatar(
+                                      ImageSource.gallery,
+                                    )..then((_) {
+                                        context.read<EmployeeAvatarBloc>().add(
+                                              EmployeeAvatarEvent.uploadAvatar(
+                                                id: widget.id,
+                                                file: avatar!,
+                                              ),
+                                            );
+                                        context.pop();
+                                      }),
+                                  ),
+                                ],
+                                label: user.fullName,
+                                title: Text(
+                                  user.fullName,
+                                  style: context.textTheme.titleLarge!.copyWith(
+                                    fontFamily: FontFamily.geologica,
+                                  ),
+                                ),
+                                leading: Text(
+                                  clientsCount.toString(),
+                                  style: context.textTheme.titleLarge!.copyWith(
+                                    fontFamily: FontFamily.geologica,
+                                  ),
+                                ),
+                                trailing: Text(
+                                  workedDaysCount.toString(),
+                                  style: context.textTheme.titleLarge!.copyWith(
+                                    fontFamily: FontFamily.geologica,
+                                  ),
+                                ),
+                                additionalTrailing: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12,
+                                      ),
+                                      backgroundColor:
+                                          context.colorScheme.primary,
+                                      side: const BorderSide(
+                                        color: Color(0xFF272727),
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      dismissed
+                                          ? _reinstatement(employee.id)
+                                          : _dismiss(employee.id);
+                                      context.pop();
+                                      MessagePopup.success(
+                                        context,
+                                        dismissed
+                                            ? 'Вы вернули сотрудника на должность'
+                                            : 'Сотрудник успешно уволен',
+                                      );
+                                    },
+                                    child: Text(
+                                      dismissed
+                                          ? 'Восстановить сотрудника в должности'
+                                          : 'Уволить сотрудника',
+                                      style: context.textTheme.bodyMedium
+                                          ?.copyWith(
+                                        color: context.colorScheme.onBackground,
+                                        fontFamily: FontFamily.geologica,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                onExit: () {
+                                  context.pop();
+                                  _refreshStaff();
+                                },
+                              ),
+                              SliverList.list(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: context.colorScheme.onBackground,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        DefaultTextStyle(
+                                          style: context.textTheme.bodyLarge!
+                                              .copyWith(
+                                            color: dismissed
+                                                ? const Color(0xFFF45636)
+                                                : context.colorScheme.primary,
+                                            fontFamily: FontFamily.geologica,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const HeaderWidget(
+                                                label: 'Статус сотрудника',
+                                                showUnderscore: false,
+                                              ),
+                                              dismissed
+                                                  ? const Text('Уволен')
+                                                  : const Text('Работает')
                                             ],
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      FieldButton(
-                                        label: 'Редактировать',
-                                        onTap: () => context.goNamed(
-                                          'employee_edit',
-                                          pathParameters: {
-                                            'id': employee.id.toString(),
-                                          },
+                                        const SizedBox(height: 16),
+                                        const HeaderWidget(
+                                          label: 'Портфолио',
+                                          showUnderscore: false,
                                         ),
-                                        controller: TextEditingController(),
-                                      ),
-                                      FieldButton(
-                                        controller: TextEditingController(),
-                                        label: 'График работы',
-                                        onTap: () => context.goNamed(
-                                          'employee_timetable',
-                                          pathParameters: {
-                                            'id': employee.id.toString(),
-                                            'salonId': context
-                                                .read<SalonBLoC>()
-                                                .state
-                                                .currentSalon!
-                                                .id
-                                                .toString()
-                                          },
+                                        const SizedBox(height: 8),
+                                        Container(
+                                          height: 110,
+                                          width:
+                                              MediaQuery.sizeOf(context).width,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                context.colorScheme.background,
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            border: Border.all(
+                                              color: const Color(0xFF272727),
+                                            ),
+                                          ),
+                                          child: BlocBuilder<PortfolioBloc,
+                                              PortfolioState>(
+                                            builder: (context, state) =>
+                                                ListView(
+                                              scrollDirection: Axis.horizontal,
+                                              children: [
+                                                PortfolioContainer(
+                                                  onTap: () =>
+                                                      MessagePopup.bottomSheet(
+                                                    context,
+                                                    'Выберите источник фото',
+                                                    additional: [
+                                                      PickerPopup(
+                                                        onPickCamera: () =>
+                                                            onPick(
+                                                          context,
+                                                          ImageSource.camera,
+                                                        ),
+                                                        onPickGallery: () =>
+                                                            onPick(
+                                                          context,
+                                                          ImageSource.gallery,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.add_circle_rounded,
+                                                      size: 50,
+                                                      color: context.colorScheme
+                                                          .primaryContainer,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ...state.portfolio.map(
+                                                  (e) => PortfolioContainer(
+                                                      onLongPress: () =>
+                                                          onLongPress(
+                                                            context,
+                                                            e.id,
+                                                          ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              '$kBaseUrl/${e.photo}',
+                                                          fit: BoxFit.cover,
+                                                          placeholder:
+                                                              (_, __) =>
+                                                                  ColoredBox(
+                                                            color: context
+                                                                .colorScheme
+                                                                .onBackground,
+                                                            child: Assets.images
+                                                                .logoWhite
+                                                                .image(
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )),
+                                                )
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                      FieldButton(
-                                        controller: TextEditingController(),
-                                        label: 'Записи',
-                                        onTap: () => context.goNamed(
-                                          'employee_clients',
-                                          pathParameters: {
-                                            'id': employee.id.toString(),
-                                          },
+                                        const SizedBox(height: 16),
+                                        FieldButton(
+                                          label: 'Редактировать',
+                                          onTap: () => context.goNamed(
+                                            'employee_edit',
+                                            pathParameters: {
+                                              'id': employee.id.toString(),
+                                            },
+                                          ),
+                                          controller: TextEditingController(),
                                         ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                    ],
+                                        FieldButton(
+                                          controller: TextEditingController(),
+                                          label: 'График работы',
+                                          onTap: () => context.goNamed(
+                                            'employee_timetable',
+                                            pathParameters: {
+                                              'id': employee.id.toString(),
+                                              'salonId': context
+                                                  .read<SalonBLoC>()
+                                                  .state
+                                                  .currentSalon!
+                                                  .id
+                                                  .toString()
+                                            },
+                                          ),
+                                        ),
+                                        FieldButton(
+                                          controller: TextEditingController(),
+                                          label: 'Записи',
+                                          onTap: () => context.goNamed(
+                                            'employee_clients',
+                                            pathParameters: {
+                                              'id': employee.id.toString(),
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),

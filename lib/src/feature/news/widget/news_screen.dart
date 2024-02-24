@@ -32,46 +32,48 @@ class _NewsScreenState extends State<NewsScreen> {
       builder: (context, state) => Scaffold(
         backgroundColor: context.colorScheme.onBackground,
         body: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                  onPressed: context.pop,
-                ),
-                title: Text(
-                  'Новости',
-                  style: context.textTheme.titleLarge?.copyWith(
-                    fontFamily: FontFamily.geologica,
+          child: RefreshIndicator.adaptive(
+            onRefresh: () async =>
+                context.read<NewsBLoC>()..add(const NewsEvent.fetchAll()),
+            edgeOffset: 100,
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    onPressed: context.pop,
+                  ),
+                  title: Text(
+                    'Новости',
+                    style: context.textTheme.titleLarge?.copyWith(
+                      fontFamily: FontFamily.geologica,
+                    ),
                   ),
                 ),
-              ),
-              CupertinoSliverRefreshControl(
-                onRefresh: () async =>
-                    context.read<NewsBLoC>()..add(const NewsEvent.fetchAll()),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverList.separated(
-                  itemCount: state.news.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) => AnimatedButton(
-                    onPressed: () => context.goNamed(
-                      'news_edit',
-                      extra: state.news[index],
-                    ),
-                    child: NewsContainer(
-                      title: state.news[index].title,
-                      subtitle: state.news[index].description,
-                      image: CustomNetworkImage(
-                        hasPhoto: state.news[index].photo != null,
-                        imageUrl: '$kBaseUrl/${state.news[index].photo ?? ''}',
+                SliverPadding(
+                  padding: const EdgeInsets.all(16),
+                  sliver: SliverList.separated(
+                    itemCount: state.news.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 16),
+                    itemBuilder: (context, index) => AnimatedButton(
+                      onPressed: () => context.goNamed(
+                        'news_edit',
+                        extra: state.news[index],
+                      ),
+                      child: NewsContainer(
+                        title: state.news[index].title,
+                        subtitle: state.news[index].description,
+                        image: CustomNetworkImage(
+                          hasPhoto: state.news[index].photo != null,
+                          imageUrl:
+                              '$kBaseUrl/${state.news[index].photo ?? ''}',
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
