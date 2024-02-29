@@ -176,7 +176,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
                                       element.dateAt.day ==
                                       _focusedDays[index].day,
                                 );
-                                if (auth.isSuperuser && timetableItem.onWork) {
+                                final isDaySelected = selectedDayPredicate(
+                                  selectedDay,
+                                  index,
+                                  employee,
+                                );
+                                if (auth.isSuperuser && isDaySelected) {
                                   ModalPopup.show(
                                     context: context,
                                     child: TimeblocksWrap(
