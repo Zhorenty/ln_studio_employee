@@ -68,7 +68,7 @@ class _TimetableEmployeeScreenState extends State<TimetableEmployeeScreen> {
           backgroundColor: context.colorScheme.onBackground,
           body: RefreshIndicator.adaptive(
             onRefresh: _onRefresh,
-            edgeOffset: 100,
+            edgeOffset: MediaQuery.sizeOf(context).width * 0.4,
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(

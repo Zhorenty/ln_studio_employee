@@ -80,7 +80,7 @@ class _StaffScreenState extends State<StaffScreen>
             return Scaffold(
               body: RefreshIndicator.adaptive(
                 onRefresh: _onRefresh,
-                edgeOffset: 100,
+                edgeOffset: MediaQuery.sizeOf(context).width * 0.4,
                 child: CustomScrollView(
                   slivers: [
                     CustomSliverAppBar(

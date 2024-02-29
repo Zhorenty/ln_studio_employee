@@ -77,7 +77,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
               : null,
           builder: (context, state) => RefreshIndicator.adaptive(
             onRefresh: _onRefresh,
-            edgeOffset: 100,
+            edgeOffset: MediaQuery.sizeOf(context).width * 0.4,
             child: CustomScrollView(
               slivers: [
                 CustomSliverAppBar(
