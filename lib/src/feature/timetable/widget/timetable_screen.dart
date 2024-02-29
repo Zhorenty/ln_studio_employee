@@ -120,7 +120,6 @@ class _TimetableScreenState extends State<TimetableScreen> {
                       itemBuilder: (context, index) {
                         final employeeTimetable =
                             state.employeeTimetable[index];
-                        final employee = employeeTimetable;
 
                         ///
                         addFDaysIfNecessary(index);
@@ -145,11 +144,12 @@ class _TimetableScreenState extends State<TimetableScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  AvatarWidget(title: employee.fullName),
+                                  AvatarWidget(
+                                      title: employeeTimetable.fullName),
                                   const SizedBox(width: 16),
                                   Flexible(
                                     child: Text(
-                                      employee.fullName,
+                                      employeeTimetable.fullName,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: context.textTheme.headlineSmall!
@@ -164,22 +164,25 @@ class _TimetableScreenState extends State<TimetableScreen> {
                             CustomTableCalendar(
                               focusedDay: _focusedDays[index],
                               selectedDayPredicate: (day) =>
-                                  selectedDayPredicate(day, index, employee),
+                                  selectedDayPredicate(
+                                      day, index, employeeTimetable),
                               onDaySelected: auth.isSuperuser
                                   ? (sel, foc) => onDaySelected(
-                                      sel, foc, index, employee.id)
+                                      sel, foc, index, employeeTimetable.id)
                                   : null,
                               onDayLongPressed: (selectedDay, focusedDay) {
                                 final timetableItem =
-                                    employee.timetableItems.firstWhere(
+                                    employeeTimetable.timetableItems.firstWhere(
                                   (element) =>
-                                      element.dateAt.day ==
-                                      _focusedDays[index].day,
+                                      element.dateAt.year == selectedDay.year &&
+                                      element.dateAt.month ==
+                                          selectedDay.month &&
+                                      element.dateAt.day == selectedDay.day,
                                 );
                                 final isDaySelected = selectedDayPredicate(
                                   selectedDay,
                                   index,
-                                  employee,
+                                  employeeTimetable,
                                 );
                                 if (auth.isSuperuser && isDaySelected) {
                                   ModalPopup.show(
