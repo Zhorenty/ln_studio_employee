@@ -170,18 +170,20 @@ class _TimetableScreenState extends State<TimetableScreen> {
                                       sel, foc, index, employee.id)
                                   : null,
                               onDayLongPressed: (selectedDay, focusedDay) {
-                                final timetable =
+                                final timetableItem =
                                     employee.timetableItems.firstWhere(
                                   (element) =>
                                       element.dateAt.day ==
                                       _focusedDays[index].day,
                                 );
-                                ModalPopup.show(
-                                  context: context,
-                                  child: TimeblocksWrap(
-                                    timetableId: timetable.id,
-                                  ),
-                                );
+                                if (auth.isSuperuser && timetableItem.onWork) {
+                                  ModalPopup.show(
+                                    context: context,
+                                    child: TimeblocksWrap(
+                                      timetableId: timetableItem.id,
+                                    ),
+                                  );
+                                }
                               },
                             ),
                           ],
