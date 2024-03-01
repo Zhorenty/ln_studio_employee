@@ -7,6 +7,7 @@ import 'package:ln_employee/src/feature/auth/widget/verification_screen.dart';
 import 'package:ln_employee/src/feature/book_history/widget/booking_history_screen.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_bloc.dart';
 import 'package:ln_employee/src/feature/employee/bloc/employee/employee_event.dart';
+import 'package:ln_employee/src/feature/employee/widget/employee_reviews_screen.dart';
 import 'package:ln_employee/src/feature/employee/widget/employee_screen.dart';
 import 'package:ln_employee/src/feature/employee/widget/timetable_employee_screen.dart';
 import 'package:ln_employee/src/feature/initialization/widget/dependencies_scope.dart';
@@ -131,6 +132,16 @@ final router = GoRouter(
                           path: 'clients',
                           builder: (context, state) => BookingHistoryScreen(
                             id: int.parse(state.pathParameters['id'] as String),
+                          ),
+                        ),
+                        GoRoute(
+                          parentNavigatorKey: _shellKey,
+                          name: 'employee_reviews',
+                          path: 'reviews',
+                          builder: (context, state) => EmployeeReviewsScreen(
+                            employeeId: int.parse(
+                              state.pathParameters['id'] as String,
+                            ),
                           ),
                         ),
                       ],

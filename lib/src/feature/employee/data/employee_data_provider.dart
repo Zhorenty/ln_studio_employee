@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:ln_employee/src/feature/book_history/model/booking.dart';
+import 'package:ln_employee/src/feature/employee/model/review.dart';
 
 import '/src/common/utils/extensions/date_time_extension.dart';
 import '/src/feature/employee/model/employee/employee.dart';
@@ -31,6 +33,9 @@ abstract interface class EmployeeDataProvider {
 
   /// Reinstatement employee by id.
   Future<void> reinstatementEmployee(int id);
+
+  /// Fetch reviews
+  Future<List<Review>> fetchReviews(int employeeId);
 }
 
 /// Implementation of employee datasource.
@@ -138,4 +143,20 @@ class EmployeeDataProviderImpl implements EmployeeDataProvider {
   @override
   Future<void> reinstatementEmployee(int id) async =>
       await restClient.patch('/api/v1/employee/$id/reinstatement');
+
+  @override
+  Future<List<Review>> fetchReviews(int employeeId) async {
+    final response =
+        await restClient.get('/api/v1/employee/$employeeId/service_sales');
+
+    final employeeBookings = List.from((response.data['data'] as List))
+        .map((e) => BookingModel.fromJson(e))
+        .toList();
+    // TODO: Отрефачить
+    final employeeBookingsWithReviews =
+        employeeBookings.where((booking) => booking.isHasReview).toList();
+    final reviews = employeeBookingsWithReviews.map((e) => e.review!).toList();
+
+    return reviews;
+  }
 }

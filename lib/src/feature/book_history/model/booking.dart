@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:ln_employee/src/common/utils/extensions/date_time_extension.dart';
 import 'package:ln_employee/src/feature/employee/model/employee/employee.dart';
+import 'package:ln_employee/src/feature/employee/model/review.dart';
 import 'package:ln_employee/src/feature/salon/models/salon.dart';
 
 import '../../employee/model/employee/user.dart';
@@ -21,6 +22,8 @@ final class BookingModel {
     this.comment,
     required this.isDone,
     required this.isCanceled,
+    required this.review,
+    required this.isHasReview,
   });
 
   ///
@@ -53,6 +56,10 @@ final class BookingModel {
 
   final bool isCanceled;
 
+  final Review? review;
+
+  final bool isHasReview;
+
   factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
         id: json['id'],
         dateAt: DateTime.parse(json['date_at']),
@@ -65,6 +72,8 @@ final class BookingModel {
         client: ClientModel.fromJson(json['client']),
         isDone: bool.parse(json['is_done']),
         isCanceled: json['is_canceled'] ?? false,
+        review: json['review'] != null ? Review.fromJson(json['review']) : null,
+        isHasReview: json['review'] != null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -92,6 +101,8 @@ final class BookingModel {
     ClientModel? client,
     bool? isDone,
     bool? isCanceled,
+    Review? review,
+    bool? isHasReview,
   }) {
     return BookingModel(
       id: id ?? this.id,
@@ -105,6 +116,8 @@ final class BookingModel {
       client: client ?? this.client,
       isDone: isDone ?? this.isDone,
       isCanceled: isCanceled ?? this.isCanceled,
+      review: review ?? this.review,
+      isHasReview: isHasReview ?? this.isHasReview,
     );
   }
 }

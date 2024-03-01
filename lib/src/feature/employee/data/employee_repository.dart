@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:ln_employee/src/feature/employee/model/review.dart';
+
 import '/src/feature/employee/data/employee_data_provider.dart';
 import '/src/feature/employee/model/employee/employee.dart';
 import '/src/feature/employee/model/employee_create/employee_create.dart';
@@ -30,6 +32,9 @@ abstract interface class EmployeeRepository {
 
   /// Reinstatement employee by id.
   Future<void> reinstatement({required int id});
+
+  /// Fetch reviews
+  Future<List<Review>> fetchReviews(int employeeId);
 }
 
 /// Implementation of the employee repository.
@@ -67,4 +72,8 @@ final class EmployeeRepositoryImpl implements EmployeeRepository {
   @override
   Future<void> reinstatement({required int id}) =>
       _dataSource.reinstatementEmployee(id);
+
+  @override
+  Future<List<Review>> fetchReviews(int employeeId) =>
+      _dataSource.fetchReviews(employeeId);
 }

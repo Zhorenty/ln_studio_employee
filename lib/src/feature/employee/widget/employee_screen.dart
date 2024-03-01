@@ -356,6 +356,16 @@ class _EditEmployeeScreenState extends State<EmployeeScreen> {
                                             },
                                           ),
                                         ),
+                                        FieldButton(
+                                          controller: TextEditingController(),
+                                          label: 'Отзывы',
+                                          onTap: () => context.goNamed(
+                                            'employee_reviews',
+                                            pathParameters: {
+                                              'id': employee.id.toString(),
+                                            },
+                                          ),
+                                        ),
                                         const SizedBox(height: 16),
                                       ],
                                     ),
