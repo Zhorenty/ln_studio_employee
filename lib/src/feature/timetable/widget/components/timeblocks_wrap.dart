@@ -37,6 +37,12 @@ class _TimeblocksWrapState extends State<TimeblocksWrap> {
   }
 
   @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimeblockBloc, TimeblocksState>(
         bloc: bloc,
