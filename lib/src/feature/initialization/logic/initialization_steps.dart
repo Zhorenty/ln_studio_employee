@@ -25,7 +25,7 @@ import '/src/feature/specialization/data/specialization_repository.dart';
 
 typedef StepAction = FutureOr<void>? Function(InitializationProgress progress);
 
-const kBaseUrl = 'http://31.129.104.75';
+const kBaseUrl = 'http://ln-studio.ru';
 
 /// Handles initialization steps.
 mixin InitializationSteps {
